@@ -54,10 +54,36 @@ class Schema
             }
 
             $this->typeMap[$typeName] = $namedType;
-        }
 
-        //TODO: $this->implementationsMap (see: https://github.com/graphql/graphql-js/blob/5ed55b89d526c637eeb9c440715367eec8a2adec/src/type/schema.js#L223)
-        $this->implementationsMap = [];
+            // generate $this->implementationsMap
+            if($namedType->isInterfaceType()){
+                foreach($namedType->getInterfaces() as $iface){
+                    if($iface->isInterfaceType()){
+                        $implementations = $this->implementationsMap[$iface->getName()] ?? null;
+                        if($implementations === null){
+                            $this->implementationsMap[$iface->getName()] = [
+                                "objects" => [],
+                                "interfaces" => []
+                            ];
+                        }
+                        $this->implementationsMap[$iface->getName()]["interfaces"][] = $namedType;
+                    }
+                }
+            }else if($namedType->isObjectType()){
+                foreach($namedType->getInterfaces() as $iface){
+                    if($iface->isInterfaceType()){
+                        $implementations = $this->implementationsMap[$iface->getName()] ?? null;
+                        if($implementations === null){
+                            $this->implementationsMap[$iface->getName()] = [
+                                "objects" => [],
+                                "interfaces" => []
+                            ];
+                        }
+                        $this->implementationsMap[$iface->getName()]["objects"][] = $namedType;
+                    }
+                }
+            }
+        }
     }
 
     private function collectReferencedTypes(GraphQLType $type, array &$typeSet)
@@ -110,7 +136,7 @@ class Schema
 
     public function isSubType(GraphQLAbstractType $abstractType, GraphQLType $maybeSubType)
     {
-        $map = $this->subTypeMap[$abstractType->getName()];
+        $map = $this->subTypeMap[$abstractType->getName()] ?? null;
         if($map === null) {
             $map = [];
             if ($abstractType->isUnionType()) {

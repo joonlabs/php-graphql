@@ -6,7 +6,7 @@ use GraphQL\Errors\GraphQLError;
 
 class GraphQLInt extends GraphQLScalarType
 {
-    protected $type = "GraphQLInt";
+    protected $type = "Int";
     protected $description = "Default GraphQL Integer Type";
 
     public function serialize($outputValue){
@@ -27,8 +27,24 @@ class GraphQLInt extends GraphQLScalarType
         }
 
         $num = intval($valueNode["value"]);
-        // TODO: check for 32-BIT integer (see: https://github.com/graphql/graphql-js/blob/5ed55b89d526c637eeb9c440715367eec8a2adec/src/type/scalars.js#L74)
+
+        //check for 32 bit integer
+        if($num > 2147483647 || $num < -2147483648){
+            throw new GraphQLError(
+                "Int cannot represent non 32-bit signed integer value: {$valueNode["value"]}",
+                $valueNode
+            );
+        }
         return $num;
+    }
+
+    public function parseValue($value){
+        if(!is_int($value) and $value!==null){
+            throw new GraphQLError(
+                "Value \"{$value}\" is not of type \"{$this->getName()}\"."
+            );
+        }
+        return $value;
     }
 }
 

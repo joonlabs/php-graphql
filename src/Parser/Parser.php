@@ -2,6 +2,7 @@
 
 namespace GraphQL\Parser;
 
+use GraphQL\Errors\BadUserInputError;
 use GraphQL\Errors\UnexpectedEndOfInputError;
 use GraphQL\Errors\UnexpectedTokenError;
 
@@ -107,7 +108,7 @@ class Parser
                 // query is named and has parameters
                 $name = $this->Name();
                 $variableDefinitions = $this->lookahead["type"]=="(" ? $this->VariableDefinitions() : [];
-                $directives = $this->lookahead["type"]=="@" ? $this->Directives() : [];
+                $directives = $this->lookahead["type"]==="@" ? $this->Directives() : [];
             }
         }
 
@@ -116,7 +117,7 @@ class Parser
             "operation" => $type,
             "name" => $name,
             "variableDefinitions" => $variableDefinitions,
-            "directives" => [], //TODO: get directives
+            "directives" => $directives,
             "selectionSet" => $this->SelectionSet(),
             "loc" => $this->tokenizer->getLocation()
         ];
@@ -126,19 +127,24 @@ class Parser
      * FragmentDefinition
      *  : fragment FragmentName TypeCondition SelectionSet
      */
-    // TODO add directives
     public function FragmentDefinition()
     {
+        $location = $this->tokenizer->getLastLocation();
         $this->eat("FRAGMENT");
         $name = $this->Name();
         $typeCondition = $this->TypeCondition();
+        $directives = [];
+        if ($this->lookahead["type"] == "@") {
+            $directives = $this->Directives();
+        }
+        $selectionSet = $this->SelectionSet();
         return [
             "kind" => "FragmentDefinition",
             "name" => $name,
             "typeCondition" => $typeCondition,
-            "directives" => [], //TODO: get directives
-            "selectionSet" => $this->SelectionSet(),
-            "loc" => $this->tokenizer->getLocation()
+            "directives" => $directives,
+            "selectionSet" => $selectionSet,
+            "loc" => $location
         ];
     }
 
@@ -302,7 +308,7 @@ class Parser
             "variable" => $variable,
             "type" => $type,
             "defaultValue" => $defaultValue,
-            "directives" => [],// TODO
+            "directives" => [],
             "loc" => $location
         ];
     }
@@ -756,7 +762,6 @@ class Parser
      */
     public function FragmentName()
     {
-        //TODO: check for not "on"
         return $this->Name();
     }
 
@@ -780,7 +785,7 @@ class Parser
         }
         if ($token["type"] !== $tokenType) {
             throw new UnexpectedTokenError(
-                "Unexpected token: \"" . $token["value"] . "\", expected token of type \"$tokenType\"",
+                "Unexpected token: \"" . $token["value"] . "\", expected token of type \"$tokenType\", got tyoe \"".$token["type"]."\".",
                 $this->tokenizer->getLastLocation()
             );
         }

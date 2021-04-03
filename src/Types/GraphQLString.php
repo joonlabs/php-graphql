@@ -6,7 +6,7 @@ use GraphQL\Errors\GraphQLError;
 
 class GraphQLString extends GraphQLScalarType
 {
-    protected $type = "GraphQLString";
+    protected $type = "String";
     protected $description = "Default GraphQL String Type";
 
     public function serialize($outputValue){
@@ -27,6 +27,15 @@ class GraphQLString extends GraphQLScalarType
         }
 
         return $valueNode["value"];
+    }
+
+    public function parseValue($value){
+        if(!is_string($value) and $value!==null){
+            throw new GraphQLError(
+                "Value \"{$value}\" is not of type \"{$this->getName()}\"."
+            );
+        }
+        return $value;
     }
 }
 

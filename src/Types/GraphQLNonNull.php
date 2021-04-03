@@ -6,7 +6,7 @@ use GraphQL\Fields\GraphQLQueryField;
 
 class GraphQLNonNull extends GraphQLType
 {
-    protected $type = "GraphQLNonNull";
+    protected $type = "NonNull";
     protected $description = "Default GraphQL Wrapper Type for Non-Nullability";
 
     private $innerType;

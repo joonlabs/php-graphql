@@ -7,7 +7,7 @@ use GraphQL\Errors\ValidationError;
 
 class GraphQLEnum extends GraphQLType
 {
-    protected $type = "GraphQLEnum";
+    protected $type = "Enum";
     protected $description = "Default GraphQL Enum Type";
 
     private $values;

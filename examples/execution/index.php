@@ -17,25 +17,18 @@ include __DIR__."/../__schema.php";
 $schema = new Schema($queryType, $mutationType);
 
 // build AST
-$query = "
+$query = '
     {
-        book(id:2){
-            ... GetName
+        listOfBooks(ids:[8]){
+            name
         }
     }
-    
-    fragment GetName on Book{
-        name
-        ... on Book{
-            id
-        }
-    }
-";
+';
 $parser = new Parser();
 $document = $parser->parse($query);
 
 $executor = new Executor();
-$result = $executor->execute($schema, $document);
+$result = $executor->execute($schema, $document, null, null, ["query" => "J. K. Rowling"]);
 
 echo json_encode($result);
 //var_dump($result);

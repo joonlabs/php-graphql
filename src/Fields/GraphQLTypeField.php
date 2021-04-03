@@ -19,14 +19,14 @@ class GraphQLTypeField {
      * @param array $args Arguments of the field
      * @param \Closure $resolve The resolve function of the field, by defaukt returns the parentDataObject[$id]
      */
-    public function __construct(string $id, GraphQLType $type, string $description="", \Closure $resolve=null, array $args=[])
+    public function __construct(string $id, GraphQLType $type, string $description="", \Closure $resolve=null, array $args=[], $defaultValue=null)
     {
         $this->id = $id;
         $this->type = $type;
         $this->description = $description;
         $this->args = $args;
         $this->resolve = $resolve;
-        $this->defaultValue = null;
+        $this->defaultValue = $defaultValue ?? null;
     }
 
     /**
@@ -43,6 +43,15 @@ class GraphQLTypeField {
     public function getDefaultValue()
     {
         return $this->defaultValue;
+    }
+
+    /**
+     * @param mixed|null $defaultValue
+     */
+    public function setDefaultValue($defaultValue): GraphQLTypeField
+    {
+        $this->defaultValue = $defaultValue;
+        return $this;
     }
 
     /**

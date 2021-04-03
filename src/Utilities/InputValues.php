@@ -86,7 +86,7 @@ abstract class InputValues{
             // to the original error.
             
             // check for other scalar types?? (see: https://github.com/graphql/graphql-js/blob/5ed55b89d526c637eeb9c440715367eec8a2adec/src/utilities/coerceInputValue.js#L149)
-            $parseResult = $type->parseResult($inputValue);
+            $parseResult = $type->parseValue($inputValue);
             
             return $parseResult;
         }

@@ -6,7 +6,7 @@ use GraphQL\Errors\GraphQLError;
 
 class GraphQLFloat extends GraphQLScalarType
 {
-    protected $type = "GraphQLFloat";
+    protected $type = "Float";
     protected $description = "Default GraphQL Float Type";
 
     public function serialize($outputValue){
@@ -27,6 +27,15 @@ class GraphQLFloat extends GraphQLScalarType
         }
 
         return floatval($valueNode["value"]);
+    }
+
+    public function parseValue($value){
+        if(!is_float($value) and $value!==null){
+            throw new GraphQLError(
+                "Value \"{$value}\" is not of type \"{$this->getName()}\"."
+            );
+        }
+        return $value;
     }
 }
 

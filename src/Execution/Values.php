@@ -3,6 +3,7 @@ namespace GraphQL\Execution;
 
 use GraphQL\Directives\GraphQLDirective;
 use GraphQL\Errors\GraphQLError;
+use GraphQL\Internals\UndefinedValue;
 use GraphQL\Schemas\Schema;
 use GraphQL\Utilities\Ast;
 use GraphQL\Utilities\InputValues;
@@ -30,7 +31,7 @@ abstract class Values{
 
             // check if type is an inputType
             if(!$varType->isInputType()){
-                $varTypeStr = $varType->getName(); // TODO: check real type name (see. https://github.com/graphql/graphql-js/blob/5ed55b89d526c637eeb9c440715367eec8a2adec/src/execution/values.js#L86)
+                $varTypeStr = $varType->getName();
                 throw new GraphQLError(
                     "Variable \"$varName\" expected value of type \"$varTypeStr\" which cannot be used as an input type."
                 );
@@ -40,9 +41,9 @@ abstract class Values{
             // check if variable exists in inputs or has a default value
             if(!array_key_exists($varName, $inputs)){
                 if($varDefNode["defaultValue"]!==null){
-                    $coercedValues[$varName] = Ast::valueFromAst($varDefNode["defaultValue"], $varType); //TODO: check: why not add $inputs as 3rd param!?
+                    $coercedValues[$varName] = Ast::valueFromAst($varDefNode["defaultValue"], $varType);
                 }else if($varType->isNonNullType()){
-                    $varTypeStr = $varType->getName(); // TODO: check real type name (see. https://github.com/graphql/graphql-js/blob/5ed55b89d526c637eeb9c440715367eec8a2adec/src/execution/values.js#L100)
+                    $varTypeStr = $varType->getName();
                     throw new GraphQLError(
                         "Variable \"$varName\" of required type \"$varTypeStr\" was not provided."
                     );
@@ -53,7 +54,7 @@ abstract class Values{
             // check if value is null but must not be so
             $value = $inputs[$varName] ?? null;
             if($value === null and $varType->isNonNullType()){
-                $varTypeStr = $varType->getName(); // TODO: check real type name (see. https://github.com/graphql/graphql-js/blob/5ed55b89d526c637eeb9c440715367eec8a2adec/src/execution/values.js#L113)
+                $varTypeStr = $varType->getName();
                 throw new GraphQLError(
                     "Variable \"$varName\" of non-null type \"$varTypeStr\" must not be null."
                 );
@@ -65,7 +66,6 @@ abstract class Values{
                 $varType
             );
         }
-
         return $coercedValues;
     }
 
@@ -132,9 +132,9 @@ abstract class Values{
             }
 
             $coercedValue = Ast::valueFromAst($valueNode, $argType, $variableValues);
-            if($coercedValue === null){
+            if($coercedValue instanceof UndefinedValue){
                 throw new GraphQLError(
-                    "Argument \"{$name}\" has invalid value {$valueNode["value"]}."
+                    "Argument \"{$name}\" of type \"{$argType->getName()}\" has invalid value. Maybe missing non nullable field?"
                 );
             }
             $coercedValues[$name] = $coercedValue;

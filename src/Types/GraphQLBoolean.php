@@ -6,7 +6,7 @@ use GraphQL\Errors\GraphQLError;
 
 class GraphQLBoolean extends GraphQLScalarType
 {
-    protected $type = "GraphQLBoolean";
+    protected $type = "Boolean";
     protected $description = "Default GraphQL Boolean Type";
 
     public function serialize($outputValue){
@@ -27,6 +27,15 @@ class GraphQLBoolean extends GraphQLScalarType
         }
 
         return $valueNode["value"];
+    }
+
+    public function parseValue($value){
+        if(!is_bool($value) and $value!==null){
+            throw new GraphQLError(
+                "Value \"{$value}\" is not of type \"{$this->getName()}\"."
+            );
+        }
+        return $value;
     }
 }
 

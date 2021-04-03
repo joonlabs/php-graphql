@@ -9,7 +9,7 @@ abstract class LocatedError{
     {
         return new GraphQLError(
             $originalError->getMessage(),
-            $fieldNodes[0]["loc"],
+            $fieldNodes[0],
             $path
         );
     }

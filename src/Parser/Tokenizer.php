@@ -38,14 +38,14 @@ class Tokenizer
 
         // --------------------------------------------
         // Types
-        ['/^query(?![_A-Za-z])/', "QUERY"],
-        ['/^mutation(?![_A-Za-z])/', "MUTATION"],
-        ['/^subscription(?![_A-Za-z])/', "SUBSCRIPTION"],
+        ['/^query(?![_A-Za-z:\)])/', "QUERY"],
+        ['/^mutation(?![_A-Za-z:\)])/', "MUTATION"],
+        ['/^subscription(?![_A-Za-z:\)])/', "SUBSCRIPTION"],
 
         // --------------------------------------------
         // Keywords
-        ['/^fragment(?![_A-Za-z])/', "FRAGMENT"],
-        ['/^on(?![_A-Za-z])/', "ON"],
+        ['/^fragment(?![_A-Za-z:\)])/', "FRAGMENT"],
+        ['/^on(?![_A-Za-z:\)])/', "ON"],
 
         // --------------------------------------------
         // String
@@ -61,11 +61,11 @@ class Tokenizer
 
         // --------------------------------------------
         // Boolean
-        ['/^(true|false)(?![_A-Za-z])/', "BOOLEAN"],
+        ['/^(true|false)(?![_A-Za-z:\)])/', "BOOLEAN"],
 
         // --------------------------------------------
         // Null
-        ['/^(null)(?![_A-Za-z])/', "NULL"],
+        ['/^(null)(?![_A-Za-z:\)])/', "NULL"],
 
         // --------------------------------------------
         // Names

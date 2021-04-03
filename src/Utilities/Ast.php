@@ -3,6 +3,7 @@
 namespace GraphQL\Utilities;
 
 use GraphQL\Errors\GraphQLError;
+use GraphQL\Internals\UndefinedValue;
 use GraphQL\Schemas\Schema;
 use GraphQL\Types\GraphQLList;
 use GraphQL\Types\GraphQLNonNull;
@@ -35,7 +36,7 @@ abstract class Ast
         if (!$valueNode) {
             // When there is no node, then there is also no value.
             // Importantly, this is different from returning the value null.
-            return;
+            return new UndefinedValue();
         }
 
         // check for variable, holding the value
@@ -43,13 +44,13 @@ abstract class Ast
             $variableName = $valueNode["name"]["value"];
             if ($variables === null || !array_key_exists($variableName, $variables)) {
                 // Invalid -> return no value
-                return;
+                return new UndefinedValue();
             }
 
             $variableValue = $variables[$variableName];
             if ($variableValue === null and $type->isNonNullType()) {
                 // Invalid -> return no value
-                return;
+                return new UndefinedValue();
             }
 
             // Note: This does no further checking that this variable is correct.
@@ -62,7 +63,7 @@ abstract class Ast
         if ($type->isNonNullType()) {
             if ($valueNode["kind"] === "NullValue") {
                 // Invalid -> return no value
-                return;
+                return new UndefinedValue();
             }
             return self::valueFromAst($valueNode, $type->getInnerType(), $variables);
         }
@@ -84,14 +85,14 @@ abstract class Ast
                         // null or if the item type is non-null, it considered invalid.
                         if ($type->isNonNullType()) {
                             // Invalid -> return no value
-                            return;
+                            return new UndefinedValue();
                         }
                         $coercedValues[] = null;
                     } else {
                         $itemValue = self::valueFromAst($itemNode, $itemType, $variables);
-                        if ($itemValue === null) {
+                        if ($itemValue instanceof UndefinedValue) {
                             // Invalid -> return no value
-                            return;
+                            return new UndefinedValue();
                         }
                         $coercedValues[] = $itemValue;
                     }
@@ -99,38 +100,38 @@ abstract class Ast
                 return $coercedValues;
             }
             $coercedValues = self::valueFromAst($valueNode, $itemType, $variables);
-            if ($coercedValues === null) {
+            if ($coercedValues instanceof UndefinedValue) {
                 // Invalid -> return no value
-                return;
+                return new UndefinedValue();
             }
             return [$coercedValues];
         }
 
         // check if type is object type
-        if ($type->isObjectType()) {
-            if ($valueNode["kind"] === "ObjectValue") {
+        if ($type->isInputObjectType()) { //TODO: isInputObjectType()
+            if ($valueNode["kind"] !== "ObjectValue") {
                 // Invalid -> return no value
-                return;
+                return new UndefinedValue();
             }
             $coercedObject = [];
             $fieldNodes = KeyMap::map($valueNode["fields"], function ($field) {
                 return $field["name"]["value"];
             });
             foreach ($type->getFields() as $field) {
-                $fieldNode = $fieldNodes[$field->getName()];
-                if (!$fieldNode || self::isMissingVariable($fieldNode["value"], $variables)) {
+                $fieldNode = $fieldNodes[$field->getName()] ?? null;
+                if ($fieldNode===null || self::isMissingVariable($fieldNode["value"], $variables)) {
                     if ($field->getDefaultValue() !== null) {
                         $coercedObject[$field->getName()] = $field->getDefaultValue();
                     } else if ($field->getType()->isNonNullType()) {
                         // Invalid -> return no value
-                        return;
+                        return new UndefinedValue();
                     }
                     continue;
                 }
                 $fieldValue = self::valueFromAst($fieldNode["value"], $field->getType(), $variables);
-                if ($fieldValue === null) {
+                if ($fieldValue instanceof UndefinedValue) {
                     // Invalid -> return no value
-                    return;
+                    return new UndefinedValue();
                 }
                 $coercedObject[$field->getName()] = $fieldValue;
             }
@@ -144,12 +145,12 @@ abstract class Ast
                 $result = $type->parseLiteral($valueNode, $variables);
             } catch (GraphQLError $error) {
                 // Invalid -> return no value
-                return;
+                return new UndefinedValue();
             }
 
             if ($result === null) {
                 // Invalid -> return no value
-                return;
+                return new UndefinedValue();
             }
 
             return $result;

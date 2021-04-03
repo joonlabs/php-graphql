@@ -9,7 +9,7 @@ use GraphQL\Variables\GraphQLVariableHolder;
 
 class GraphQLList extends GraphQLType
 {
-    protected $type = "GraphQLList";
+    protected $type = "List";
     protected $description = "Default GraphQL Wrapper Type for Lists";
 
     private $innerType;

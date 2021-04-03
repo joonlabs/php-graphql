@@ -4,10 +4,23 @@ use GraphQL\Types\GraphQLInt;
 use GraphQL\Types\GraphQLString;
 use GraphQL\Types\GraphQLNonNull;
 use GraphQL\Types\GraphQLList;
+use GraphQL\Types\GraphQLUnion;
+use GraphQL\Types\GraphQLInputObjectType;
+use GraphQL\Types\GraphQLInterface;
 use GraphQL\Fields\GraphQLTypeField;
 use \GraphQL\Arguments\GraphQLFieldArgument;
 
 require __DIR__."/__data.php";
+
+$withNameInterface = new GraphQLInterface("WithName", "All Types with Name", function(){
+    return [
+        new GraphQLTypeField(
+            "name",
+            new GraphQLString(),
+            "Name of the Entry"
+        ),
+    ];
+});
 
 // build schema
 $bookType = new GraphQLObjectType("Book", "The Book Type", function() use(&$authorType, &$bookCategoryType, &$authors, &$bookType, &$books) {
@@ -30,7 +43,7 @@ $bookType = new GraphQLObjectType("Book", "The Book Type", function() use(&$auth
         ),
         new GraphQLTypeField(
             "authorId",
-            new GraphQLString(),
+            new GraphQLInt(),
             "Author Id of the Book"
         ),
         new GraphQLTypeField(
@@ -53,6 +66,7 @@ $bookType = new GraphQLObjectType("Book", "The Book Type", function() use(&$auth
         )
     ];
 });
+$bookType->setInterfaces([&$withNameInterface]);
 
 $authorType = new GraphQLObjectType("Author", "The Author Type", function() use(&$bookType, &$books){
     return[
@@ -63,7 +77,7 @@ $authorType = new GraphQLObjectType("Author", "The Author Type", function() use(
         ),
         new GraphQLTypeField(
             "name",
-            new GraphQLString(),
+            new GraphQLNonNull(new GraphQLString()),
             "Name of the Book"
         ),
         new GraphQLTypeField(
@@ -78,8 +92,30 @@ $authorType = new GraphQLObjectType("Author", "The Author Type", function() use(
         )
     ];
 });
+$authorType->setInterfaces([&$withNameInterface]);
 
-$queryType = new GraphQLObjectType("Query", "Root Query", function() use(&$books, &$authors, &$bookType, &$authorType) {
+$searchResultType = new GraphQLUnion([&$bookType, &$authorType]);
+
+$bookInputType = new GraphQLInputObjectType(
+    "BookInput",
+    "This is the book input type",
+    function(){
+        return [
+            new GraphQLTypeField(
+                "id",
+                new GraphQLNonNull(new GraphQLInt()),
+                "Id of the book"
+            ),
+            new GraphQLTypeField(
+                "name",
+                new GraphQLString(),
+                "Name of the book"
+            )
+        ];
+    }
+);
+
+$queryType = new GraphQLObjectType("Query", "Root Query", function() use(&$books, &$authors, &$bookType, &$authorType, &$withNameInterface, &$bookInputType) {
     return [
         new GraphQLTypeField(
             "book",
@@ -123,17 +159,42 @@ $queryType = new GraphQLObjectType("Query", "Root Query", function() use(&$books
             }
         ),
         new GraphQLTypeField(
+            "search",
+            new GraphQLList($withNameInterface),
+            "search for book or author",
+            function($_, $args) use ($books, $authors){
+                $allResults = [];
+                $s = $args["query"];
+                // search for books
+                $potentialItems = array_filter($books, function($i) use($s){return strpos($i["name"], $s)!==false;});
+                foreach($potentialItems as $potentialItem){
+                    $allResults[] = $potentialItem;
+                }
+                // search for authors
+                $potentialItems = array_filter($authors, function($i) use($s){return strpos($i["name"], $s)!==false;});
+                foreach($potentialItems as $potentialItem){
+                    $allResults[] = $potentialItem;
+                }
+
+                return $allResults;
+            },
+            [
+                new GraphQLFieldArgument("query", new GraphQLNonNull(new GraphQLString()))
+            ]
+        ),
+        new GraphQLTypeField(
             "authorByBook",
             $authorType,
             "a specific author by book",
             function ($_, $args) use ($books, $authors) {
                 $bookIndex = array_search($args["book"]["id"], array_column($books, 'id'));
+                if($bookIndex===false) return null;
                 $book = $books[$bookIndex];
                 $authorIndex = array_search($book["authorId"], array_column($authors, 'id'));
                 return $authors[$authorIndex];
             },
             [
-                new GraphQLFieldArgument("book", new GraphQLNonNull($bookType))
+                new GraphQLFieldArgument("book", new GraphQLNonNull($bookInputType))
             ]
         ),
         new GraphQLTypeField(
@@ -150,7 +211,7 @@ $queryType = new GraphQLObjectType("Query", "Root Query", function() use(&$books
                 return $list;
             },
             [
-                new GraphQLFieldArgument("ids", new GraphQLList(new GraphQLInt()))
+                new GraphQLFieldArgument("ids", new GraphQLNonNull(new GraphQLList(new GraphQLInt())))
             ]
         )
     ];

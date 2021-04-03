@@ -7,19 +7,19 @@ use Throwable;
 class GraphQLError extends \Exception
 {
     protected $code;
-    protected $locations;
+    protected $node;
     protected $path;
 
     /**
      * GraphQLError constructor.
      * @param string $message
-     * @param null $location
+     * @param null $node
      * @param null $path
      */
-    public function __construct($message = "", $location=null, $path=null)
+    public function __construct($message = "", $node=null, $path=null)
     {
         parent::__construct($message);
-        $this->locations = [$location];
+        $this->node = $node;
         $this->path = array_filter(
             array_reverse($path ?? []),
             function($pathItem){
@@ -34,7 +34,7 @@ class GraphQLError extends \Exception
      * @return null
      */
     public function getLocations(){
-        return $this->locations;
+        return $this->node["loc"] ?? null;
     }
 
     /**

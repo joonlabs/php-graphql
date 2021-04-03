@@ -122,8 +122,8 @@ class Executor
         if (!$typeConditionNode) {
             return true;
         }
+        
         $conditionalType = Ast::typeFromAst($executionContext->getSchema(), $typeConditionNode);
-        // TODO: check if object are really equal!? maybe a->getName() === $b->getName()???
         if ($conditionalType === $type) {
             return true;
         }
@@ -166,6 +166,7 @@ class Executor
         return array_reduce(array_keys($fields), function (&$results, $responseName) use ($executionContext, $parentType, $sourceValue, $path, $fields) {
             $fieldNodes = $fields[$responseName];
             $fieldPath = [$path, $responseName, $parentType->getName()];
+
             $result = $this->resolveField(
                 $executionContext,
                 $parentType,
@@ -173,6 +174,7 @@ class Executor
                 $fieldNodes,
                 $fieldPath
             );
+
             if($result === null){
                 return $results;
             }
@@ -219,7 +221,6 @@ class Executor
                 $result
             );
         } catch (GraphQLError $error) {
-            // TODO (see: https://github.com/graphql/graphql-js/blob/5ed55b89d526c637eeb9c440715367eec8a2adec/src/execution/execute.js#L654)
             $error = LocatedError::from($error, $fieldNodes, $path);
             return $this->handleFieldError($error, $returnType, $executionContext);
         }
@@ -333,9 +334,8 @@ class Executor
                     $item
                 );
             } catch (GraphQLError $error) {
-                // TODO (see: https://github.com/graphql/graphql-js/blob/5ed55b89d526c637eeb9c440715367eec8a2adec/src/execution/execute.js#L877)
-                echo "THIS IS A FIELD ERROR";
-                exit();
+                $error = LocatedError::from($error, $fieldNodes, $path);
+                return $this->handleFieldError($error, $returnType, $executionContext);
             }
         }, $result, array_keys($result));
         return $completedResults;
@@ -555,8 +555,23 @@ class Executor
     private function getDefaultFieldResolver(): \Closure
     {
         return function ($source, $args, $contextValue, $info) {
-            return $source[$info["fieldName"]];
-            // TODO: implement full default resolver (see: https://github.com/graphql/graphql-js/blob/5ed55b89d526c637eeb9c440715367eec8a2adec/src/execution/execute.js#L1161)
+            // if $source is an iterable (e.g. array), get value by key (field name)
+            if(is_iterable($source)){
+                return $source[$info["fieldName"]] ?? null;
+            }
+            // if $source is an object, get value by either calling the getter or trying to acces property directly
+            if(is_object($source)){
+                $propertyName = $info["fieldName"];
+                $methodName = "get".ucwords($info["fieldName"]);
+                if(method_exists($source, $methodName)){
+                    return $source->{$methodName}();
+                }
+                if(property_exists($source, $propertyName)){
+                    return $source->{$propertyName};
+                }
+                return null;
+            }
+            return null;
         };
     }
 
@@ -573,11 +588,26 @@ class Executor
     private function getDefaultTypeResolver(): \Closure
     {
         return function ($value, $contextValue, $info, $abstractType) {
-            if (is_iterable($value) and is_string($value["__typename"])) {
+            if (is_iterable($value) and is_string($value["__typename"] ?? null)) {
                 return $value["__typename"];
             }
 
             $possibleTypes = $info["schema"]->getPossibleTypes($abstractType);
+
+            // sort possibleTypes by the amount of fields they provide (ascending)
+            // this helps the to prevent fetching the wrong type, because a subset of the fields
+            // match with the required fields.
+            usort($possibleTypes, function($a, $b){
+                 $countFieldsA = count($a->getFields());
+                 $countFieldsB = count($b->getFields());
+                if ($countFieldsA === $countFieldsB) {
+                    return 0;
+                }else if ($countFieldsA > $countFieldsB){
+                    return 1;
+                }else{
+                    return -1;
+                }
+            });
 
             for ($i = 0; $i < count($possibleTypes); $i++) {
                 $type = $possibleTypes[$i];

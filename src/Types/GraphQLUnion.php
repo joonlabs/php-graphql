@@ -4,14 +4,16 @@ namespace GraphQL\Types;
 
 class GraphQLUnion extends GraphQLAbstractType
 {
-    protected $type = "GraphQLUnion";
+    protected $type = "Union";
     protected $description = "Default GraphQL Union Type";
 
     private $types;
+    private $resolveTypeFn;
 
-    public function __construct(array $types)
+    public function __construct(array $types, ?\Closure $resolveTypeFn=null)
     {
         $this->types = $types;
+        $this->resolveTypeFn = $resolveTypeFn;
     }
 
     /**
@@ -22,9 +24,12 @@ class GraphQLUnion extends GraphQLAbstractType
         return $this->types;
     }
 
-    public function getResolveType()
+    /**
+     * @return \Closure|null
+     */
+    public function getResolveType(): ?\Closure
     {
-        return null;
+        return $this->resolveTypeFn;
     }
 }
 

@@ -6,7 +6,7 @@ use GraphQL\Errors\GraphQLError;
 
 class GraphQLID extends GraphQLScalarType
 {
-    protected $type = "GraphQLID";
+    protected $type = "ID";
     protected $description = "Default GraphQL ID Type";
 
     public function serialize($outputValue){
