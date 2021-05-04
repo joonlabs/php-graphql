@@ -96,7 +96,7 @@ abstract class Values{
             // if no argument specified in AST, check if default argument exists and is valid
             if(!$argumentNode){
                 if($argDef->getDefaultValue() !== null){
-                    $coercedValues[$name] == $argDef->getDefaultValue();
+                    $coercedValues[$name] = $argDef->getDefaultValue();
                 }else if($argType->isNonNullType()){
                     throw new GraphQLError(
                         "Argument \"{$name}\" of required type \"{$argType->getName()}\" was not provided.'"

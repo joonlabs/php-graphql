@@ -8,7 +8,7 @@ use GraphQL\Types\GraphQLUnion;
 use GraphQL\Types\GraphQLInputObjectType;
 use GraphQL\Types\GraphQLInterface;
 use GraphQL\Fields\GraphQLTypeField;
-use \GraphQL\Arguments\GraphQLFieldArgument;
+use GraphQL\Arguments\GraphQLFieldArgument;
 
 require __DIR__."/__data.php";
 
@@ -114,6 +114,7 @@ $bookInputType = new GraphQLInputObjectType(
         ];
     }
 );
+
 
 $queryType = new GraphQLObjectType("Query", "Root Query", function() use(&$books, &$authors, &$bookType, &$authorType, &$withNameInterface, &$bookInputType) {
     return [

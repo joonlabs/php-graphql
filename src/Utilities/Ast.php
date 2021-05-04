@@ -108,7 +108,7 @@ abstract class Ast
         }
 
         // check if type is object type
-        if ($type->isInputObjectType()) { //TODO: isInputObjectType()
+        if ($type->isInputObjectType()) {
             if ($valueNode["kind"] !== "ObjectValue") {
                 // Invalid -> return no value
                 return new UndefinedValue();

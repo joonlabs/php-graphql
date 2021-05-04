@@ -11,15 +11,19 @@ class GraphQLTypeField {
     private $description;
     private $resolve;
     private $defaultValue;
+    private $deprecationReason;
 
     /**
      * GraphQLTypeField constructor.
      * @param string $id Id of the field
+     * @param GraphQLType $type
      * @param string $description Description of the field
+     * @param \Closure|null $resolve The resolve function of the field, by defaukt returns the parentDataObject[$id]
      * @param array $args Arguments of the field
-     * @param \Closure $resolve The resolve function of the field, by defaukt returns the parentDataObject[$id]
+     * @param null $defaultValue Default value of field
+     * @param string|null $deprecationReason Reason why field is deprecated
      */
-    public function __construct(string $id, GraphQLType $type, string $description="", \Closure $resolve=null, array $args=[], $defaultValue=null)
+    public function __construct(string $id, GraphQLType $type, string $description="", \Closure $resolve=null, array $args=[], $defaultValue=null, ?string $deprecationReason=null)
     {
         $this->id = $id;
         $this->type = $type;
@@ -27,6 +31,8 @@ class GraphQLTypeField {
         $this->args = $args;
         $this->resolve = $resolve;
         $this->defaultValue = $defaultValue ?? null;
+        $this->deprecationReason = $deprecationReason ?? null;
+
     }
 
     /**
@@ -43,6 +49,22 @@ class GraphQLTypeField {
     public function getDefaultValue()
     {
         return $this->defaultValue;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDeprecationReason(): ?string
+    {
+        return $this->deprecationReason;
     }
 
     /**

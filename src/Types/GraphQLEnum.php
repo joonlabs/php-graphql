@@ -12,8 +12,10 @@ class GraphQLEnum extends GraphQLType
 
     private $values;
 
-    public function __construct(?array $values)
+    public function __construct(string $type, string $description, ?array $values)
     {
+        $this->type = $type;
+        $this->description = $description;
         $this->values = $values ?? [];
     }
 
@@ -59,6 +61,14 @@ class GraphQLEnum extends GraphQLType
         }
 
         return $value;
+    }
+
+    /**
+     * @return array
+     */
+    public function getValues(): array
+    {
+        return $this->values;
     }
 }
 

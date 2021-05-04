@@ -122,9 +122,11 @@ class Executor
         if (!$typeConditionNode) {
             return true;
         }
-        
         $conditionalType = Ast::typeFromAst($executionContext->getSchema(), $typeConditionNode);
-        if ($conditionalType === $type) {
+        //var_dump($conditionalType->getName(), $type->getName(), $conditionalType===$type);
+        //exit();
+        // TODO: check if can be replaces with "$conditionalType===$type" : problem -> __Type is not original reference
+        if ($conditionalType->getName() === $type->getName()) {
             return true;
         }
         if ($conditionalType->isAbstractType()) {
@@ -188,6 +190,7 @@ class Executor
     {
         $fieldNode = $fieldNodes[0];
         $fieldName = $fieldNode["name"]["value"];
+
 
         $fieldDef = $this->getFieldDef($executionContext->getSchema(), $parentType, $fieldName);
         if (!$fieldDef) {
@@ -461,11 +464,17 @@ class Executor
     private function getFieldDef(Schema $schema, GraphQLObjectType $parentType, string $fieldName)
     {
         if ($fieldName === "__schema" && $schema->getQueryType() === $parentType) {
-            return null; // TODO (see: https://github.com/graphql/graphql-js/blob/5ed55b89d526c637eeb9c440715367eec8a2adec/src/execution/execute.js#L1193):
+            $SchemaMetaFieldDef = null;
+            require __DIR__."/../Introspection/Introspection.php";
+            return $SchemaMetaFieldDef;
         } else if ($fieldName === "__type" && $schema->getQueryType() === $parentType) {
-            return null; // TODO (see: https://github.com/graphql/graphql-js/blob/5ed55b89d526c637eeb9c440715367eec8a2adec/src/execution/execute.js#L1200):
+            $TypeMetaFieldDef = null;
+            require __DIR__."/../Introspection/Introspection.php";
+            return $TypeMetaFieldDef;
         } else if ($fieldName === "__typename" && $schema->getQueryType() === $parentType) {
-            return null; // TODO (see: https://github.com/graphql/graphql-js/blob/5ed55b89d526c637eeb9c440715367eec8a2adec/src/execution/execute.js#L1202):
+            $TypeNameMetaFieldDef = null;
+            require __DIR__."/../Introspection/Introspection.php";
+            return $TypeNameMetaFieldDef;
         }
         return $parentType->getFields()[$fieldName];
     }

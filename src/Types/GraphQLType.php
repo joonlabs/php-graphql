@@ -19,6 +19,14 @@ abstract class GraphQLType
         return $this->type;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
     public function getNamedType(): GraphQLType
     {
         if ($this instanceof GraphQLNonNull or $this instanceof GraphQLList) {

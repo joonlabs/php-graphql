@@ -17,6 +17,9 @@ class GraphQLObjectType extends GraphQLType
 
     public function __construct(string $type, string $description, \Closure $fields, ?array $interfaces = null, ?\Closure $isTypeOfFn = null)
     {
+        $bt = debug_backtrace();
+        $caller = array_shift($bt); // Get first array
+
         $this->type = $type;
         $this->description = $description;
 

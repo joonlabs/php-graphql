@@ -19,13 +19,16 @@ $schema = new Schema($queryType, $mutationType);
 // build AST
 $query = '
     {
-        listOfBooks(ids:[8]){
+        listOfBooks(ids:[1,2,3,8]){
             name
         }
     }
 ';
 $parser = new Parser();
 $document = $parser->parse($query);
+
+var_dump($document);
+exit();
 
 $executor = new Executor();
 $result = $executor->execute($schema, $document, null, null, ["query" => "J. K. Rowling"]);

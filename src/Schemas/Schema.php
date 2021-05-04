@@ -39,6 +39,12 @@ class Schema
             $this->collectReferencedTypes($this->mutationType, $allReferencedTypes);
         }
 
+        //TODO: check for custom directives (see: https://github.com/graphql/graphql-js/blob/5ed55b89d526c637eeb9c440715367eec8a2adec/src/type/schema.js#L190)
+
+        $__Schema = null;
+        require_once __DIR__ .'/../Introspection/Introspection.php';
+        $this->collectReferencedTypes($__Schema, $allReferencedTypes);
+
         // build type map
         foreach ($allReferencedTypes as $namedType) {
             if ($namedType === null) {
@@ -193,6 +199,24 @@ class Schema
         $this->mutationType = $mutationType;
         return $this;
     }
+
+    /**
+     * @return array
+     */
+    public function getTypeMap(): array
+    {
+        return $this->typeMap;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDirectives(): array
+    {
+        return $this->directives;
+    }
+
+
 }
 
 ?>
