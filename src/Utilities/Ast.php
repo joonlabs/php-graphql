@@ -3,6 +3,7 @@
 namespace GraphQL\Utilities;
 
 use GraphQL\Errors\GraphQLError;
+use GraphQL\Errors\ValidationError;
 use GraphQL\Internals\UndefinedValue;
 use GraphQL\Schemas\Schema;
 use GraphQL\Types\GraphQLList;
@@ -99,6 +100,7 @@ abstract class Ast
                 }
                 return $coercedValues;
             }
+            // supports non-list values? (see: https://github.com/graphql/graphql-js/blob/main/src/utilities/valueFromAST.js#L98)
             $coercedValues = self::valueFromAst($valueNode, $itemType, $variables);
             if ($coercedValues instanceof UndefinedValue) {
                 // Invalid -> return no value
@@ -114,9 +116,19 @@ abstract class Ast
                 return new UndefinedValue();
             }
             $coercedObject = [];
-            $fieldNodes = KeyMap::map($valueNode["fields"], function ($field) {
+            $fieldNodes = KeyMap::map($valueNode["fields"] ?? [], function ($field) {
                 return $field["name"]["value"];
             });
+
+            // Implements the rule specified under 5.6.3 (Input Object Field Uniqueness) in the GraphQL-Specs (version: 2018)
+            if(count($valueNode["fields"] ?? []) !== count($fieldNodes)){
+                // before mapping to keys and after mapping to keys there is a different amount of items
+                // which means, there must have been some values provided at least twice
+                throw new ValidationError(
+                    "Input objects must not contain more than one field of the same name."
+                );
+            }
+
             foreach ($type->getFields() as $field) {
                 $fieldNode = $fieldNodes[$field->getName()] ?? null;
                 if ($fieldNode===null || self::isMissingVariable($fieldNode["value"], $variables)) {
@@ -135,6 +147,18 @@ abstract class Ast
                 }
                 $coercedObject[$field->getName()] = $fieldValue;
             }
+
+            // check if there are fields provided that cannot be applied to this input type
+            // implements the rule specified under 5.6.2 (Input Object Field Names) in the GraphQL-Specs (version: 2018)
+            $fieldsInNode = array_keys($fieldNodes);
+            $fieldsInType = array_keys($type->getFields());
+            $sameFields = array_diff($fieldsInNode, $fieldsInType);
+            if(count($sameFields)>0 and count($fieldsInNode)>count($fieldsInType)){
+                throw new ValidationError(
+                    "The following input fields are provided in the input object value but not defined as field in the input object's type: \"".implode($sameFields, "\", \"")."\""
+                );
+            }
+
             return $coercedObject;
         }
 

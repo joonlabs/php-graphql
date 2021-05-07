@@ -134,7 +134,7 @@ abstract class Values{
             $coercedValue = Ast::valueFromAst($valueNode, $argType, $variableValues);
             if($coercedValue instanceof UndefinedValue){
                 throw new GraphQLError(
-                    "Argument \"{$name}\" of type \"{$argType->getName()}\" has invalid value. Maybe missing non nullable field?"
+                    "Argument \"{$name}\" of type \"{$argType->getName()}\" has invalid value. Maybe provided wrong type or forgot non-nullable field in input object?"
                 );
             }
             $coercedValues[$name] = $coercedValue;

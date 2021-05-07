@@ -22,8 +22,6 @@ class Executor
 {
     public function execute(Schema $schema, array $document, $rootValue = null, $contextValue = null, $variableValues = null, $operationName = null, $fieldResolver = null, $typeResolver = null)
     {
-        //TODO: Validate
-
         // build execution context
         $executionContext = $this->buildExecutionContext(
             $schema,

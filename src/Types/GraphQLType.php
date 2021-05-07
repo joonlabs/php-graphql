@@ -115,6 +115,11 @@ abstract class GraphQLType
         return ($this->isScalarType() || $this->isEnumType());
     }
 
+    public function isCompositeType(): bool
+    {
+        return ($this->isObjectType() || $this->isInterfaceType() || $this->isUnionType());
+    }
+
     public function isInputType(): bool
     {
         return ($this->isScalarType() ||

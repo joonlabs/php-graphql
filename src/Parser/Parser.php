@@ -101,6 +101,8 @@ class Parser
         $variableDefinitions = [];
         $directives = [];
 
+        $location = $this->tokenizer->getLocation();
+
         if ($this->lookahead["type"] != "{") {
             $token = $this->eat($this->lookahead["type"]); // eat QUERY / MUTATION / SUBSCRIPTION
             $type = strtolower($token["type"]);
@@ -119,7 +121,7 @@ class Parser
             "variableDefinitions" => $variableDefinitions,
             "directives" => $directives,
             "selectionSet" => $this->SelectionSet(),
-            "loc" => $this->tokenizer->getLocation()
+            "loc" => $location
         ];
     }
 

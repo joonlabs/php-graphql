@@ -94,7 +94,7 @@ $authorType = new GraphQLObjectType("Author", "The Author Type", function() use(
 });
 $authorType->setInterfaces([&$withNameInterface]);
 
-$searchResultType = new GraphQLUnion([&$bookType, &$authorType]);
+$searchResultType = new GraphQLUnion("SearchResultType", "Type being returned by a search query", [&$bookType, &$authorType]);
 
 $bookInputType = new GraphQLInputObjectType(
     "BookInput",
@@ -116,7 +116,7 @@ $bookInputType = new GraphQLInputObjectType(
 );
 
 
-$queryType = new GraphQLObjectType("Query", "Root Query", function() use(&$books, &$authors, &$bookType, &$authorType, &$withNameInterface, &$bookInputType) {
+$queryType = new GraphQLObjectType("Query", "Root Query", function() use(&$books, &$authors, &$bookType, &$authorType, &$withNameInterface, &$bookInputType, &$searchResultType) {
     return [
         new GraphQLTypeField(
             "book",
@@ -161,11 +161,11 @@ $queryType = new GraphQLObjectType("Query", "Root Query", function() use(&$books
         ),
         new GraphQLTypeField(
             "search",
-            new GraphQLList($withNameInterface),
+            new GraphQLList($searchResultType),
             "search for book or author",
             function($_, $args) use ($books, $authors){
                 $allResults = [];
-                $s = $args["query"];
+                $s = $args["query"]["name"] ?? "o";
                 // search for books
                 $potentialItems = array_filter($books, function($i) use($s){return strpos($i["name"], $s)!==false;});
                 foreach($potentialItems as $potentialItem){
@@ -180,7 +180,17 @@ $queryType = new GraphQLObjectType("Query", "Root Query", function() use(&$books
                 return $allResults;
             },
             [
-                new GraphQLFieldArgument("query", new GraphQLNonNull(new GraphQLString()))
+                new GraphQLFieldArgument("query", new GraphQLNonNull(
+                    new GraphQLInputObjectType(
+                        "queryInput",
+                        "BLA",
+                        function(){
+                            return [
+                                new GraphQLTypeField("name", new GraphQLNonNull(new GraphQLString()))
+                            ];
+                        }
+                    )
+                ))
             ]
         ),
         new GraphQLTypeField(
