@@ -21,10 +21,10 @@ class Schema
      * @param GraphQLObjectType $queryType
      * @param GraphQLObjectType $mutationType
      */
-    public function __construct(?GraphQLObjectType $queryType, ?GraphQLObjectType $mutationType, ?array $directives = null)
+    public function __construct(?GraphQLObjectType $queryType, ?GraphQLObjectType $mutationType = null, ?array $directives = null)
     {
         $this->queryType = $queryType;
-        $this->mutationType = $mutationType;
+        $this->mutationType = $mutationType ?? null;
         $this->directives = $directives ?? [];
 
         $allReferencedTypes = [];
@@ -42,7 +42,7 @@ class Schema
         //TODO: check for custom directives (see: https://github.com/graphql/graphql-js/blob/5ed55b89d526c637eeb9c440715367eec8a2adec/src/type/schema.js#L190)
 
         $__Schema = null;
-        require_once __DIR__ .'/../Introspection/Introspection.php';
+        require_once __DIR__ . '/../Introspection/Introspection.php';
         $this->collectReferencedTypes($__Schema, $allReferencedTypes);
 
         // build type map
@@ -62,11 +62,11 @@ class Schema
             $this->typeMap[$typeName] = $namedType;
 
             // generate $this->implementationsMap
-            if($namedType->isInterfaceType()){
-                foreach($namedType->getInterfaces() as $iface){
-                    if($iface->isInterfaceType()){
+            if ($namedType->isInterfaceType()) {
+                foreach ($namedType->getInterfaces() as $iface) {
+                    if ($iface->isInterfaceType()) {
                         $implementations = $this->implementationsMap[$iface->getName()] ?? null;
-                        if($implementations === null){
+                        if ($implementations === null) {
                             $this->implementationsMap[$iface->getName()] = [
                                 "objects" => [],
                                 "interfaces" => []
@@ -75,11 +75,11 @@ class Schema
                         $this->implementationsMap[$iface->getName()]["interfaces"][] = $namedType;
                     }
                 }
-            }else if($namedType->isObjectType()){
-                foreach($namedType->getInterfaces() as $iface){
-                    if($iface->isInterfaceType()){
+            } else if ($namedType->isObjectType()) {
+                foreach ($namedType->getInterfaces() as $iface) {
+                    if ($iface->isInterfaceType()) {
                         $implementations = $this->implementationsMap[$iface->getName()] ?? null;
-                        if($implementations === null){
+                        if ($implementations === null) {
                             $this->implementationsMap[$iface->getName()] = [
                                 "objects" => [],
                                 "interfaces" => []
@@ -143,7 +143,7 @@ class Schema
     public function isSubType(GraphQLAbstractType $abstractType, GraphQLType $maybeSubType)
     {
         $map = $this->subTypeMap[$abstractType->getName()] ?? null;
-        if($map === null) {
+        if ($map === null) {
             $map = [];
             if ($abstractType->isUnionType()) {
                 foreach ($abstractType->getTypes() as $type) {
