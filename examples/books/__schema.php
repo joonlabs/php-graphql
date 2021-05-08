@@ -125,7 +125,7 @@ $queryType = new GraphQLObjectType("Query", "Root Query", function () use (&$boo
         new GraphQLTypeField(
             "search",
             new GraphQLList($searchResultType),
-            "search for book or author",
+            "Search for books and authors",
             function ($_, $args) use ($books, $authors) {
                 $allResults = [];
                 $s = $args["query"];
@@ -154,7 +154,7 @@ $queryType = new GraphQLObjectType("Query", "Root Query", function () use (&$boo
         new GraphQLTypeField(
             "listOfBooks",
             new GraphQLList($bookType),
-            "Returns a list Books based on the given list of ids.",
+            "List of Books based on a given list of ids",
             function ($_, $args) use ($books) {
                 $list = [];
                 foreach ($args["ids"] as $id) {
