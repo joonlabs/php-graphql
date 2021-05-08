@@ -87,7 +87,7 @@ abstract class GraphQLType
 
     public function isObjectType(): bool
     {
-        return $this instanceof GraphQLObjectType;
+        return $this instanceof GraphQLObjectType and !($this instanceof  GraphQLInputObjectType);
     }
 
     public function isStringType(): bool

@@ -271,7 +271,7 @@ $__Type = new GraphQLObjectType(
                         return $args["includeDeprecated"]
                             ? $fields
                             : array_filter($fields, function (GraphQLTypeField $field) {
-                                return $field->getDeprecationReason() !== null;
+                                return $field->getDeprecationReason() === null;
                             });
                     }
                     return null;
@@ -318,10 +318,11 @@ $__Field = new GraphQLObjectType(
                 new GraphQLNonNull(new GraphQLList(new GraphQLNonNull($__InputValue))),
                 "",
                 function(GraphQLTypeField $field, $args){
+                    //var_dump($field->getArguments());
                     return $args["includeDeprecated"]
                         ? $field->getArguments()
                         : array_filter($field->getArguments(), function (GraphQLFieldArgument $arg) {
-                            return $arg->getDeprecationReason() !== null;
+                            return $arg->getDeprecationReason() === null;
                         });
                 },
                 [
@@ -366,7 +367,7 @@ $__InputValue = new GraphQLObjectType(
                 new GraphQLNonNull(new GraphQLString()),
                 "",
                 function($inputValue){
-                    return "NOT_SUPPORTED";
+                    return $inputValue->getName();
                 }
             ),
             new GraphQLTypeField(
@@ -374,7 +375,7 @@ $__InputValue = new GraphQLObjectType(
                 new GraphQLString(),
                 "",
                 function($inputValue){
-                    return "NOT_SUPPORTED";
+                    return $inputValue->getDescription();
                 }
             ),
             new GraphQLTypeField(
@@ -382,7 +383,7 @@ $__InputValue = new GraphQLObjectType(
                 new GraphQLNonNull($__Type),
                 "",
                 function($inputValue){
-                    return new GraphQLFloat();
+                    return $inputValue->getType();
                 }
             ),
             new GraphQLTypeField(
@@ -390,7 +391,7 @@ $__InputValue = new GraphQLObjectType(
                 new GraphQLString(),
                 "",
                 function($inputValue){
-                    return "NOT_SUPPORTED";
+                    return strval($inputValue->getDefaultValue());
                 }
             ),
             new GraphQLTypeField(
@@ -398,7 +399,7 @@ $__InputValue = new GraphQLObjectType(
                 new GraphQLNonNull(new GraphQLBoolean()),
                 "",
                 function($inputValue){
-                    return false;
+                    return $inputValue->getDeprecationReason()!==null;
                 }
             ),
             new GraphQLTypeField(
@@ -406,7 +407,7 @@ $__InputValue = new GraphQLObjectType(
                 new GraphQLString(),
                 "",
                 function($inputValue){
-                    return "NOT_SUPPORTED";
+                    return $inputValue->getDeprecationReason();
                 }
             )
         ];

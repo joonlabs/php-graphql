@@ -2,20 +2,20 @@
 
 namespace GraphQL\Servers;
 
+use GraphQL\Execution\Executor;
+use GraphQL\Parser\Parser;
 use GraphQL\Schemas\Schema;
 use GraphQL\Errors\GraphQLError;
-use GraphQL\Fields\GraphQLQuery;
-use GraphQL\Fields\GraphQLMutation;
-use GraphQL\Resolvers\ErrorResolver;
-use GraphQL\Parsers\GraphQLQueryParser;
 use GraphQL\Errors\InternalServerError;
-use GraphQL\Variables\GraphQLVariableHolder;
-use GraphQL\AbstractSyntaxTreeTranslators\AbstractSyntaxTreeTranslator;
+use GraphQL\Utilities\Errors;
+use GraphQL\Validation\Validator;
 
 class Server
 {
     private $schema;
     private $parser;
+    private $validator;
+    private $executor;
     private $displayInternalServerErrorReason = false;
 
     /**
@@ -27,8 +27,10 @@ class Server
         // store schema
         $this->schema = $schema;
 
-        // create parser
-        $this->parser = new GraphQLQueryParser();
+        // create parser, validator and executor
+        $this->parser = new Parser();
+        $this->validator = new Validator();
+        $this->executor = new Executor();
     }
 
     /**
@@ -51,51 +53,58 @@ class Server
         $query = $this->getQuery();
 
         if ($query === null) {
-            try {
-                throw new InternalServerError("No query could be found. Please ensure, that your query is sent via raw POST data, json encoded and accessible via the \"query\" key.");
-            } catch (GraphQLError $graphQLError) {
-                echo json_encode(
-                    ["errors" => [ErrorResolver::resolve($graphQLError)]]
-                );
-            }
+            // no query found -> error
+            $this->returnData([
+                "errors" => Errors::prettyPrintErrors(
+                    [new InternalServerError("No query could be found. Please ensure, that your query is sent via raw POST data, json encoded and accessible via the \"query\" key.")]
+                )
+            ]);
         } else {
+            // try to parse the query
             try {
-                // create abstract syntax tree
-                $abstractSyntaxTree = $this->parser->parse($query);
-                // translate abstract syntrax tree into an operation
-                $operation = AbstractSyntaxTreeTranslator::translate($abstractSyntaxTree);
+                // parse the query
+                $document = $this->parser->parse($query);
 
-                if ($operation instanceof GraphQLQuery) {
-                    $result = $this->schema->propagateQuery($operation, $variables);
-                    echo json_encode(
-                        ["data" => $result]
-                    );
-                } else if ($operation instanceof GraphQLMutation) {
-                    $result = $this->schema->propagateMutation($operation, $variables);
-                    echo json_encode(
-                        ["data" => $result]
-                    );
+                // validate the query
+                $this->validator->validate($this->schema, $document);
+
+                // check if query is valid
+                if(!$this->validator->documentIsValid()){
+                    // if invalid -> show errors
+                    $this->returnData([
+                        "errors" => Errors::prettyPrintErrors($this->validator->getErrors())
+                    ]);
+                }else{
+                    // valid -> execute query
+                    $result = $this->executor->execute($this->schema, $document, null, null, $variables);
+                    $this->returnData($result);
                 }
+
             } catch (GraphQLError $graphQLError) {
-                echo json_encode(
-                    ["errors" => [ErrorResolver::resolve($graphQLError)]]
-                );
+                // GraphQLError (while parsing or execution) -> error
+                $this->returnData([
+                    "errors" => Errors::prettyPrintErrors([$graphQLError])
+                ]);
             } catch (\Error $error) {
-                echo json_encode(
-                    ["errors" => [ErrorResolver::resolve(new InternalServerError(
-                        "An unexpected error occurred during execution" .
-                        ($this->displayInternalServerErrorReason ? ": " . $error->getMessage() . ". Trace: " . $error->getTraceAsString() : ".")
-                    ))]]
-                );
+                // 500 error -> error
+                $this->returnData([
+                    "errors" => Errors::prettyPrintErrors(
+                        [new InternalServerError("An unexpected error occurred during execution" . ($this->displayInternalServerErrorReason ? ": " . $error->getMessage() . ". Trace: " . $error->getTraceAsString() : "."))]
+                    )
+                ]);
             } catch (\Exception $exception) {
-                echo json_encode(
-                    ["errors" => [ErrorResolver::resolve(new InternalServerError(
-                        "An unexpected exception occurred during execution." .
-                        ($this->displayInternalServerErrorReason ? "\n" . $exception->getMessage() . "\n" . $exception->getTraceAsString() : "")
-                    ))]]
-                );
+                // Unexpected exception -> error
+                $this->returnData([
+                    "errors" => Errors::prettyPrintErrors(
+                        [new InternalServerError("An unexpected exception occurred during execution." . ($this->displayInternalServerErrorReason ? "\n" . $exception->getMessage() . "\n" . $exception->getTraceAsString() : ""))]
+                    )
+                ]);
             }
         }
+    }
+
+    public function returnData($data){
+        echo json_encode($data);
     }
 
     /**
@@ -120,19 +129,19 @@ class Server
     /**
      * Returns the variables, sent by raw post data.
      *
-     * @return GraphQLVariableHolder
+     * @return array
      */
-    private function getVariables(): GraphQLVariableHolder
+    private function getVariables(): array
     {
         // check if variables is sent as raw http body in request as "application/json" or via post fields as "multipart/form-data"
         $headers = apache_request_headers();
         if (array_key_exists("Content-Type", $headers) and $headers["Content-Type"] === "application/json") {
             // raw json string in http body
             $phpInput = json_decode(file_get_contents("php://input"), true);
-            return new GraphQLVariableHolder($phpInput["variables"] ?? []);
+            return $phpInput["variables"] ?? [];
         }else{
             // query sent via post field
-            return new GraphQLVariableHolder(json_decode($_POST["variables"] ?? "[]", true));
+            return json_decode($_POST["variables"] ?? "[]", true);
         }
 
     }

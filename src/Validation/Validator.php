@@ -6,6 +6,7 @@ use GraphQL\Schemas\Schema;
 use GraphQL\Validation\Rules\AllVariablesUsed;
 use GraphQL\Validation\Rules\AllVariableUsagesAreAllowed;
 use GraphQL\Validation\Rules\AllVariableUsesDefined;
+use GraphQL\Validation\Rules\AnyOperationDefined;
 use GraphQL\Validation\Rules\ArgumentName;
 use GraphQL\Validation\Rules\ArgumentUniqueness;
 use GraphQL\Validation\Rules\DirectivesAreDefined;
@@ -60,7 +61,7 @@ class Validator
      * Returns wether the validation went successfull
      * @return bool
      */
-    public function isValid() : bool
+    public function documentIsValid() : bool
     {
         return count($this->errors)===0;
     }
@@ -81,6 +82,7 @@ class Validator
         // the rules must be returned in the correct (and following) order
         // since some rules may depend on their predecessors
         return [
+            new AnyOperationDefined(),
             new FragmentsMustNotFormCycles(),
             new OperationNameUniqueness(),
             new LoneAnonymousOperation(),

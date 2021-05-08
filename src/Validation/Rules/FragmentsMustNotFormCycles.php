@@ -17,6 +17,7 @@ class FragmentsMustNotFormCycles extends ValidationRule
      */
     public function validate(ValidationContext $validationContext): void
     {
+        //return;
         $document = $validationContext->getDocument();
         $schema = $validationContext->getSchema();
 
@@ -24,19 +25,24 @@ class FragmentsMustNotFormCycles extends ValidationRule
 
         // build $fragmentDefinitionsMap
         $fragmentDefinitionsMap = [];
-        foreach ($fragmentDefinitions as $fragmentDefinition){
+        foreach ($fragmentDefinitions as $fragmentDefinition) {
             $fragmentDefinitionsMap[$fragmentDefinition["name"]["value"]] = $fragmentDefinition;
         }
 
-        foreach ($fragmentDefinitions as $fragmentDefinition){
+        foreach ($fragmentDefinitions as $fragmentDefinition) {
             $visited = [];
             $this->detectCycles($fragmentDefinition, $visited, null, $fragmentDefinitionsMap);
         }
     }
 
-    private function detectCycles(array $fragmentDefinition, array &$visited, ?array $lastFragmentSpread, array $fragmentDefinitionsMap){
+    private function detectCycles(array $fragmentDefinition, array &$visited, ?array $lastFragmentSpread, array $fragmentDefinitionsMap)
+    {
         // check if we've seen this fragment already
-        if(in_array($fragmentDefinition, $visited)){
+        if (in_array($fragmentDefinition, $visited)) {
+            /*foreach($visited as $v){
+                echo $v["name"]["value"].",";
+            }
+            echo "::".$fragmentDefinition["name"]["value"]." --- ";*/
             $this->addError(
                 new ValidationError(
                     "Fragments must not form cycles.",
@@ -51,15 +57,19 @@ class FragmentsMustNotFormCycles extends ValidationRule
         $selectionSet = $fragmentDefinition["selectionSet"];
         $selections = $selectionSet["selections"];
         $i = 0;
-        while(($selections[$i]??null)!==null){
+        while (($selections[$i] ?? null) !== null) {
             $selection = $selections[$i];
 
-            if($selection["kind"]==="FragmentSpread"){
+            if ($selection["kind"] === "FragmentSpread") {
                 $newFragmentDefinition = $fragmentDefinitionsMap[$selection["name"]["value"]] ?? null;
-                $this->detectCycles($newFragmentDefinition, $visited, $selection, $fragmentDefinitionsMap);
+                $visitedCopy = [];
+                foreach ($visited as $v) {
+                    $visitedCopy[] = $v;
+                }
+                $this->detectCycles($newFragmentDefinition, $visitedCopy, $selection, $fragmentDefinitionsMap);
             }
 
-            if($selection["kind"]==="Field"){
+            if ($selection["kind"] === "Field") {
                 $selections = array_merge($selections, $selection["selectionSet"]["selections"] ?? []);
             }
 

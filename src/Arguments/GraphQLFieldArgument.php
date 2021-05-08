@@ -6,6 +6,7 @@ use GraphQL\Types\GraphQLType;
 
 class GraphQLFieldArgument extends GraphQLArgument{
     private $defaultValue;
+    private $description;
     private $deprecationReason;
 
     /**
@@ -16,6 +17,8 @@ class GraphQLFieldArgument extends GraphQLArgument{
      */
     public function __construct(string $id, GraphQLType $type, $defaultValue=null, ?string $deprecationReason=null)
     {
+        // TODO: add description by constructor
+        $this->description = "";
         $this->id = $id;
         $this->type = $type;
         $this->defaultValue = $defaultValue;
@@ -28,6 +31,14 @@ class GraphQLFieldArgument extends GraphQLArgument{
     public function getName(): string
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
     }
 
     /**

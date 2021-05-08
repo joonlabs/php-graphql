@@ -15,6 +15,7 @@ use GraphQL\Types\GraphQLList;
 use GraphQL\Types\GraphQLObjectType;
 use GraphQL\Types\GraphQLType;
 use GraphQL\Utilities\Ast;
+use GraphQL\Utilities\Errors;
 use GraphQL\Utilities\LocatedError;
 use GraphQL\Utilities\OperationRootType;
 
@@ -539,24 +540,10 @@ class Executor
             ];
         } else {
             return [
-                "errors" => $this->prettyPrintErrors($executionContext->getErrors()),
+                "errors" => Errors::prettyPrintErrors($executionContext->getErrors()),
                 "data" => $data
             ];
         }
-    }
-
-    private function prettyPrintErrors(array $errors)
-    {
-        return array_map(function(GraphQLError $error){
-            return [
-                "message" => $error->getMessage(),
-                "locations" => $error->getLocations(),
-                "path" => $error->getPath(),
-                "extensions" => [
-                    "code" => $error->getErrorCode()
-                ]
-            ];
-        }, $errors);
     }
 
     private function getDefaultFieldResolver(): \Closure
