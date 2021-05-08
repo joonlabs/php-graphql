@@ -10,7 +10,7 @@ class GraphQLSkipDirective extends GraphQLDirective {
     public function __construct()
     {
         $this->arguments = [
-            new GraphQLDirectiveArgument("if", new GraphQLBoolean(), false)
+            new GraphQLDirectiveArgument("if", new GraphQLBoolean(), "Determines whether to skip the target field or not", false)
         ];
     }
 }

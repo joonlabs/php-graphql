@@ -5,6 +5,7 @@ namespace GraphQL\Validation\Rules;
 use GraphQL\Errors\GraphQLError;
 use GraphQL\Errors\ValidationError;
 use GraphQL\Types\GraphQLType;
+use GraphQL\Utilities\Suggestions;
 use GraphQL\Validation\DocumentUtils;
 use GraphQL\Validation\ValidationContext;
 
@@ -85,10 +86,10 @@ class FieldSelectionsOnObjectsInterfacesAndUnionTypes_FragmentSpreadTypeExistenc
 
                 // check if TypeCondition of InlineFragment is in Types
                 if (!in_array($typeConditionName, array_keys($typeMap))) {
-                    // TODO: suggest better names?
+                    $suggestions = Suggestions::suggest($typeConditionName, array_keys($typeMap));
                     $this->addError(
                         new ValidationError(
-                            "Unknown type \"$typeConditionName\".",
+                            "Unknown type \"$typeConditionName\".".Suggestions::didYouMean($suggestions),
                             $selection
                         )
                     );
@@ -135,10 +136,10 @@ class FieldSelectionsOnObjectsInterfacesAndUnionTypes_FragmentSpreadTypeExistenc
 
                         // check if TypeCondition of InlineFragment is in Types
                         if (!in_array($typeConditionName, array_keys($typeMap))) {
-                            // TODO: suggest better names?
+                            $suggestions = Suggestions::suggest($typeConditionName, array_keys($typeMap));
                             $this->addError(
                                 new ValidationError(
-                                    "Unknown type \"$typeConditionName\".",
+                                    "Unknown type \"$typeConditionName\".".Suggestions::didYouMean($suggestions),
                                     $fragmentDefinition
                                 )
                             );

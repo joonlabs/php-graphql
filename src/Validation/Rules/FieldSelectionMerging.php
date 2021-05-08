@@ -7,6 +7,7 @@ use GraphQL\Errors\ValidationError;
 use GraphQL\Types\GraphQLObjectType;
 use GraphQL\Types\GraphQLType;
 use GraphQL\Utilities\KeyMap;
+use GraphQL\Utilities\Suggestions;
 use GraphQL\Validation\DocumentUtils;
 use GraphQL\Validation\ValidationContext;
 
@@ -37,7 +38,7 @@ class FieldSelectionMerging extends ValidationRule
     }
 
     /**
-     * Returns wether fields in a selection set can merge or not
+     * Returns whether fields in a selection set can merge or not
      * @param array $selectionSet
      * @param GraphQLType $objectType
      * @param ValidationContext $validationContext
@@ -85,10 +86,10 @@ class FieldSelectionMerging extends ValidationRule
 
                 // check if TypeCondition of InlineFragment is in Types
                 if (!in_array($typeConditionName, array_keys($typeMap))) {
-                    // TODO: suggest better names?
+                    $suggestions = Suggestions::suggest($typeConditionName, array_keys($typeMap));
                     $this->addError(
                         new ValidationError(
-                            "Unknown type \"$typeConditionName\".",
+                            "Unknown type \"$typeConditionName\".".Suggestions::didYouMean($suggestions),
                             $selection
                         )
                     );
@@ -186,7 +187,7 @@ class FieldSelectionMerging extends ValidationRule
     }
 
     /**
-     * Returns, wether fieldA and fieldB share the same response shape
+     * Returns, whether fieldA and fieldB share the same response shape
      * @param array $fieldA
      * @param array $fieldB
      * @param GraphQLObjectType $parentType

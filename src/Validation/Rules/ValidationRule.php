@@ -27,7 +27,7 @@ abstract class ValidationRule
     }
 
     /**
-     * Returns wether the rule was validated or not
+     * Returns whether the rule was validated or not
      * @return bool
      */
     public function violated():bool

@@ -5,6 +5,7 @@ namespace GraphQL\Validation\Rules;
 use GraphQL\Errors\GraphQLError;
 use GraphQL\Errors\ValidationError;
 use GraphQL\Utilities\KeyMap;
+use GraphQL\Utilities\Suggestions;
 use GraphQL\Validation\ValidationContext;
 
 class VariablesAreInputTypes extends ValidationRule
@@ -36,9 +37,10 @@ class VariablesAreInputTypes extends ValidationRule
                 $typeName = $type["name"]["value"];
                 $type = $typeMap[$typeName] ?? null;
                 if($type===null){
+                    $suggestions = Suggestions::suggest($typeName, array_keys($typeMap));
                     $this->addError(
                         new ValidationError(
-                            "Unknown type \"$typeName\".",
+                            "Unknown type \"$typeName\".".Suggestions::didYouMean($suggestions),
                             $definition
                         )
                     );

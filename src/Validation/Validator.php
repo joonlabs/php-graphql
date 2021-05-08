@@ -58,7 +58,7 @@ class Validator
     }
 
     /**
-     * Returns wether the validation went successfull
+     * Returns whether the validation went successfull
      * @return bool
      */
     public function documentIsValid() : bool

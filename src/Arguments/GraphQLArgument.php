@@ -8,23 +8,52 @@ abstract class GraphQLArgument{
     protected $id;
     protected $type;
 
+    public function __construct(string $id, GraphQLType $type, string $description="", $defaultValue=null, ?string $deprecationReason=null)
+    {
+        $this->id = $id;
+        $this->description = $description;
+        $this->type = $type;
+        $this->defaultValue = $defaultValue;
+        $this->deprecationReason = $deprecationReason ?? null;
+    }
+
     /**
-     * Returns the id of the argument.
-     *
      * @return string
      */
-    public function __getId() : string
+    public function getName(): string
     {
         return $this->id;
     }
 
     /**
-     * Returns the type of the argument.
-     *
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    /**
      * @return GraphQLType
      */
-    public function __getType() : GraphQLType
+    public function getType(): GraphQLType
     {
         return $this->type;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDeprecationReason(): ?string
+    {
+        return $this->deprecationReason;
+    }
+
+    /**
+     * @return null
+     */
+    public function getDefaultValue()
+    {
+        return $this->defaultValue;
     }
 }

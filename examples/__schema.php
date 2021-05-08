@@ -240,7 +240,7 @@ $mutationType = new GraphQLObjectType("Mutation", "Root Mutation", function() us
                 }
                 return $books;
             }, [
-                new GraphQLFieldArgument("amount", new GraphQLNonNull(new GraphQLInt()), 200)
+                new GraphQLFieldArgument("amount", new GraphQLNonNull(new GraphQLInt()), "", 200)
             ]
         )
     ];

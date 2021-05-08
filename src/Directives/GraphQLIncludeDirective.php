@@ -10,7 +10,7 @@ class GraphQLIncludeDirective extends GraphQLDirective {
     public function __construct()
     {
         $this->arguments = [
-            new GraphQLDirectiveArgument("if", new GraphQLBoolean(), true)
+            new GraphQLDirectiveArgument("if", new GraphQLBoolean(), "Determines whether to include the target field or not",true)
         ];
     }
 }

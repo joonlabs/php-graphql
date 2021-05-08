@@ -5,6 +5,7 @@ namespace GraphQL\Validation\Rules;
 use GraphQL\Errors\GraphQLError;
 use GraphQL\Errors\ValidationError;
 use GraphQL\Types\GraphQLType;
+use GraphQL\Utilities\Suggestions;
 use GraphQL\Validation\DocumentUtils;
 use GraphQL\Validation\ValidationContext;
 
@@ -31,9 +32,10 @@ class FragmentsOnCompositeTypes extends ValidationRule
 
             // check if type exists
             if (!array_key_exists($typeCondition, $typeMap)) {
+                $suggestions = Suggestions::suggest($typeCondition, array_keys($typeMap));
                 $this->addError(
                     new ValidationError(
-                        "Unknown type \"$typeCondition\".",
+                        "Unknown type \"$typeCondition\".".Suggestions::didYouMean($suggestions),
                         $fragmentDefinition
                     )
                 );

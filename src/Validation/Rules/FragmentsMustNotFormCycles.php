@@ -39,10 +39,6 @@ class FragmentsMustNotFormCycles extends ValidationRule
     {
         // check if we've seen this fragment already
         if (in_array($fragmentDefinition, $visited)) {
-            /*foreach($visited as $v){
-                echo $v["name"]["value"].",";
-            }
-            echo "::".$fragmentDefinition["name"]["value"]." --- ";*/
             $this->addError(
                 new ValidationError(
                     "Fragments must not form cycles.",

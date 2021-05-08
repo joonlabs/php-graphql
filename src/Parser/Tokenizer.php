@@ -80,7 +80,7 @@ class Tokenizer
     }
 
     /**
-     * Returns, wether there are more potential tokens available to tokenize.
+     * Returns, whether there are more potential tokens available to tokenize.
      *
      * @return bool
      */
@@ -136,7 +136,7 @@ class Tokenizer
     }
 
     /**
-     * Returns wether a regular expression matches a string and if it does so, it updates the cursor.
+     * Returns whether a regular expression matches a string and if it does so, it updates the cursor.
      *
      * @param string $regexp
      * @param string $string

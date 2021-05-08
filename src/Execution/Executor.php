@@ -23,6 +23,8 @@ class Executor
 {
     public function execute(Schema $schema, array $document, $rootValue = null, $contextValue = null, $variableValues = null, $operationName = null, $fieldResolver = null, $typeResolver = null)
     {
+
+
         // build execution context
         $executionContext = $this->buildExecutionContext(
             $schema,
@@ -121,10 +123,9 @@ class Executor
         if (!$typeConditionNode) {
             return true;
         }
+
         $conditionalType = Ast::typeFromAst($executionContext->getSchema(), $typeConditionNode);
-        //var_dump($conditionalType->getName(), $type->getName(), $conditionalType===$type);
-        //exit();
-        // TODO: check if can be replaces with "$conditionalType===$type" : problem -> __Type is not original reference
+
         if ($conditionalType->getName() === $type->getName()) {
             return true;
         }
