@@ -8,6 +8,7 @@ use GraphQL\Schemas\Schema;
 use GraphQL\Errors\GraphQLError;
 use GraphQL\Errors\InternalServerError;
 use GraphQL\Utilities\Errors;
+use GraphQL\Validation\Rules\ValidationRule;
 use GraphQL\Validation\Validator;
 
 class Server
@@ -35,11 +36,15 @@ class Server
 
     /**
      * Enables the printing of the reason for the internal server error.
-     * @param bool $enable
+     * @param bool $enabled
      */
-    public function enableInternalServerErrorPrint(bool $enable = true)
+    public function setInternalServerErrorPrint(bool $enabled = true)
     {
-        $this->displayInternalServerErrorReason = $enable;
+        $this->displayInternalServerErrorReason = $enabled;
+    }
+
+    public function addValidationRule(ValidationRule $validationRule){
+        $this->validator->addAdditionalValidationRule($validationRule);
     }
 
     /**

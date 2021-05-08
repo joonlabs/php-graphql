@@ -32,6 +32,7 @@ use GraphQL\Validation\Rules\VariableUniqueness;
 class Validator
 {
     private $errors = [];
+    private $additionalValidationRules = [];
 
     /**
      * Takes a schema and a parsed document and validates them against each other.
@@ -55,6 +56,10 @@ class Validator
                 break;
             }
         }
+    }
+
+    public function addAdditionalValidationRule(ValidationRule $validationRule){
+        $this->additionalValidationRules[] = $validationRule;
     }
 
     /**
@@ -81,7 +86,7 @@ class Validator
     private function getAllValidationRules(){
         // the rules must be returned in the correct (and following) order
         // since some rules may depend on their predecessors
-        return [
+        $validationRules = [
             new AnyOperationDefined(),
             new FragmentsMustNotFormCycles(),
             new OperationNameUniqueness(),
@@ -107,6 +112,11 @@ class Validator
             new AllVariablesUsed(),
             new RequiredArguments()
         ];
+
+        // add aditional validation rules
+        $validationRules = array_merge($validationRules, $this->additionalValidationRules);
+
+        return $validationRules;
     }
 }
 
