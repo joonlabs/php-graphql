@@ -471,7 +471,7 @@ class Executor
             $TypeMetaFieldDef = null;
             require __DIR__."/../Introspection/Introspection.php";
             return $TypeMetaFieldDef;
-        } else if ($fieldName === "__typename" && $schema->getQueryType() === $parentType) {
+        } else if ($fieldName === "__typename") {
             $TypeNameMetaFieldDef = null;
             require __DIR__."/../Introspection/Introspection.php";
             return $TypeNameMetaFieldDef;
