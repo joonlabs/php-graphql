@@ -174,7 +174,7 @@ $queryType = new GraphQLObjectType("Query", "Root Query", function () use (&$boo
 /**
  * Create the Mutation-Type
  */
-$mutationType = new GraphQLObjectType("Mutation", "Root Mutation", function () use (&$bookType) {
+$mutationType = new GraphQLObjectType("Mutation", "Root Mutation", function () use (&$bookType, &$books) {
     return [
         new GraphQLTypeField(
             "incrementBookIds",
