@@ -12,18 +12,25 @@ class GraphQLObjectType extends GraphQLType
     protected $description;
 
     private $fields;
+    private $internalFields;
     private $interfaces;
     private $isTypeOfFn;
 
     public function __construct(string $type, string $description, \Closure $fields, ?array $interfaces = null, ?\Closure $isTypeOfFn = null)
     {
-        $bt = debug_backtrace();
-        $caller = array_shift($bt); // Get first array
-
         $this->type = $type;
         $this->description = $description;
 
         $this->fields = $fields;
+
+        // create internal fields
+        $this->internalFields = [
+            "__typename" => new GraphQLTypeField("__typename", new GraphQLNonNull(new GraphQLString()), "Name of the type of the object", function () use ($type) {
+                return $type;
+            })
+        ];
+
+
         $this->interfaces = $interfaces ?? [];
         $this->isTypeOfFn = $isTypeOfFn ?? function ($value, $contextValue, $info) {
                 // if $value is array, check if all keys match
@@ -75,6 +82,8 @@ class GraphQLObjectType extends GraphQLType
         foreach ($allFields as $field) {
             $fields[$field->getName()] = $field;
         }
+
+        $fields = array_merge($fields, $this->internalFields);
         return $fields;
     }
 
