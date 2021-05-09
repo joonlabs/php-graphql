@@ -211,7 +211,7 @@ class Executor
         try {
             $args = Values::getArgumentValues($fieldDef, $fieldNodes[0], $executionContext->getVariableValues());
 
-            $contextValue = $executionContext->getContextValue();
+            $contextValue = &$executionContext->getContextValue();
 
             $result = $resolveFn($source, $args, $contextValue, $info);
 
@@ -520,6 +520,9 @@ class Executor
         $variableDefinitions = $operation["variableDefinitions"] ?? [];
         $coercedVariableValues = Values::getVariableValues($schema, $variableDefinitions, $rawVariableValues ?? []);
 
+        // default $contextValue to an empty array
+        $contextValue = $contextValue ?? [];
+        
         return new ExecutionContext(
             $schema,
             $fragments,

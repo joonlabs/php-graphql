@@ -19,7 +19,7 @@ class ExecutionContext{
         Schema $schema,
         array $fragments,
         $rootValue,
-        $contextValue,
+        array $contextValue,
         $operation,
         $variableValues,
         $fieldResolver,
@@ -104,7 +104,7 @@ class ExecutionContext{
     /**
      * @return mixed
      */
-    public function getContextValue()
+    public function &getContextValue()
     {
         return $this->contextValue;
     }
