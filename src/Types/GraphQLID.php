@@ -10,23 +10,32 @@ class GraphQLID extends GraphQLScalarType
     protected $description = "Default GraphQL ID Type";
 
     public function serialize($outputValue){
-        if(!is_int($outputValue) and !is_string($outputValue) and $outputValue!==null){
+        if(!is_string($outputValue) and $outputValue!==null){
             throw new GraphQLError(
                 "Value \"{$outputValue}\" is not of type \"{$this->getName()}\"."
             );
         }
-        return strval($outputValue);
+        return $outputValue;
     }
 
     public function parseLiteral($valueNode, $variables)
     {
-        if($valueNode["kind"] !== "StringValue" and $valueNode["kind"] !== "IntValue"){
+        if($valueNode["kind"] !== "StringValue"){
             throw new GraphQLError(
-                "ID cannot represent a non-string and non-integer value: {$valueNode["value"]}"
+                "String cannot represent a non string value: {$valueNode["value"]}"
             );
         }
 
         return $valueNode["value"];
+    }
+
+    public function parseValue($value){
+        if(!is_string($value) and $value!==null){
+            throw new GraphQLError(
+                "Value \"{$value}\" is not of type \"{$this->getName()}\"."
+            );
+        }
+        return $value;
     }
 }
 
