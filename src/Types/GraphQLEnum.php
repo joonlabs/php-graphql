@@ -64,7 +64,7 @@ class GraphQLEnum extends GraphQLType
             );
         }
 
-        if(!in_array($value, $this->values)){
+        if(!array_key_exists($value, $this->values)){
             throw new GraphQLError(
                 "Value \"{$value}\" does not exist in \"{$this->getName()}\" enum."
             );
