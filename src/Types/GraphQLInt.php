@@ -9,8 +9,9 @@ class GraphQLInt extends GraphQLScalarType
     protected $type = "Int";
     protected $description = "Default GraphQL Integer Type";
 
-    public function serialize($outputValue){
-        if(!is_int($outputValue) and $outputValue!==null){
+    public function serialize($outputValue)
+    {
+        if (!is_int($outputValue) and $outputValue !== null) {
             throw new GraphQLError(
                 "Value \"{$outputValue}\" is not of type \"{$this->getName()}\"."
             );
@@ -20,7 +21,7 @@ class GraphQLInt extends GraphQLScalarType
 
     public function parseLiteral($valueNode, $variables)
     {
-        if($valueNode["kind"] !== "IntValue"){
+        if ($valueNode["kind"] !== "IntValue") {
             throw new GraphQLError(
                 "Int cannot represent non-integer value: {$valueNode["value"]}"
             );
@@ -29,7 +30,7 @@ class GraphQLInt extends GraphQLScalarType
         $num = intval($valueNode["value"]);
 
         //check for 32 bit integer
-        if($num > 2147483647 || $num < -2147483648){
+        if ($num > 2147483647 || $num < -2147483648) {
             throw new GraphQLError(
                 "Int cannot represent non 32-bit signed integer value: {$valueNode["value"]}",
                 $valueNode
@@ -38,8 +39,9 @@ class GraphQLInt extends GraphQLScalarType
         return $num;
     }
 
-    public function parseValue($value){
-        if(!is_int($value) and $value!==null){
+    public function parseValue($value)
+    {
+        if (!is_int($value) and $value !== null) {
             throw new GraphQLError(
                 "Value \"{$value}\" is not of type \"{$this->getName()}\"."
             );

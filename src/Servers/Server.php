@@ -43,7 +43,8 @@ class Server
         $this->displayInternalServerErrorReason = $enabled;
     }
 
-    public function addValidationRule(ValidationRule $validationRule){
+    public function addValidationRule(ValidationRule $validationRule)
+    {
         $this->validator->addAdditionalValidationRule($validationRule);
     }
 
@@ -74,12 +75,12 @@ class Server
                 $this->validator->validate($this->schema, $document);
 
                 // check if query is valid
-                if(!$this->validator->documentIsValid()){
+                if (!$this->validator->documentIsValid()) {
                     // if invalid -> show errors
                     $this->returnData([
                         "errors" => Errors::prettyPrintErrors($this->validator->getErrors())
                     ]);
-                }else{
+                } else {
                     // valid -> execute query
                     $result = $this->executor->execute($this->schema, $document, null, null, $variables);
                     $this->returnData($result);
@@ -108,7 +109,8 @@ class Server
         }
     }
 
-    public function returnData($data){
+    public function returnData($data)
+    {
         echo json_encode($data);
     }
 
@@ -125,7 +127,7 @@ class Server
             // raw json string in http body
             $phpInput = json_decode(file_get_contents("php://input"), true);
             return $phpInput["query"] ?? null;
-        }else{
+        } else {
             // query sent via post field
             return $_POST["query"] ?? null;
         }
@@ -144,7 +146,7 @@ class Server
             // raw json string in http body
             $phpInput = json_decode(file_get_contents("php://input"), true);
             return $phpInput["variables"] ?? [];
-        }else{
+        } else {
             // query sent via post field
             return json_decode($_POST["variables"] ?? "[]", true);
         }

@@ -18,19 +18,20 @@ class GraphQLEnum extends GraphQLType
         $this->description = $description;
 
         // check for proper types and create value map
-        foreach($values as $v){
-            if(!$v instanceof GraphQLEnumValue){
+        foreach ($values as $v) {
+            if (!$v instanceof GraphQLEnumValue) {
                 throw new BadImplementationError(
                     "Enum values must be of type \"GraphQLEnumValue\""
                 );
-            }else{
+            } else {
                 $this->values[$v->getName()] = $v;
             }
         }
     }
 
-    public function serialize($outputValue){
-        if(!array_key_exists($outputValue, $this->values)){
+    public function serialize($outputValue)
+    {
+        if (!array_key_exists($outputValue, $this->values)) {
             throw new GraphQLError(
                 "Value \"{$outputValue}\" does not exist in \"{$this->getName()}\" enum."
             );
@@ -41,14 +42,14 @@ class GraphQLEnum extends GraphQLType
 
     public function parseLiteral($valueNode, $variables)
     {
-        if($valueNode["kind"] !== "EnumValue"){
+        if ($valueNode["kind"] !== "EnumValue") {
             throw new GraphQLError(
                 "Enum cannot represent non enum value: {$valueNode["value"]}"
             );
         }
 
         $value = $valueNode["value"];
-        if(!array_key_exists($value, $this->values)){
+        if (!array_key_exists($value, $this->values)) {
             throw new GraphQLError(
                 "Value \"{$value}\" does not exist in \"{$this->getName()}\" enum."
             );
@@ -58,13 +59,13 @@ class GraphQLEnum extends GraphQLType
 
     public function parseValue($value)
     {
-        if(!is_string($value)){
+        if (!is_string($value)) {
             throw new GraphQLError(
                 "Enum \"{$this->getName()}\" cannot represent non-string value: {$value}"
             );
         }
 
-        if(!array_key_exists($value, $this->values)){
+        if (!array_key_exists($value, $this->values)) {
             throw new GraphQLError(
                 "Value \"{$value}\" does not exist in \"{$this->getName()}\" enum."
             );
@@ -82,7 +83,8 @@ class GraphQLEnum extends GraphQLType
     }
 }
 
-class GraphQLEnumValue {
+class GraphQLEnumValue
+{
 
     private $id;
     private $description;
@@ -94,7 +96,7 @@ class GraphQLEnumValue {
      * @param string $description
      * @param string|null $deprecationReason
      */
-    public function __construct(string $id, string $description="", ?string $deprecationReason=null)
+    public function __construct(string $id, string $description = "", ?string $deprecationReason = null)
     {
         $this->id = $id;
         $this->description = $description;
@@ -125,4 +127,5 @@ class GraphQLEnumValue {
         return $this->deprecationReason;
     }
 }
+
 ?>

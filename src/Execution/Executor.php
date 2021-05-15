@@ -177,7 +177,7 @@ class Executor
                 $fieldPath
             );
 
-            if($result === null){
+            if ($result === null) {
                 return $results;
             }
 
@@ -229,8 +229,9 @@ class Executor
         }
     }
 
-    private function handleFieldError(GraphQLError $error, GraphQLType $returnType, ExecutionContext $executionContext){
-        if($returnType->isNonNullType()){
+    private function handleFieldError(GraphQLError $error, GraphQLType $returnType, ExecutionContext $executionContext)
+    {
+        if ($returnType->isNonNullType()) {
             throw $error;
         }
 
@@ -430,9 +431,8 @@ class Executor
     {
         $subFieldNodes = [];
         $visitedFragmentNames = [];
-        foreach ($fieldNodes as $node)
-        {
-            if($node["selectionSet"]){
+        foreach ($fieldNodes as $node) {
+            if ($node["selectionSet"]) {
                 $subFieldNodes = $this->collectFields(
                     $executionContext,
                     $returnType,
@@ -465,15 +465,15 @@ class Executor
     {
         if ($fieldName === "__schema" && $schema->getQueryType() === $parentType) {
             $SchemaMetaFieldDef = null;
-            require __DIR__."/../Introspection/Introspection.php";
+            require __DIR__ . "/../Introspection/Introspection.php";
             return $SchemaMetaFieldDef;
         } else if ($fieldName === "__type" && $schema->getQueryType() === $parentType) {
             $TypeMetaFieldDef = null;
-            require __DIR__."/../Introspection/Introspection.php";
+            require __DIR__ . "/../Introspection/Introspection.php";
             return $TypeMetaFieldDef;
         } else if ($fieldName === "__typename") {
             $TypeNameMetaFieldDef = null;
-            require __DIR__."/../Introspection/Introspection.php";
+            require __DIR__ . "/../Introspection/Introspection.php";
             return $TypeNameMetaFieldDef;
         }
         return $parentType->getFields()[$fieldName];
@@ -522,7 +522,7 @@ class Executor
 
         // default $contextValue to an empty array
         $contextValue = $contextValue ?? [];
-        
+
         return new ExecutionContext(
             $schema,
             $fragments,
@@ -554,17 +554,17 @@ class Executor
     {
         return function ($source, $args, $contextValue, $info) {
             // if $source is an iterable (e.g. array), get value by key (field name)
-            if(is_iterable($source)){
+            if (is_iterable($source)) {
                 return $source[$info["fieldName"]] ?? null;
             }
             // if $source is an object, get value by either calling the getter or trying to acces property directly
-            if(is_object($source)){
+            if (is_object($source)) {
                 $propertyName = $info["fieldName"];
-                $methodName = "get".ucwords($info["fieldName"]);
-                if(method_exists($source, $methodName)){
+                $methodName = "get" . ucwords($info["fieldName"]);
+                if (method_exists($source, $methodName)) {
                     return $source->{$methodName}();
                 }
-                if(property_exists($source, $propertyName)){
+                if (property_exists($source, $propertyName)) {
                     return $source->{$propertyName};
                 }
                 return null;
@@ -595,14 +595,14 @@ class Executor
             // sort possibleTypes by the amount of fields they provide (ascending)
             // this helps the to prevent fetching the wrong type, because a subset of the fields
             // match with the required fields.
-            usort($possibleTypes, function($a, $b){
-                 $countFieldsA = count($a->getFields());
-                 $countFieldsB = count($b->getFields());
+            usort($possibleTypes, function ($a, $b) {
+                $countFieldsA = count($a->getFields());
+                $countFieldsB = count($b->getFields());
                 if ($countFieldsA === $countFieldsB) {
                     return 0;
-                }else if ($countFieldsA > $countFieldsB){
+                } else if ($countFieldsA > $countFieldsB) {
                     return 1;
-                }else{
+                } else {
                     return -1;
                 }
             });

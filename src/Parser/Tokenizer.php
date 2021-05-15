@@ -166,11 +166,11 @@ class Tokenizer
             "line" => 1,
             "column" => 1,
         ];
-        for ($i=0; $i<$this->cursor; $i++) {
+        for ($i = 0; $i < $this->cursor; $i++) {
             if ($this->string[$i] === "\n") {
                 $location["line"]++;
                 $location["column"] = 1;
-            }else{
+            } else {
                 $location["column"]++;
             }
         }
@@ -178,13 +178,15 @@ class Tokenizer
         return $location;
     }
 
-    public function getLastLocation(){
+    public function getLastLocation()
+    {
         $historyLength = count($this->locationHistory);
-        if($historyLength<=1) return $this->getLocation();
-        return $this->locationHistory[$historyLength-1];
+        if ($historyLength <= 1) return $this->getLocation();
+        return $this->locationHistory[$historyLength - 1];
     }
 
-    private function addToLocationHistory(){
+    private function addToLocationHistory()
+    {
         $this->locationHistory[] = $this->getLocation();
     }
 }

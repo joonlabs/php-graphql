@@ -26,20 +26,20 @@ class FragmentsMustBeUsed extends ValidationRule
 
         // create assoc array of all fragment definitions
         $usedFragmentNames = [];
-        foreach ($fragmentDefinitions as $fragmentDefinition){
+        foreach ($fragmentDefinitions as $fragmentDefinition) {
             $fragmentName = $fragmentDefinition["name"]["value"];
             $usedFragmentNames[$fragmentName] = $fragmentDefinition;
         }
 
 
         // mark used fragments as used
-        foreach($fragmentSpreads as $fragmentSpread){
+        foreach ($fragmentSpreads as $fragmentSpread) {
             $fragmentSpreadName = $fragmentSpread["name"]["value"];
             $usedFragmentNames[$fragmentSpreadName] = true;
         }
 
-        foreach($usedFragmentNames as $fragName=>$used){
-            if($used!==true){
+        foreach ($usedFragmentNames as $fragName => $used) {
+            if ($used !== true) {
                 $this->addError(
                     new ValidationError(
                         "Fragment \"$fragName\" is defined but never used.",

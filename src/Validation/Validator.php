@@ -40,17 +40,18 @@ class Validator
      * @param array $document
      * @return array
      */
-    public function validate(Schema $schema, array $document){
+    public function validate(Schema $schema, array $document)
+    {
         // create validation context
         $validationContext = new ValidationContext($schema, $document);
 
         $this->errors = [];
         // check all validation rules
-        foreach($this->getAllValidationRules() as $validationRule){
+        foreach ($this->getAllValidationRules() as $validationRule) {
             // validate ValidationContext against ValiudationRule
             $validationRule->validate($validationContext);
             // check for validation
-            if($validationRule->violated()){
+            if ($validationRule->violated()) {
                 $this->errors = array_merge($this->errors, $validationRule->getErrors());
                 // end for loop, as other rules may depend on this rule
                 break;
@@ -58,7 +59,8 @@ class Validator
         }
     }
 
-    public function addAdditionalValidationRule(ValidationRule $validationRule){
+    public function addAdditionalValidationRule(ValidationRule $validationRule)
+    {
         $this->additionalValidationRules[] = $validationRule;
     }
 
@@ -66,9 +68,9 @@ class Validator
      * Returns whether the validation went successfull
      * @return bool
      */
-    public function documentIsValid() : bool
+    public function documentIsValid(): bool
     {
-        return count($this->errors)===0;
+        return count($this->errors) === 0;
     }
 
     /**
@@ -83,7 +85,8 @@ class Validator
      * Returns all ValidationRules necessary to check the ValidationContext against.
      * @return ValidationRule[]
      */
-    private function getAllValidationRules(){
+    private function getAllValidationRules()
+    {
         // the rules must be returned in the correct (and following) order
         // since some rules may depend on their predecessors
         $validationRules = [

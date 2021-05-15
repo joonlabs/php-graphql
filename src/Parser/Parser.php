@@ -79,9 +79,9 @@ class Parser
      */
     public function ExecutableDefinition()
     {
-        if($this->lookahead["type"] === "FRAGMENT"){
+        if ($this->lookahead["type"] === "FRAGMENT") {
             return $this->FragmentDefinition();
-        }else{
+        } else {
             return $this->OperationDefinition();
         }
     }
@@ -109,8 +109,8 @@ class Parser
             if ($this->lookahead["type"] == "NAME") {
                 // query is named and has parameters
                 $name = $this->Name();
-                $variableDefinitions = $this->lookahead["type"]=="(" ? $this->VariableDefinitions() : [];
-                $directives = $this->lookahead["type"]==="@" ? $this->Directives() : [];
+                $variableDefinitions = $this->lookahead["type"] == "(" ? $this->VariableDefinitions() : [];
+                $directives = $this->lookahead["type"] === "@" ? $this->Directives() : [];
             }
         }
 
@@ -191,19 +191,19 @@ class Parser
      */
     public function Selection()
     {
-        if($this->lookahead["type"]!=="..."){
+        if ($this->lookahead["type"] !== "...") {
             return $this->Field();
-        }else{
+        } else {
             // get temporarly the second lookeahead
             $secondLookahead = $this->tokenizer->glimpsAtNextToken();
             // check if fragmentspread or inline fragment
-            if(
-                $secondLookahead["type"]==="ON" or
-                $secondLookahead["type"]==="@" or
-                $secondLookahead["type"]==="{"
-            ){
+            if (
+                $secondLookahead["type"] === "ON" or
+                $secondLookahead["type"] === "@" or
+                $secondLookahead["type"] === "{"
+            ) {
                 return $this->InlineFragment();
-            }else{
+            } else {
                 return $this->FragmentSpread();
             }
 
@@ -409,7 +409,7 @@ class Parser
         $location = $this->tokenizer->getLastLocation();
         return [
             "kind" => "BooleanValue",
-            "value" => $this->eat("BOOLEAN")["value"]=="true",
+            "value" => $this->eat("BOOLEAN")["value"] == "true",
             "loc" => $location
         ];
     }
@@ -473,7 +473,7 @@ class Parser
         $this->eat("{");
 
         $objectFieldList = null;
-        if($this->lookahead["type"]!=="}"){
+        if ($this->lookahead["type"] !== "}") {
             $objectFieldList = $this->ObjectFieldList();
         }
 
@@ -507,7 +507,8 @@ class Parser
      * ObjectField:
      *  : Name : Values
      */
-    public function ObjectField(){
+    public function ObjectField()
+    {
         $location = $this->tokenizer->getLastLocation();
 
         $name = $this->Name();
@@ -559,7 +560,7 @@ class Parser
         }
 
         // check for list type
-        if($isListType){
+        if ($isListType) {
             $type = [
                 "kind" => "ListType",
                 "type" => $type,
@@ -567,13 +568,13 @@ class Parser
             ];
         }
 
-        if ($this->lookahead["type"] == "!"){
+        if ($this->lookahead["type"] == "!") {
             $this->eat("!");
             $nonNullable = true;
         }
 
         // check for non-nullable type
-        if($nonNullable){
+        if ($nonNullable) {
             $type = [
                 "kind" => "NonNullType",
                 "type" => $type,
@@ -691,7 +692,7 @@ class Parser
         $name = $this->Name();
 
         $arguments = [];
-        if($this->lookahead["type"]==="(") {
+        if ($this->lookahead["type"] === "(") {
             $arguments = $this->Arguments();
         }
         return [
@@ -713,12 +714,12 @@ class Parser
         $this->eat("...");
 
         $typeCondition = null;
-        if($this->lookahead["type"]==="ON"){
+        if ($this->lookahead["type"] === "ON") {
             $typeCondition = $this->TypeCondition();
         }
 
         $directives = [];
-        if($this->lookahead["type"]==="@"){
+        if ($this->lookahead["type"] === "@") {
             $directives = $this->Directives();
         }
 
@@ -746,7 +747,7 @@ class Parser
         $name = $this->FragmentName();
 
         $directives = [];
-        if($this->lookahead["type"]==="@"){
+        if ($this->lookahead["type"] === "@") {
             $directives = $this->Directives();
         }
 
@@ -777,7 +778,7 @@ class Parser
      */
     private function eat(string $tokenType)
     {
-            $token = $this->lookahead;
+        $token = $this->lookahead;
 
         if ($token === null) {
             throw new UnexpectedEndOfInputError(
@@ -787,7 +788,7 @@ class Parser
         }
         if ($token["type"] !== $tokenType) {
             throw new UnexpectedTokenError(
-                "Unexpected token: \"" . $token["value"] . "\", expected token of type \"$tokenType\", got tyoe \"".$token["type"]."\".",
+                "Unexpected token: \"" . $token["value"] . "\", expected token of type \"$tokenType\", got tyoe \"" . $token["type"] . "\".",
                 $this->tokenizer->getLastLocation()
             );
         }

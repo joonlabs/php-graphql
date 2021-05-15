@@ -4,17 +4,23 @@
 
 # php-graphql
 
-php-graphql is a pure php implementation of the latest GraphQL [specification](https://github.com/graphql/graphql-spec) based on the [reference implementation in JavaScript](https://github.com/graphql/graphql-js). 
+php-graphql is a pure php implementation of the latest GraphQL [specification](https://github.com/graphql/graphql-spec)
+based on the [reference implementation in JavaScript](https://github.com/graphql/graphql-js).
 
 ## Installation
+
 **git clone:**
+
 ````bash
 git clone https://github.com/joonlabs/php-graphql.git
 ````
+
 after downloading include the autloader.php, e.g.:
+
 ````php
 require 'php-graphql/src/autoloader.php';
 ````
+
 ## Hello world!
 
 ```php
@@ -48,8 +54,9 @@ $server->listen();
 That's it! Now the GraphQL server is ready to accept requests at the URL of the PHP script.
 
 ## Backers and sponsors
+
 <img src="https://joonlabs.com/php-graphql/backers/joon.png" alt="index.js logo" height="30"/><br>
-see [joonlabs.com](https://joonlabs.com) 
+see [joonlabs.com](https://joonlabs.com)
 <br>
 <br>
 <img src="https://joonlabs.com/php-graphql/backers/leafx.png" alt="index.js logo" height="30"/><br>

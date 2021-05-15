@@ -32,7 +32,7 @@ abstract class Ast
         );
     }
 
-    static function valueFromAst(array $valueNode, GraphQLType $type, ?array $variables=null)
+    static function valueFromAst(array $valueNode, GraphQLType $type, ?array $variables = null)
     {
         if (!$valueNode) {
             // When there is no node, then there is also no value.
@@ -121,7 +121,7 @@ abstract class Ast
             });
 
             // Implements the rule specified under 5.6.3 (Input Object Field Uniqueness) in the GraphQL-Specs (version: 2018)
-            if(count($valueNode["fields"] ?? []) !== count($fieldNodes)){
+            if (count($valueNode["fields"] ?? []) !== count($fieldNodes)) {
                 // before mapping to keys and after mapping to keys there is a different amount of items
                 // which means, there must have been some values provided at least twice
                 throw new ValidationError(
@@ -131,7 +131,7 @@ abstract class Ast
 
             foreach ($type->getFields() as $field) {
                 $fieldNode = $fieldNodes[$field->getName()] ?? null;
-                if ($fieldNode===null || self::isMissingVariable($fieldNode["value"], $variables)) {
+                if ($fieldNode === null || self::isMissingVariable($fieldNode["value"], $variables)) {
                     if ($field->getDefaultValue() !== null) {
                         $coercedObject[$field->getName()] = $field->getDefaultValue();
                     } else if ($field->getType()->isNonNullType()) {
@@ -153,9 +153,9 @@ abstract class Ast
             $fieldsInNode = array_keys($fieldNodes);
             $fieldsInType = array_keys($type->getFields());
             $sameFields = array_diff($fieldsInNode, $fieldsInType);
-            if(count($sameFields)>0 and count($fieldsInNode)>count($fieldsInType)){
+            if (count($sameFields) > 0 and count($fieldsInNode) > count($fieldsInType)) {
                 throw new ValidationError(
-                    "The following input fields are provided in the input object value but not defined as field in the input object's type: \"".implode($sameFields, "\", \"")."\""
+                    "The following input fields are provided in the input object value but not defined as field in the input object's type: \"" . implode($sameFields, "\", \"") . "\""
                 );
             }
 

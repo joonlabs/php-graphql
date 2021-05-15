@@ -153,7 +153,7 @@ $__DirectiveLocation = new GraphQLEnum(
 $__Type = new GraphQLObjectType(
     "__Type",
     "The fundamental unit of any GraphQL Schema is the type. There are many kinds of types in GraphQL as represented by the `__TypeKind` enum.\n\nDepending on the kind of a type, certain fields describe information about that type. Scalar types provide no information beyond a name, description and optional `specifiedByUrl`, while Enum types provide their values. Object and Interface types provide the fields they describe. Abstract types, Union and Interface, provide the Object types possible at runtime. List and NonNull types compose other types.",
-    function () use (&$__EnumValue,&$__InputValue, &$__TypeKind, &$__Field, &$__Type) {
+    function () use (&$__EnumValue, &$__InputValue, &$__TypeKind, &$__Field, &$__Type) {
         return [
             new GraphQLTypeField(
                 "kind",
@@ -276,7 +276,7 @@ $__Type = new GraphQLObjectType(
                 "ofType",
                 $__Type,
                 "",
-                function(GraphQLType $type){
+                function (GraphQLType $type) {
                     return $type->isWrappingType() ? $type->getInnerType() : null;
                 }
             )
@@ -287,13 +287,13 @@ $__Type = new GraphQLObjectType(
 $__Field = new GraphQLObjectType(
     "__Field",
     "Object and Interface types are described by a list of Fields, each of which has a name, potentially a list of arguments, and a return type.",
-    function() use(&$__InputValue, &$__Type){
+    function () use (&$__InputValue, &$__Type) {
         return [
             new GraphQLTypeField(
                 "name",
                 new GraphQLNonNull(new GraphQLString()),
                 "",
-                function(GraphQLTypeField $field){
+                function (GraphQLTypeField $field) {
                     return $field->getName();
                 }
             ),
@@ -301,7 +301,7 @@ $__Field = new GraphQLObjectType(
                 "description",
                 new GraphQLString(),
                 "",
-                function(GraphQLTypeField $field){
+                function (GraphQLTypeField $field) {
                     return $field->getDescription();
                 }
             ),
@@ -309,7 +309,7 @@ $__Field = new GraphQLObjectType(
                 "args",
                 new GraphQLNonNull(new GraphQLList(new GraphQLNonNull($__InputValue))),
                 "",
-                function(GraphQLTypeField $field, $args){
+                function (GraphQLTypeField $field, $args) {
                     return $args["includeDeprecated"]
                         ? $field->getArguments()
                         : array_filter($field->getArguments(), function (GraphQLFieldArgument $arg) {
@@ -324,7 +324,7 @@ $__Field = new GraphQLObjectType(
                 "type",
                 new GraphQLNonNull($__Type),
                 "",
-                function(GraphQLTypeField $field){
+                function (GraphQLTypeField $field) {
                     return $field->getType();
                 }
             ),
@@ -332,7 +332,7 @@ $__Field = new GraphQLObjectType(
                 "isDeprecated",
                 new GraphQLNonNull(new GraphQLBoolean()),
                 "",
-                function(GraphQLTypeField $field){
+                function (GraphQLTypeField $field) {
                     return $field->getDeprecationReason() !== null;
                 }
             ),
@@ -340,7 +340,7 @@ $__Field = new GraphQLObjectType(
                 "deprecationReason",
                 new GraphQLString(),
                 "",
-                function(GraphQLTypeField $field){
+                function (GraphQLTypeField $field) {
                     return $field->getDeprecationReason();
                 }
             ),
@@ -351,14 +351,14 @@ $__Field = new GraphQLObjectType(
 $__InputValue = new GraphQLObjectType(
     "__InputValue",
     "Arguments provided to Fields or Directives and the input fields of an InputObject are represented as Input Values which describe their type and optionally a default value.",
-    function() use(&$__Type){
+    function () use (&$__Type) {
         return [
             new GraphQLTypeField(
                 "name",
                 new GraphQLNonNull(new GraphQLString()),
                 "",
                 //$inputValue can either be GraphQLArgument or GraphQLTypeField
-                function($inputValue){
+                function ($inputValue) {
                     return $inputValue->getName();
                 }
             ),
@@ -367,7 +367,7 @@ $__InputValue = new GraphQLObjectType(
                 new GraphQLString(),
                 "",
                 //$inputValue can either be GraphQLArgument or GraphQLTypeField
-                function($inputValue){
+                function ($inputValue) {
                     return $inputValue->getDescription();
                 }
             ),
@@ -376,7 +376,7 @@ $__InputValue = new GraphQLObjectType(
                 new GraphQLNonNull($__Type),
                 "",
                 //$inputValue can either be GraphQLArgument or GraphQLTypeField
-                function($inputValue){
+                function ($inputValue) {
                     return $inputValue->getType();
                 }
             ),
@@ -385,7 +385,7 @@ $__InputValue = new GraphQLObjectType(
                 new GraphQLString(),
                 "",
                 //$inputValue can either be GraphQLArgument or GraphQLTypeField
-                function($inputValue){
+                function ($inputValue) {
                     return strval($inputValue->getDefaultValue());
                 }
             ),
@@ -394,8 +394,8 @@ $__InputValue = new GraphQLObjectType(
                 new GraphQLNonNull(new GraphQLBoolean()),
                 "",
                 //$inputValue can either be GraphQLArgument or GraphQLTypeField
-                function($inputValue){
-                    return $inputValue->getDeprecationReason()!==null;
+                function ($inputValue) {
+                    return $inputValue->getDeprecationReason() !== null;
                 }
             ),
             new GraphQLTypeField(
@@ -403,7 +403,7 @@ $__InputValue = new GraphQLObjectType(
                 new GraphQLString(),
                 "",
                 //$inputValue can either be GraphQLArgument or GraphQLTypeField
-                function($inputValue){
+                function ($inputValue) {
                     return $inputValue->getDeprecationReason();
                 }
             )
@@ -414,13 +414,13 @@ $__InputValue = new GraphQLObjectType(
 $__EnumValue = new GraphQLObjectType(
     "__EnumValue",
     "One possible value for a given Enum. Enum values are unique values, not a placeholder for a string or numeric value. However an Enum value is returned in a JSON response as a string.",
-    function(){
+    function () {
         return [
             new GraphQLTypeField(
                 "name",
                 new GraphQLNonNull(new GraphQLString()),
                 "",
-                function(GraphQLEnumValue $enumValue){
+                function (GraphQLEnumValue $enumValue) {
                     return $enumValue->getName();
                 }
             ),
@@ -428,7 +428,7 @@ $__EnumValue = new GraphQLObjectType(
                 "description",
                 new GraphQLString(),
                 "",
-                function(GraphQLEnumValue $enumValue){
+                function (GraphQLEnumValue $enumValue) {
                     return $enumValue->getDescription();
                 }
             ),
@@ -436,15 +436,15 @@ $__EnumValue = new GraphQLObjectType(
                 "isDeprecated",
                 new GraphQLNonNull(new GraphQLBoolean()),
                 "",
-                function(GraphQLEnumValue $enumValue){
-                    return $enumValue->getDeprecationReason()!==null;
+                function (GraphQLEnumValue $enumValue) {
+                    return $enumValue->getDeprecationReason() !== null;
                 }
             ),
             new GraphQLTypeField(
                 "deprecationReason",
                 new GraphQLString(),
                 "",
-                function(GraphQLEnumValue $enumValue){
+                function (GraphQLEnumValue $enumValue) {
                     return $enumValue->getDeprecationReason();
                 }
             )
@@ -471,7 +471,7 @@ $SchemaMetaFieldDef = new GraphQLTypeField(
     "__schema",
     new GraphQLNonNull($__Schema),
     "Access the current type schema of this server.",
-    function($_, $__, $___, $info){
+    function ($_, $__, $___, $info) {
         return $info["schema"];
     }
 );
@@ -480,7 +480,7 @@ $TypeMetaFieldDef = new GraphQLTypeField(
     "__type",
     $__Type,
     "Request the type information of a single type.",
-    function($_, $args, $__, $info){
+    function ($_, $args, $__, $info) {
         return $info["schema"]->getType($args["name"]);
     },
     [
@@ -492,7 +492,7 @@ $TypeNameMetaFieldDef = new GraphQLTypeField(
     "__typename",
     new GraphQLNonNull(new GraphQLString()),
     "The name of the current Object type at runtime.",
-    function($_, $__, $___, $info){
+    function ($_, $__, $___, $info) {
         return $info["parentType"]->getName();
     }
 );

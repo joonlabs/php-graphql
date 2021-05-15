@@ -30,10 +30,10 @@ class DocumentUtils
         $nodes = [];
 
         foreach ($keys as $k) {
-            if(is_array($document[$k]) && array_key_exists("kind", $document[$k]) && $document[$k]["kind"]===$kind){
+            if (is_array($document[$k]) && array_key_exists("kind", $document[$k]) && $document[$k]["kind"] === $kind) {
                 $nodes[] = $document[$k];
             }
-            if(is_array($document[$k])){
+            if (is_array($document[$k])) {
                 $nodes = array_merge($nodes, self::getAllNodesOfKind($document[$k], $kind));
             }
         }
@@ -54,10 +54,10 @@ class DocumentUtils
         $nodes = [];
 
         foreach ($keys as $k) {
-            if($k===$key){
+            if ($k === $key) {
                 $nodes[] = $document[$k];
             }
-            if(is_array($document[$k])){
+            if (is_array($document[$k])) {
                 $nodes = array_merge($nodes, self::getAllNodesOfKey($document[$k], $key));
             }
         }

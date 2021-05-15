@@ -22,7 +22,7 @@ class DirectivesAreUniquePerLocation extends ValidationRule
 
         $directives = $schema->getDirectives();
 
-        $directives = array_map(function($directive){
+        $directives = array_map(function ($directive) {
             return $directive["name"]["value"];
         }, $directives);
 
@@ -34,9 +34,9 @@ class DirectivesAreUniquePerLocation extends ValidationRule
 
         foreach ($wantedDirectives as $wantedDirectiveList) {
             $seenDirectiveNames = [];
-            foreach($wantedDirectiveList as $directive){
+            foreach ($wantedDirectiveList as $directive) {
                 $directiveName = $directive["name"]["value"] ?? null;
-                if(in_array($directiveName, $seenDirectiveNames)){
+                if (in_array($directiveName, $seenDirectiveNames)) {
                     // directiv already used in this spot
                     $this->addError(
                         new ValidationError(

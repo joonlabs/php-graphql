@@ -3,7 +3,8 @@ namespace GraphQL\Utilities;
 
 use GraphQL\Errors\GraphQLError;
 
-abstract class Errors{
+abstract class Errors
+{
 
     /**
      * Returns a pretty printed array version of an array of errors
@@ -12,7 +13,7 @@ abstract class Errors{
      */
     public static function prettyPrintErrors(array $errors)
     {
-        return array_map(function(GraphQLError $error){
+        return array_map(function (GraphQLError $error) {
             return [
                 "message" => $error->getMessage(),
                 "locations" => $error->getLocations(),
@@ -24,4 +25,5 @@ abstract class Errors{
         }, $errors);
     }
 }
+
 ?>

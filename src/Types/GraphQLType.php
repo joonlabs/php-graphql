@@ -14,7 +14,7 @@ abstract class GraphQLType
     protected $type;
     protected $description;
 
-    public function getName() : string
+    public function getName(): string
     {
         return $this->type;
     }
@@ -87,7 +87,7 @@ abstract class GraphQLType
 
     public function isObjectType(): bool
     {
-        return $this instanceof GraphQLObjectType and !($this instanceof  GraphQLInputObjectType);
+        return $this instanceof GraphQLObjectType and !($this instanceof GraphQLInputObjectType);
     }
 
     public function isStringType(): bool

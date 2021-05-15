@@ -1,10 +1,12 @@
 <?php
+
 namespace GraphQL\Directives;
 
 use GraphQL\Arguments\GraphQLDirectiveArgument;
 use GraphQL\Types\GraphQLBoolean;
 
-class GraphQLSkipDirective extends GraphQLDirective {
+class GraphQLSkipDirective extends GraphQLDirective
+{
     protected $name = "skip";
 
     public function __construct()
@@ -14,4 +16,5 @@ class GraphQLSkipDirective extends GraphQLDirective {
         ];
     }
 }
+
 ?>

@@ -16,7 +16,7 @@ class GraphQLList extends GraphQLType
 
     public function getName(): string
     {
-        return parent::getName()."({$this->getInnerType()->getName()})";
+        return parent::getName() . "({$this->getInnerType()->getName()})";
     }
 
     public function __construct(GraphQLType $innerType)
@@ -24,7 +24,8 @@ class GraphQLList extends GraphQLType
         $this->innerType = $innerType;
     }
 
-    public function getInnerType(){
+    public function getInnerType()
+    {
         return $this->innerType;
     }
 }

@@ -10,7 +10,7 @@ class GraphQLUnion extends GraphQLAbstractType
     private $types;
     private $resolveTypeFn;
 
-    public function __construct(string $type, string $description, array $types, ?\Closure $resolveTypeFn=null)
+    public function __construct(string $type, string $description, array $types, ?\Closure $resolveTypeFn = null)
     {
         $this->type = $type;
         $this->description = $description;
@@ -24,7 +24,7 @@ class GraphQLUnion extends GraphQLAbstractType
     public function getFields(): array
     {
         $fields = [];
-        foreach($this->types as $type){
+        foreach ($this->types as $type) {
             $fields = array_merge($fields, $type->getFields());
         }
         return $fields;

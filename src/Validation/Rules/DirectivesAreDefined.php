@@ -22,7 +22,7 @@ class DirectivesAreDefined extends ValidationRule
 
         $directives = $schema->getDirectives();
 
-        $directives = array_map(function($directive){
+        $directives = array_map(function ($directive) {
             return $directive["name"]["value"];
         }, $directives);
 
@@ -33,9 +33,9 @@ class DirectivesAreDefined extends ValidationRule
         $wantedDirectives = DocumentUtils::getAllNodesOfKey($document, "directives");
 
         foreach ($wantedDirectives as $wantedDirectiveList) {
-            foreach($wantedDirectiveList as $directive){
+            foreach ($wantedDirectiveList as $directive) {
                 $directiveName = $directive["name"]["value"] ?? null;
-                if(!in_array($directiveName, $directives)){
+                if (!in_array($directiveName, $directives)) {
                     // directiv not known
                     $this->addError(
                         new ValidationError(

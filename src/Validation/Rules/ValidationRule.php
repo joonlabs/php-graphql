@@ -15,7 +15,7 @@ abstract class ValidationRule
      * @param ValidationContext $validationContext
      * @return void
      */
-    abstract public function validate(ValidationContext $validationContext) : void;
+    abstract public function validate(ValidationContext $validationContext): void;
 
     /**
      * Appends an GraphQLError to the internal errors list
@@ -30,9 +30,9 @@ abstract class ValidationRule
      * Returns whether the rule was validated or not
      * @return bool
      */
-    public function violated():bool
+    public function violated(): bool
     {
-        return count($this->errors)>0;
+        return count($this->errors) > 0;
     }
 
     /**

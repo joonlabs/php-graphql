@@ -1,10 +1,12 @@
 <?php
+
 namespace GraphQL\Execution;
 
 use GraphQL\Errors\GraphQLError;
 use GraphQL\Schemas\Schema;
 
-class ExecutionContext{
+class ExecutionContext
+{
     private $schema;
     private $fragments;
     private $rootValue;
@@ -218,4 +220,5 @@ class ExecutionContext{
         return $this;
     }
 }
+
 ?>

@@ -35,7 +35,7 @@ class FragmentsOnCompositeTypes extends ValidationRule
                 $suggestions = Suggestions::suggest($typeCondition, array_keys($typeMap));
                 $this->addError(
                     new ValidationError(
-                        "Unknown type \"$typeCondition\".".Suggestions::didYouMean($suggestions),
+                        "Unknown type \"$typeCondition\"." . Suggestions::didYouMean($suggestions),
                         $fragmentDefinition
                     )
                 );

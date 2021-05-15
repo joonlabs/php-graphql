@@ -1,15 +1,17 @@
 <?php
+
 namespace GraphQL\Utilities;
 
 use GraphQL\Errors\GraphQLError;
 use GraphQL\Schemas\Schema;
 
-abstract class OperationRootType{
+abstract class OperationRootType
+{
     public static function getOperationRootType(Schema $schema, $operation)
     {
-        if($operation["operation"] === "query"){
+        if ($operation["operation"] === "query") {
             $queryType = $schema->getQueryType();
-            if($queryType===null){
+            if ($queryType === null) {
                 throw new GraphQLError(
                     "Schema does not define the required query root type."
                 );
@@ -17,9 +19,9 @@ abstract class OperationRootType{
             return $queryType;
         }
 
-        if($operation["operation"] === "mutation"){
+        if ($operation["operation"] === "mutation") {
             $mutationType = $schema->getMutationType();
-            if($mutationType===null){
+            if ($mutationType === null) {
                 throw new GraphQLError(
                     "Schema is not configured for mutations."
                 );
@@ -33,4 +35,5 @@ abstract class OperationRootType{
     }
 
 }
+
 ?>

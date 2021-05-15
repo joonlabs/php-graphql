@@ -1,7 +1,9 @@
 <?php
+
 namespace GraphQL\Utilities;
 
-abstract class KeyMap{
+abstract class KeyMap
+{
     public static function map(?array $items, \Closure $function)
     {
         $items = $items ?? []; // repair null values
@@ -12,4 +14,5 @@ abstract class KeyMap{
         return $result;
     }
 }
+
 ?>

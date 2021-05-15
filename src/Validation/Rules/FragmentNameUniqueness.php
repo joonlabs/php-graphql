@@ -23,11 +23,11 @@ class FragmentNameUniqueness extends ValidationRule
         $fragmentDefinitions = DocumentUtils::getAllNodesOfKind($document, "FragmentDefinition");
 
         $seenFragmentNames = [];
-        foreach ($fragmentDefinitions as $fragmentDefinition){
+        foreach ($fragmentDefinitions as $fragmentDefinition) {
             $fragmentName = $fragmentDefinition["name"]["value"];
-            if(!in_array($fragmentName, $seenFragmentNames)){
+            if (!in_array($fragmentName, $seenFragmentNames)) {
                 $seenFragmentNames[] = $fragmentName;
-            }else{
+            } else {
                 $this->addError(
                     new ValidationError(
                         "There can be only one fragment named \"$fragmentName\".",

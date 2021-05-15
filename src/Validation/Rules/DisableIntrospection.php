@@ -19,11 +19,11 @@ class DisableIntrospection extends ValidationRule
     {
         $definitions = $validationContext->getDocument()["definitions"];
 
-        foreach ($definitions as $definition){
-            if($definition["kind"]==="OperationDefinition"){
+        foreach ($definitions as $definition) {
+            if ($definition["kind"] === "OperationDefinition") {
                 $selections = $definition["selectionSet"]["selections"];
-                foreach ($selections as $selection){
-                    if($selection["name"]["value"]==="__schema"){
+                foreach ($selections as $selection) {
+                    if ($selection["name"]["value"] === "__schema") {
                         $this->addError(
                             new ValidationError(
                                 "Introspection is disabled in this setup.",

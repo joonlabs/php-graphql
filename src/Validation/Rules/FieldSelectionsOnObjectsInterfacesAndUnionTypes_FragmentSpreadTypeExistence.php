@@ -42,7 +42,7 @@ class FieldSelectionsOnObjectsInterfacesAndUnionTypes_FragmentSpreadTypeExistenc
     private function validateFieldsInSelectionSet(array $selectionSet, GraphQLType $objectType, ValidationContext $validationContext)
     {
         // if the field does not support getting sub fields -> return
-        if(!method_exists($objectType, "getFields")) return;
+        if (!method_exists($objectType, "getFields")) return;
 
         foreach ($selectionSet["selections"] as $selection) {
             $selectionKind = $selection["kind"];
@@ -50,9 +50,9 @@ class FieldSelectionsOnObjectsInterfacesAndUnionTypes_FragmentSpreadTypeExistenc
             if ($selectionKind === "Field") {
                 $selectedFieldName = $selection["name"]["value"];
                 // check if field is an internal field and skip this field
-                if($selectedFieldName === "__typename"
+                if ($selectedFieldName === "__typename"
                     || $selectedFieldName === "__schema"
-                    || $selectedFieldName === "__type"){
+                    || $selectedFieldName === "__type") {
                     continue;
                 }
                 if (!in_array($selectedFieldName, array_keys($objectType->getFields()))) {
@@ -89,7 +89,7 @@ class FieldSelectionsOnObjectsInterfacesAndUnionTypes_FragmentSpreadTypeExistenc
                     $suggestions = Suggestions::suggest($typeConditionName, array_keys($typeMap));
                     $this->addError(
                         new ValidationError(
-                            "Unknown type \"$typeConditionName\".".Suggestions::didYouMean($suggestions),
+                            "Unknown type \"$typeConditionName\"." . Suggestions::didYouMean($suggestions),
                             $selection
                         )
                     );
@@ -104,13 +104,13 @@ class FieldSelectionsOnObjectsInterfacesAndUnionTypes_FragmentSpreadTypeExistenc
 
 
                     // check if subType is allowed here (GraphQL Spec Rule 5.5.2.3 - Fragment Spread Is Possible)
-                    if(($objectType->isObjectType() and $objectType->getName() !== $subType->getName()) // check if object types are same
+                    if (($objectType->isObjectType() and $objectType->getName() !== $subType->getName()) // check if object types are same
                         || ($objectType->isAbstractType() and !$validationContext->getSchema()->isSubType($objectType, $subType)) // check if abstract type has this subType as a sub type
-                    ){
+                    ) {
                         // if any rule violated -> error
                         $this->addError(
                             new ValidationError(
-                                "Fragment cannot be spread here as objects of type \"".$subType->getName()."\" can never be of type \"".$objectType->getName()."\".",
+                                "Fragment cannot be spread here as objects of type \"" . $subType->getName() . "\" can never be of type \"" . $objectType->getName() . "\".",
                                 $selection
                             )
                         );
@@ -139,7 +139,7 @@ class FieldSelectionsOnObjectsInterfacesAndUnionTypes_FragmentSpreadTypeExistenc
                             $suggestions = Suggestions::suggest($typeConditionName, array_keys($typeMap));
                             $this->addError(
                                 new ValidationError(
-                                    "Unknown type \"$typeConditionName\".".Suggestions::didYouMean($suggestions),
+                                    "Unknown type \"$typeConditionName\"." . Suggestions::didYouMean($suggestions),
                                     $fragmentDefinition
                                 )
                             );
@@ -149,13 +149,13 @@ class FieldSelectionsOnObjectsInterfacesAndUnionTypes_FragmentSpreadTypeExistenc
                             $subType = $typeMap[$typeConditionName];
 
                             // check if subType is allowed here (GraphQL Spec Rule 5.5.2.3 - Fragment Spread Is Possible)
-                            if(($objectType->isObjectType() and $objectType->getName() !== $subType->getName()) // check if object types are same
+                            if (($objectType->isObjectType() and $objectType->getName() !== $subType->getName()) // check if object types are same
                                 || ($objectType->isAbstractType() and !$validationContext->getSchema()->isSubType($objectType, $subType)) // check if abstract type has this subType as a sub type
-                            ){
+                            ) {
                                 // if any rule violated -> error
                                 $this->addError(
                                     new ValidationError(
-                                        "Fragment \"$fragmentSpreadName\" cannot be spread here as objects of type \"".$subType->getName()."\" can never be of type \"".$objectType->getName()."\".",
+                                        "Fragment \"$fragmentSpreadName\" cannot be spread here as objects of type \"" . $subType->getName() . "\" can never be of type \"" . $objectType->getName() . "\".",
                                         $selection
                                     )
                                 );

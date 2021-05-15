@@ -19,11 +19,11 @@ class AnyOperationDefined extends ValidationRule
 
         $foundAnyOperationDefinition = false;
 
-        foreach($document["definitions"] as $definition){
-            if($definition["kind"]==="OperationDefinition") $foundAnyOperationDefinition = true;
+        foreach ($document["definitions"] as $definition) {
+            if ($definition["kind"] === "OperationDefinition") $foundAnyOperationDefinition = true;
         }
 
-        if(!$foundAnyOperationDefinition){
+        if (!$foundAnyOperationDefinition) {
             $this->addError(
                 new ValidationError(
                     "No operation found. Provide at least one operation."

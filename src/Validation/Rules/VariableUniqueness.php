@@ -18,22 +18,22 @@ class VariableUniqueness extends ValidationRule
     {
         $definitions = $validationContext->getDocument()["definitions"];
 
-        foreach ($definitions as $definition){
-            if($definition["kind"]!=="OperationDefinition") continue;
+        foreach ($definitions as $definition) {
+            if ($definition["kind"] !== "OperationDefinition") continue;
 
             $variableDefinitions = $definition["variableDefinitions"];
             $seenKeys = [];
 
-            foreach ($variableDefinitions as $definition){
+            foreach ($variableDefinitions as $definition) {
                 $definitionName = $definition["variable"]["name"]["value"];
-                if(in_array($definitionName, $seenKeys)){
+                if (in_array($definitionName, $seenKeys)) {
                     $this->addError(
                         new ValidationError(
                             "There can be only one variable named \"$definitionName\".",
                             $definition
                         )
                     );
-                }else{
+                } else {
                     $seenKeys[] = $definitionName;
                 }
             }

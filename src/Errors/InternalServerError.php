@@ -6,4 +6,5 @@ class InternalServerError extends GraphQLError
 {
     protected $code = "INTERNAL_SERVER_ERROR";
 }
+
 ?>

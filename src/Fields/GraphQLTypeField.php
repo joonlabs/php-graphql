@@ -4,7 +4,8 @@ namespace GraphQL\Fields;
 
 use GraphQL\Types\GraphQLType;
 
-class GraphQLTypeField {
+class GraphQLTypeField
+{
     protected $id;
     private $args;
     private $type;
@@ -23,7 +24,7 @@ class GraphQLTypeField {
      * @param null $defaultValue Default value of field
      * @param string|null $deprecationReason Reason why field is deprecated
      */
-    public function __construct(string $id, GraphQLType $type, string $description="", \Closure $resolve=null, array $args=[], $defaultValue=null, ?string $deprecationReason=null)
+    public function __construct(string $id, GraphQLType $type, string $description = "", \Closure $resolve = null, array $args = [], $defaultValue = null, ?string $deprecationReason = null)
     {
         $this->id = $id;
         $this->type = $type;

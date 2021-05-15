@@ -89,7 +89,7 @@ class FieldSelectionMerging extends ValidationRule
                     $suggestions = Suggestions::suggest($typeConditionName, array_keys($typeMap));
                     $this->addError(
                         new ValidationError(
-                            "Unknown type \"$typeConditionName\".".Suggestions::didYouMean($suggestions),
+                            "Unknown type \"$typeConditionName\"." . Suggestions::didYouMean($suggestions),
                             $selection
                         )
                     );
@@ -134,28 +134,28 @@ class FieldSelectionMerging extends ValidationRule
 
         // collect fields with same name / alias into one array
         $fieldsPerName = [];
-        foreach($allSelectedFields as $selectedField){
+        foreach ($allSelectedFields as $selectedField) {
             $selectedName = $selectedField["alias"]["value"] ?? $selectedField["name"]["value"];
 
-            if(!array_key_exists($selectedName, $fieldsPerName)){
+            if (!array_key_exists($selectedName, $fieldsPerName)) {
                 $fieldsPerName[$selectedName] = [];
             }
 
-            if(array_key_exists($selectedName, $objectType->getFields())){
+            if (array_key_exists($selectedName, $objectType->getFields())) {
                 $fieldsPerName[$selectedName][] = $selectedField;
             }
         }
 
-        foreach ($fieldsPerName as $selectedName => $selectedFields){
-            if(count($selectedFields)>1){
+        foreach ($fieldsPerName as $selectedName => $selectedFields) {
+            if (count($selectedFields) > 1) {
                 // collect all possible permutations of fields that might be amigouse
                 $permutations = $this->getPermutations($selectedFields);
-                foreach($permutations as $permutation){
+                foreach ($permutations as $permutation) {
                     $sameResponseShape = $this->sameResponseShape($permutation[0], $permutation[1], $objectType);
-                    if(!$sameResponseShape){
+                    if (!$sameResponseShape) {
                         $this->addError(
                             new ValidationError(
-                                "Fields \"$selectedName\" conflict because ".$permutation[0]["name"]["value"]." and ".$permutation[1]["name"]["value"]." are different fields. Use different aliases on the fields to fetch both if this was intentional.",
+                                "Fields \"$selectedName\" conflict because " . $permutation[0]["name"]["value"] . " and " . $permutation[1]["name"]["value"] . " are different fields. Use different aliases on the fields to fetch both if this was intentional.",
                                 $permutation[1]
                             )
                         );
@@ -167,12 +167,16 @@ class FieldSelectionMerging extends ValidationRule
                     $argumentsB = $permutation[1]["arguments"];
 
                     // remove locations from arguments from fieldA
-                    array_walk_recursive($argumentsA, function(&$item, $key){ if($key==="line" || $key==="column") $item = null; });
+                    array_walk_recursive($argumentsA, function (&$item, $key) {
+                        if ($key === "line" || $key === "column") $item = null;
+                    });
                     // remove locations from arguments from fieldB
-                    array_walk_recursive($argumentsB, function(&$item, $key){ if($key==="line" || $key==="column") $item = null; });
+                    array_walk_recursive($argumentsB, function (&$item, $key) {
+                        if ($key === "line" || $key === "column") $item = null;
+                    });
 
                     // check if both arguments are the same
-                    if($argumentsA!=$argumentsB){
+                    if ($argumentsA != $argumentsB) {
                         $this->addError(
                             new ValidationError(
                                 "Fields \"$selectedName\" conflict because they have differing arguments. Use different aliases on the fields to fetch both if this was intentional.",
@@ -193,14 +197,15 @@ class FieldSelectionMerging extends ValidationRule
      * @param GraphQLObjectType $parentType
      * @return bool
      */
-    private function sameResponseShape(array $fieldA, array $fieldB, GraphQLType $parentType){
+    private function sameResponseShape(array $fieldA, array $fieldB, GraphQLType $parentType)
+    {
         // step 1
         $typeA = $parentType->getFields()[$fieldA["name"]["value"]]->getType();
 
         // step 2
         $typeB = $parentType->getFields()[$fieldB["name"]["value"]]->getType();
 
-        while($typeA->isNonNullType() || $typeA->isListType() || $typeB->isNonNullType() || $typeB->isListType()) {
+        while ($typeA->isNonNullType() || $typeA->isListType() || $typeB->isNonNullType() || $typeB->isListType()) {
             // step 3
             if ($typeA->isNonNullType() || $typeB->isNonNullType()) {
                 if (!$typeA->isNonNullType() || !$typeB->isNonNullType()) return false;
@@ -217,12 +222,12 @@ class FieldSelectionMerging extends ValidationRule
         }
 
         // step 5
-        if($typeA->isScalarType() || $typeA->isEnumType() || $typeB->isScalarType() || $typeB->isEnumType()){
+        if ($typeA->isScalarType() || $typeA->isEnumType() || $typeB->isScalarType() || $typeB->isEnumType()) {
             return $typeA->getName() === $typeB->getName();
         }
 
         // step 6
-        if(!$typeA->isCompositeType() || !$typeB->isCompositeType()){
+        if (!$typeA->isCompositeType() || !$typeB->isCompositeType()) {
             return false;
         }
 
@@ -239,8 +244,8 @@ class FieldSelectionMerging extends ValidationRule
     private function getPermutations(array $arr)
     {
         $perms = [];
-        for($i=0; $i<count($arr); $i++){
-            for($j=$i+1; $j<count($arr); $j++){
+        for ($i = 0; $i < count($arr); $i++) {
+            for ($j = $i + 1; $j < count($arr); $j++) {
                 $perms[] = [$arr[$i], $arr[$j]];
             }
         }
@@ -258,7 +263,7 @@ class FieldSelectionMerging extends ValidationRule
         $fields = [];
 
         $objectType = $validationContext->getSchema()->getTypeMap()[$inlineFragment["typeCondition"]["name"]["value"]];
-        if(!method_exists($objectType, "getFields")) return [];
+        if (!method_exists($objectType, "getFields")) return [];
 
         foreach ($inlineFragment["selectionSet"]["selections"] as $selection) {
             if ($selection["kind"] === "Field") {
@@ -300,14 +305,14 @@ class FieldSelectionMerging extends ValidationRule
         $fields = [];
 
         $fragments = DocumentUtils::getAllNodesOfKind($validationContext->getDocument(), "FragmentDefinition");
-        $fragments = KeyMap::map($fragments, function($fragment){
+        $fragments = KeyMap::map($fragments, function ($fragment) {
             return $fragment["name"]["value"];
         });
 
         $fragment = $fragments["$fragmentName"];
 
         $objectType = $validationContext->getSchema()->getTypeMap()[$fragment["typeCondition"]["name"]["value"]];
-        if(!method_exists($objectType, "getFields")) return [];
+        if (!method_exists($objectType, "getFields")) return [];
 
         foreach ($fragment["selectionSet"]["selections"] as $selection) {
             if ($selection["kind"] === "Field") {

@@ -20,22 +20,22 @@ class AllVariablesUsed extends ValidationRule
         $document = $validationContext->getDocument();
         $definitions = $document["definitions"];
 
-        foreach ($definitions as $definition){
-            if($definition["kind"]!=="OperationDefinition") continue;
+        foreach ($definitions as $definition) {
+            if ($definition["kind"] !== "OperationDefinition") continue;
 
-            $variableDefinitions = KeyMap::map($definition["variableDefinitions"], function ($definition){
+            $variableDefinitions = KeyMap::map($definition["variableDefinitions"], function ($definition) {
                 return $definition["variable"]["name"]["value"];
             });
 
-            $variableUsages = KeyMap::map(DocumentUtils::getAllNodesOfKind($definition["selectionSet"], "Variable"), function($definition){
-                return  $definition["name"]["value"];
+            $variableUsages = KeyMap::map(DocumentUtils::getAllNodesOfKind($definition["selectionSet"], "Variable"), function ($definition) {
+                return $definition["name"]["value"];
             });
 
             $variableUsages = array_keys($variableUsages);
             $variableDefinitions = array_keys($variableDefinitions);
 
-            foreach($variableDefinitions as $usage){
-                if(!in_array($usage, $variableUsages)){
+            foreach ($variableDefinitions as $usage) {
+                if (!in_array($usage, $variableUsages)) {
                     $this->addError(
                         new ValidationError(
                             "Variable \"$usage\" is defined but never used.",

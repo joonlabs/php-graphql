@@ -6,4 +6,5 @@ class PersistentQueryNotFound extends GraphQLError
 {
     protected $code = "PERSISTED_QUERY_NOT_FOUND";
 }
+
 ?>

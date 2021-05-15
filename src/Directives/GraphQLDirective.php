@@ -1,7 +1,9 @@
 <?php
+
 namespace GraphQL\Directives;
 
-class GraphQLDirective{
+class GraphQLDirective
+{
     protected $name;
     protected $arguments;
     protected $description;
@@ -48,4 +50,5 @@ class GraphQLDirective{
         return $this->isRepetable;
     }
 }
+
 ?>

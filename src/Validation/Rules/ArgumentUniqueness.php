@@ -23,13 +23,13 @@ class ArgumentUniqueness extends ValidationRule
         //var_dump($document);
         $argumentLists = DocumentUtils::getAllNodesOfKey($document, "arguments");
 
-        foreach ($argumentLists as $argumentList){
+        foreach ($argumentLists as $argumentList) {
             $seenArguments = [];
-            foreach ($argumentList as $arg){
+            foreach ($argumentList as $arg) {
                 $argName = $arg["name"]["value"];
-                if(!in_array($argName, $seenArguments)){
+                if (!in_array($argName, $seenArguments)) {
                     $seenArguments[] = $argName;
-                }else{
+                } else {
                     $this->addError(
                         new ValidationError(
                             "There can be only one argument named \"$argName\".",

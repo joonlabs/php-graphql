@@ -38,7 +38,7 @@ class LeafFieldSelections extends ValidationRule
     private function validateFieldsInSelectionSet(array $selectionSet, GraphQLType $objectType, ValidationContext $validationContext)
     {
         // if the field does not support getting sub fields -> return
-        if(!method_exists($objectType, "getFields")) return;
+        if (!method_exists($objectType, "getFields")) return;
 
         foreach ($selectionSet["selections"] as $selection) {
             $selectionKind = $selection["kind"];
@@ -46,9 +46,9 @@ class LeafFieldSelections extends ValidationRule
             if ($selectionKind === "Field") {
                 $selectedFieldName = $selection["name"]["value"];
                 // check if field is an internal field and skip this field
-                if($selectedFieldName === "__typename"
+                if ($selectedFieldName === "__typename"
                     || $selectedFieldName === "__schema"
-                    || $selectedFieldName === "__type"){
+                    || $selectedFieldName === "__type") {
                     continue;
                 }
                 $fieldType = $objectType->getFields()[$selectedFieldName]->getType();
@@ -59,11 +59,11 @@ class LeafFieldSelections extends ValidationRule
 
                 $subSelectionSet = $selection["selectionSet"];
                 // check if the current field's type is enum or scalar -> if yes, it must have no sub selection
-                if($fieldType->isEnumType() || $fieldType->isScalarType()){
-                    if(count($subSelectionSet["selections"] ?? [])>0){
+                if ($fieldType->isEnumType() || $fieldType->isScalarType()) {
+                    if (count($subSelectionSet["selections"] ?? []) > 0) {
                         $this->addError(
                             new ValidationError(
-                                "Field \"$selectedFieldName\" must not have a selection since type \"".$fieldType->getName()."\" has no subfields.",
+                                "Field \"$selectedFieldName\" must not have a selection since type \"" . $fieldType->getName() . "\" has no subfields.",
                                 $selection
                             )
                         );
@@ -71,15 +71,15 @@ class LeafFieldSelections extends ValidationRule
                 }
 
                 // check if the current field's type is interface, union, or object -> must have a sub selection
-                if($fieldType->isInterfaceType() || $fieldType->isUnionType() || $fieldType->isObjectType()){
-                    if(count($subSelectionSet["selections"] ?? [])===0){
+                if ($fieldType->isInterfaceType() || $fieldType->isUnionType() || $fieldType->isObjectType()) {
+                    if (count($subSelectionSet["selections"] ?? []) === 0) {
                         $this->addError(
                             new ValidationError(
-                                "Field \"$selectedFieldName\" of type \"".$fieldType->getName()."\" must have a selection of subfields. Did you mean \"$selectedFieldName { ... }\"?",
+                                "Field \"$selectedFieldName\" of type \"" . $fieldType->getName() . "\" must have a selection of subfields. Did you mean \"$selectedFieldName { ... }\"?",
                                 $selection
                             )
                         );
-                    }else{
+                    } else {
                         // call function recursivley on sub selection
                         $this->validateFieldsInSelectionSet($subSelectionSet, $fieldType, $validationContext);
                     }

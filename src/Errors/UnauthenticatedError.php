@@ -6,4 +6,5 @@ class UnauthenticatedError extends GraphQLError
 {
     protected $code = "UNAUTHENTICATED";
 }
+
 ?>
