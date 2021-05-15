@@ -1,14 +1,12 @@
 <?php
 
 use GraphQL\Types\GraphQLObjectType;
-use GraphQL\Types\GraphQLInt;
 use GraphQL\Types\GraphQLEnum;
 use GraphQL\Types\GraphQLEnumValue;
 use GraphQL\Types\GraphQLString;
 use GraphQL\Types\GraphQLInterface;
 use GraphQL\Types\GraphQLNonNull;
 use GraphQL\Types\GraphQLList;
-use GraphQL\Types\GraphQLUnion;
 use GraphQL\Fields\GraphQLTypeField;
 use GraphQL\Arguments\GraphQLFieldArgument;
 
@@ -26,15 +24,15 @@ $Episode = new GraphQLEnum("Episode", "One of the films in the Star Wars Trilogy
 /**
  * CHARACTER
  */
-$Character = new GraphQLInterface("Character", "A character in the Star Wars Trilogy.", function() use(&$Character, &$Episode){
+$Character = new GraphQLInterface("Character", "A character in the Star Wars Trilogy.", function () use (&$Character, &$Episode) {
     return [
         new GraphQLTypeField("id", new GraphQLNonNull(new GraphQLString()), "The id of the character."),
         new GraphQLTypeField("name", new GraphQLString(), "The name of the character."),
         new GraphQLTypeField("friends", new GraphQLList($Character), "The friends of the character, or an empty list if they have none."),
         new GraphQLTypeField("appearsIn", new GraphQLList($Episode), "Which movies they appear in."),
     ];
-}, function ($character){
-    if($character["type"]==="human"){
+}, function ($character) {
+    if ($character["type"] === "human") {
         return "Human";
     }
     return "Droid";
@@ -43,12 +41,12 @@ $Character = new GraphQLInterface("Character", "A character in the Star Wars Tri
 /**
  * HUMAN
  */
-$Human = new GraphQLObjectType("Human", "A humanoid creature in the Star Wars universe.", function() use(&$Character, &$Episode, &$humans, &$droids){
+$Human = new GraphQLObjectType("Human", "A humanoid creature in the Star Wars universe.", function () use (&$Character, &$Episode, &$humans, &$droids) {
     return [
         new GraphQLTypeField("id", new GraphQLNonNull(new GraphQLString()), "The id of the human."),
         new GraphQLTypeField("name", new GraphQLString(), "The name of the human."),
-        new GraphQLTypeField("friends", new GraphQLList($Character), "The friends of the human, or an empty list if they have none.", function ($character) use(&$humans, &$droids){
-            return array_map(function($friendId) use(&$humans, &$droids){
+        new GraphQLTypeField("friends", new GraphQLList($Character), "The friends of the human, or an empty list if they have none.", function ($character) use (&$humans, &$droids) {
+            return array_map(function ($friendId) use (&$humans, &$droids) {
                 return $humans[$friendId] ?? $droids[$friendId];
             }, $character["friends"]);
         }),
@@ -62,12 +60,12 @@ $Human = new GraphQLObjectType("Human", "A humanoid creature in the Star Wars un
 /**
  * DROID
  */
-$Droid = new GraphQLObjectType("Droid", "A mechanical creature in the Star Wars universe.", function() use(&$Character, &$Episode, &$humans, &$droids){
+$Droid = new GraphQLObjectType("Droid", "A mechanical creature in the Star Wars universe.", function () use (&$Character, &$Episode, &$humans, &$droids) {
     return [
         new GraphQLTypeField("id", new GraphQLNonNull(new GraphQLString()), "The id of the droid."),
         new GraphQLTypeField("name", new GraphQLString(), "The name of the droid."),
-        new GraphQLTypeField("friends", new GraphQLList($Character), "The friends of the droid, or an empty list if they have none.", function ($character) use(&$humans, &$droids){
-            return array_map(function($friendId) use(&$humans, &$droids){
+        new GraphQLTypeField("friends", new GraphQLList($Character), "The friends of the droid, or an empty list if they have none.", function ($character) use (&$humans, &$droids) {
+            return array_map(function ($friendId) use (&$humans, &$droids) {
                 return $humans[$friendId] ?? $droids[$friendId];
             }, $character["friends"]);
         }),
@@ -82,26 +80,26 @@ $Droid = new GraphQLObjectType("Droid", "A mechanical creature in the Star Wars 
 /**
  * QUERY
  */
-$Query = new GraphQLObjectType("Query", "Root Query", function () use (&$Episode, &$Character, &$Human, &$Droid, &$humans, &$droids){
+$Query = new GraphQLObjectType("Query", "Root Query", function () use (&$Episode, &$Character, &$Human, &$Droid, &$humans, &$droids) {
     return [
-        new GraphQLTypeField("hero", $Character, "", function($_, $args) use(&$humans, &$droids){
-                if(($args["episode"] ?? null)==="JEDI"){
-                    return $humans["1000"]; // Luke Skywalker
-                }
-                return $droids["2000"]; // R2-D2
-            }, [
+        new GraphQLTypeField("hero", $Character, "", function ($_, $args) use (&$humans, &$droids) {
+            if (($args["episode"] ?? null) === "JEDI") {
+                return $humans["1000"]; // Luke Skywalker
+            }
+            return $droids["2000"]; // R2-D2
+        }, [
                 new GraphQLFieldArgument("episode", $Episode, "If omitted, returns the hero of the whole saga. If provided, returns the hero of that particular episode")
             ]
         ),
-        new GraphQLTypeField("human", $Human, "", function($_, $args) use(&$humans){
-                return $humans[$args["id"]] ?? null;
-            }, [
+        new GraphQLTypeField("human", $Human, "", function ($_, $args) use (&$humans) {
+            return $humans[$args["id"]] ?? null;
+        }, [
                 new GraphQLFieldArgument("id", new GraphQLNonNull(new GraphQLString()), "id of the human")
             ]
         ),
-        new GraphQLTypeField("droid", $Droid, "", function($_, $args) use(&$droids){
-                return $droids[$args["id"]] ?? null;
-            }, [
+        new GraphQLTypeField("droid", $Droid, "", function ($_, $args) use (&$droids) {
+            return $droids[$args["id"]] ?? null;
+        }, [
                 new GraphQLFieldArgument("id", new GraphQLNonNull(new GraphQLString()), "id of the droid")
             ]
         )
