@@ -83,10 +83,10 @@ $Droid = new GraphQLObjectType("Droid", "A mechanical creature in the Star Wars 
 $Query = new GraphQLObjectType("Query", "Root Query", function () use (&$Episode, &$Character, &$Human, &$Droid, &$humans, &$droids) {
     return [
         new GraphQLTypeField("hero", $Character, "", function ($_, $args) use (&$humans, &$droids) {
-            if (($args["episode"] ?? null) === "JEDI") {
+            if (($args["episode"] ?? null) === "EMPIRE") {
                 return $humans["1000"]; // Luke Skywalker
             }
-            return $droids["2000"]; // R2-D2
+            return $droids["2001"]; // R2-D2
         }, [
                 new GraphQLFieldArgument("episode", $Episode, "If omitted, returns the hero of the whole saga. If provided, returns the hero of that particular episode")
             ]
