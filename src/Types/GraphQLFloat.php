@@ -27,6 +27,14 @@ class GraphQLFloat extends GraphQLScalarType
             );
         }
 
+        //check if is parsable as a float
+        if (!is_numeric($valueNode["value"])) {
+            throw new GraphQLError(
+                "Value cannot be represent as a float value: {$valueNode["value"]}",
+                $valueNode
+            );
+        }
+
         return floatval($valueNode["value"]);
     }
 
