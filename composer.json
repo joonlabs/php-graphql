@@ -19,6 +19,9 @@
     "phpunit/phpunit": "9.5.4",
     "phpbench/phpbench": "1.0.1"
   },
+  "require": {
+    "php": ">=7.2"
+  },
   "autoload": {
     "psr-4": {
       "GraphQL\\": "src/",
