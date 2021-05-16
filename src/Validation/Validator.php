@@ -40,7 +40,7 @@ class Validator
      * @param array $document
      * @return void
      */
-    public function validate(Schema $schema, array $document) : void
+    public function validate(Schema $schema, array $document): void
     {
         // create validation context
         $validationContext = new ValidationContext($schema, $document);
