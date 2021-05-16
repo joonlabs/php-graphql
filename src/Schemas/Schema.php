@@ -42,7 +42,7 @@ class Schema
         //TODO: check for custom directives (see: https://github.com/graphql/graphql-js/blob/5ed55b89d526c637eeb9c440715367eec8a2adec/src/type/schema.js#L190)
 
         $__Schema = null;
-        require_once __DIR__ . '/../Introspection/Introspection.php';
+        require __DIR__ . '/../Introspection/Introspection.php';
         $this->collectReferencedTypes($__Schema, $allReferencedTypes);
 
         // build type map
