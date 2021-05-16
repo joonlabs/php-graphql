@@ -41,10 +41,10 @@ class Parser
         $this->lookahead = $this->tokenizer->getNextToken();
 
         // try parsing the document -> if it fails, add error to the errors
-        try{
+        try {
             // entry point for parsing
             $this->document = $this->Document();
-        }catch (GraphQLError $error){
+        } catch (GraphQLError $error) {
             $this->errors[] = $error;
         }
     }
@@ -52,7 +52,7 @@ class Parser
     /**
      * @return bool
      */
-    public function queryIsValid() : bool
+    public function queryIsValid(): bool
     {
         return count($this->errors) === 0;
     }

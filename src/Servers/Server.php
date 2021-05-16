@@ -71,7 +71,7 @@ class Server
                 $this->parser->parse($query);
 
                 // check if is valid
-                if(!$this->parser->queryIsValid()){
+                if (!$this->parser->queryIsValid()) {
                     // if invalid -> show errors
                     $this->returnData([
                         "errors" => Errors::prettyPrintErrors($this->parser->getErrors())

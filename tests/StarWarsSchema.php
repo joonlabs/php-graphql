@@ -13,7 +13,8 @@ use GraphQL\Fields\GraphQLTypeField;
 use GraphQL\Arguments\GraphQLFieldArgument;
 use GraphQL\Schemas\Schema;
 
-class StarWarsSchema{
+class StarWarsSchema
+{
     private static $humans = [
         "1000" => ["type" => "human", "id" => "1000", "name" => "Luke Skywalker", "friends" => ["1002", "1003", "2000", "2001"], "appearsIn" => ["NEW_HOPE", "EMPIRE", "JEDI"], "homePlanet" => "Tatooine"],
         "1001" => ["type" => "human", "id" => "1001", "name" => "Darth Vader", "friends" => ["1004"], "appearsIn" => ["NEW_HOPE", "EMPIRE", "JEDI"], "homePlanet" => "Tatooine"],
