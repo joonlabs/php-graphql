@@ -3,6 +3,7 @@
 namespace GraphQL\Parser;
 
 use GraphQL\Errors\BadUserInputError;
+use GraphQL\Errors\GraphQLError;
 use GraphQL\Errors\UnexpectedEndOfInputError;
 use GraphQL\Errors\UnexpectedTokenError;
 
@@ -10,12 +11,15 @@ class Parser
 {
     private $tokenizer;
     private $string = "";
+    private $document;
     private $lookahead;
+    private $errors;
 
     public function __construct()
     {
         $this->string = "";
         $this->tokenizer = new Tokenizer();
+        $this->errors = [];
     }
 
     /**
@@ -36,8 +40,37 @@ class Parser
 
         $this->lookahead = $this->tokenizer->getNextToken();
 
-        // entry point for parsing
-        return $this->Document();
+        // try parsing the document -> if it fails, add error to the errors
+        try{
+            // entry point for parsing
+            $this->document = $this->Document();
+        }catch (GraphQLError $error){
+            $this->errors[] = $error;
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function queryIsValid() : bool
+    {
+        return count($this->errors) === 0;
+    }
+
+    /**
+     * @return array
+     */
+    public function getErrors(): array
+    {
+        return $this->errors;
+    }
+
+    /**
+     * @return array
+     */
+    public function getParsedDocument(): array
+    {
+        return $this->document;
     }
 
     /***

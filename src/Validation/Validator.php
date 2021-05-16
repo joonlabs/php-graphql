@@ -38,9 +38,9 @@ class Validator
      * Takes a schema and a parsed document and validates them against each other.
      * @param Schema $schema
      * @param array $document
-     * @return array
+     * @return void
      */
-    public function validate(Schema $schema, array $document)
+    public function validate(Schema $schema, array $document) : void
     {
         // create validation context
         $validationContext = new ValidationContext($schema, $document);

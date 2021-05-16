@@ -5,7 +5,6 @@ namespace GraphQL\Servers;
 use GraphQL\Execution\Executor;
 use GraphQL\Parser\Parser;
 use GraphQL\Schemas\Schema;
-use GraphQL\Errors\GraphQLError;
 use GraphQL\Errors\InternalServerError;
 use GraphQL\Utilities\Errors;
 use GraphQL\Validation\Rules\ValidationRule;
@@ -68,29 +67,35 @@ class Server
         } else {
             // try to parse the query
             try {
-                // parse the query
-                $document = $this->parser->parse($query);
+                // parse query
+                $this->parser->parse($query);
 
-                // validate the query
-                $this->validator->validate($this->schema, $document);
+                // check if is valid
+                if(!$this->parser->queryIsValid()){
+                    // if invalid -> show errors
+                    $this->returnData([
+                        "errors" => Errors::prettyPrintErrors($this->parser->getErrors())
+                    ]);
+                    return;
+                }
 
-                // check if query is valid
+                // validate query
+                $this->validator->validate($this->schema, $this->parser->getParsedDocument());
+
+                // check if is valid
                 if (!$this->validator->documentIsValid()) {
                     // if invalid -> show errors
                     $this->returnData([
                         "errors" => Errors::prettyPrintErrors($this->validator->getErrors())
                     ]);
-                } else {
-                    // valid -> execute query
-                    $result = $this->executor->execute($this->schema, $document, null, null, $variables);
-                    $this->returnData($result);
+                    return;
                 }
 
-            } catch (GraphQLError $graphQLError) {
-                // GraphQLError (while parsing or execution) -> error
-                $this->returnData([
-                    "errors" => Errors::prettyPrintErrors([$graphQLError])
-                ]);
+
+                // execute query
+                $result = $this->executor->execute($this->schema, $this->parser->getParsedDocument(), null, null, $variables);
+                $this->returnData($result);
+
             } catch (\Error $error) {
                 // 500 error -> error
                 $this->returnData([

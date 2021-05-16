@@ -68,7 +68,7 @@ class Executor
                 case "Field":
                     // check field
                     if (!$this->shouldIncludeNode($executionContext, $selection)) {
-                        continue;
+                        break;
                     }
                     $name = $this->getFieldEntryKey($selection);
                     if (!($fields[$name] ?? null)) {
@@ -79,7 +79,7 @@ class Executor
                 case "InlineFragment":
                     if (!$this->shouldIncludeNode($executionContext, $selection)
                         || !$this->doesFragmentConditionMatch($executionContext, $selection, $runtimeType)) {
-                        continue;
+                        break;
                     }
                     $this->collectFields(
                         $executionContext,
@@ -92,12 +92,12 @@ class Executor
                 case "FragmentSpread":
                     $fragName = $selection["name"]["value"];
                     if (array_key_exists($fragName, $visitedFragmentNames) || !$this->shouldIncludeNode($executionContext, $selection)) {
-                        continue;
+                        break;
                     }
                     $visitedFragmentNames[$fragName] = true;
                     $fragment = $executionContext->getFragments()[$fragName];
                     if (!$fragment || !$this->doesFragmentConditionMatch($executionContext, $fragment, $runtimeType)) {
-                        continue;
+                        break;
                     }
                     $this->collectFields(
                         $executionContext,
@@ -178,7 +178,7 @@ class Executor
             );
 
             if ($result === null) {
-                return $results;
+                //return $results;
             }
 
             $results[$responseName] = $result;
