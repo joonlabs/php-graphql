@@ -8,15 +8,19 @@ permalink: /docs/getting-started/
 # Installation
 To install php-graphql, you basically have two options. You can either use composer or git submodules.
 
-Composer (coming soon):
+**Composer**:
 ````bash
 composer require joonlabs/php-graphql
 ````
 
-Git-Submodule
+**Git-Submodule**
 ````bash
 git submodule add https://github.com/joonlabs/php-graphql.git
 ````
+***Notice:** When using this package via Git-Submodules, a custom autoloader is required. **php-graphql** comes with an own autoloader as replacement for the PSR-4 autoloader of composer, which can be used like this:*
+```php
+require 'php-graphql/src/autoloader.php';
+```
 # Additional Tools
 Although it is completely possible to communicate with the GraphQL API via HTTP requests, it is much more convenient to use graphical tools like [Altair](https://github.com/imolorhe/altair) or [GraphiQL](https://github.com/graphql/graphiql), while debugging and developing.
 These tools offer syntax highlighting, autocompletion, documentation insights and much more.
