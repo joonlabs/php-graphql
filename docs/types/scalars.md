@@ -1,3 +1,9 @@
+---
+layout: default
+title: Scalars
+parent: Types
+nav_order: 1
+---
 # Scalars
 The GraphQL specification describes a hand full built-in types, that represent the leafs of a query or mutation and cannot be sub-selected in any way.
 These types are called scalars:

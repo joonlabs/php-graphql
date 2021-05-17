@@ -1,3 +1,11 @@
+---
+layout: default
+title: Types
+nav_order: 4
+has_children: true
+permalink: /docs/types/
+---
+
 # Types
 In **php-graphql**, types are represented as instances of a GraphQL-Type-Class. Supported built in types are:
 - ```GraphQLBoolean()```

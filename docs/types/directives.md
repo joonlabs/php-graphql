@@ -1,3 +1,9 @@
+---
+layout: default
+title: Directives
+parent: Types
+nav_order: 7
+---
 # Directives
 A directive describes how the data should be processed at a meta level. 
 A directive can be attached to a field or fragment and can affect the execution of the query.

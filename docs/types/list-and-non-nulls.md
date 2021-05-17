@@ -1,3 +1,9 @@
+---
+layout: default
+title: Lists and Non-Nulls
+parent: Types
+nav_order: 4
+---
 # Lists and Non-Nulls
 Lists and Non-Nulls are wrapping types in GraphQL. This means, that they cannot be used solely, but must feature an inner type, which they hold.
 

@@ -1,3 +1,10 @@
+---
+layout: default
+title: Getting Started
+nav_order: 2
+has_children: false
+permalink: /docs/getting-started/
+---
 # Installation
 To install php-graphql, you basically have two options. You can either use composer or git submodules.
 

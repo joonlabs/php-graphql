@@ -1,3 +1,9 @@
+---
+layout: default
+title: Unions
+parent: Types
+nav_order: 6
+---
 # Unions
 A Union is an abstract type that holds other object types. When passed as type to a field, 
 it means that the field can return any of the types held by the union. 

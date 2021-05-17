@@ -1,3 +1,9 @@
+---
+layout: default
+title: Interfaces
+parent: Types
+nav_order: 5
+---
 # Interfaces
 An Interface is an abstract type that includes a certain set of fields that a type must include to implement the interface.
 An Interface can never be returned directly but must be implemented by 'child types'.

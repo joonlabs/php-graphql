@@ -1,3 +1,10 @@
+---
+layout: default
+title: Enums
+parent: Types
+nav_order: 3
+---
+
 # Enums
 Enumeration types are a special kind of scalar that is restricted to a particular set of allowed values and in this implementation handled as string values.
 

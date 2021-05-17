@@ -1,3 +1,10 @@
+---
+layout: default
+title: Server
+nav_order: 5
+has_children: false
+permalink: /docs/server/
+---
 # Server
 The default `Server` is a simple wrapper around a parser, validator and executor to save you work. 
 When constructing a server, simply pass the schema to the constructor and enable processing via the `listen()` function.

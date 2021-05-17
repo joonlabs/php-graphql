@@ -1,3 +1,10 @@
+---
+layout: default
+title: Schema Definition
+nav_order: 3
+has_children: false
+permalink: /docs/schema-definition/
+---
 # Schema Definition
 The schema is a container for your type hierarchy that accepts object types as roots for the query type, and the mutation type. 
 It is passed to the validator and the executor and used to model your underlying data structures.

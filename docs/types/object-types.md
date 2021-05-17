@@ -1,3 +1,9 @@
+---
+layout: default
+title: Object Types
+parent: Types
+nav_order: 2
+---
 # Object Type
 Object Types represent the probably most used primitive types in GraphQL applications. The hold a set of fields, 
 where each field has it's own type, which lays the foundation for building complex hierachies and systems.

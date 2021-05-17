@@ -1,3 +1,10 @@
+---
+layout: default
+title: Parsing, Validation, Execution
+nav_order: 6
+has_children: false
+permalink: /docs/parsing-validating-executing/
+---
 # Introduction
 This section describes how parsing, validation and execution in a high level and should only be interesting for building an own processing pipeline or understanding how the GraphQL-Server works. 
 In all other cases the default `Server` should be fine to use.
