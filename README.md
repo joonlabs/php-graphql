@@ -4,6 +4,10 @@
 
 # php-graphql
 
+[![CI](https://github.com/joonlabs/php-graphql/actions/workflows/php.yml/badge.svg)](https://github.com/joonlabs/php-graphql/actions/workflows/php.yml)
+[![Latest Stable Version](https://poser.pugx.org/joonlabs/php-graphql/v)](//packagist.org/packages/joonlabs/php-graphql)
+[![License](https://poser.pugx.org/joonlabs/php-graphql/license)](//packagist.org/packages/joonlabs/php-graphql)
+
 php-graphql is a pure php implementation of the latest GraphQL [specification](https://github.com/graphql/graphql-spec)
 based on the [reference implementation in JavaScript](https://github.com/graphql/graphql-js).
 
