@@ -2,7 +2,6 @@
 
 namespace GraphQL\Validation\Rules;
 
-use GraphQL\Errors\GraphQLError;
 use GraphQL\Errors\ValidationError;
 use GraphQL\Validation\ValidationContext;
 
@@ -11,7 +10,7 @@ class AnyOperationDefined extends ValidationRule
     /**
      * Implements a custom rule to ensure that an operation is present
      * @param ValidationContext $validationContext
-     * @return array
+     * @return void
      */
     public function validate(ValidationContext $validationContext): void
     {
@@ -32,5 +31,3 @@ class AnyOperationDefined extends ValidationRule
         }
     }
 }
-
-?>

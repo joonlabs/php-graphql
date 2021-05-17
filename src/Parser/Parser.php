@@ -2,7 +2,6 @@
 
 namespace GraphQL\Parser;
 
-use GraphQL\Errors\BadUserInputError;
 use GraphQL\Errors\GraphQLError;
 use GraphQL\Errors\UnexpectedEndOfInputError;
 use GraphQL\Errors\UnexpectedTokenError;
@@ -10,7 +9,7 @@ use GraphQL\Errors\UnexpectedTokenError;
 class Parser
 {
     private $tokenizer;
-    private $string = "";
+    private $string;
     private $document;
     private $lookahead;
     private $errors;
@@ -26,10 +25,9 @@ class Parser
      * Returns the abstract syntax tree corresponding to the a given query or mutation.
      *
      * @param $string
-     * @return array
      * @throws UnexpectedTokenError
      */
-    public function parse($string)
+    public function parse($string) : void
     {
         $this->string = $string;
         $this->tokenizer->init($string);
@@ -79,7 +77,7 @@ class Parser
      *
      * Notice: ExecutableDefinitionList is just a shorthand as the DDL-lang is not supported
      */
-    public function Document()
+    public function Document(): array
     {
         $location = $this->tokenizer->getLocation();
         return [
@@ -94,7 +92,7 @@ class Parser
      *  : ExecutableDefinitionList
      *  : ExecutableDefinition
      */
-    public function ExecutableDefinitionList()
+    public function ExecutableDefinitionList(): array
     {
         $executableDefinitionList = [];
 
@@ -110,7 +108,7 @@ class Parser
      *  : OperationDefinition
      *  : FragmentDefinition
      */
-    public function ExecutableDefinition()
+    public function ExecutableDefinition(): array
     {
         if ($this->lookahead["type"] === "FRAGMENT") {
             return $this->FragmentDefinition();
@@ -127,7 +125,7 @@ class Parser
      *  : mutation SelectionSet
      *  : mutation Name VariableDefinitions SelectionSet
      */
-    public function OperationDefinition()
+    public function OperationDefinition(): array
     {
         $type = "query";
         $name = null;
@@ -162,7 +160,7 @@ class Parser
      * FragmentDefinition
      *  : fragment FragmentName TypeCondition SelectionSet
      */
-    public function FragmentDefinition()
+    public function FragmentDefinition(): array
     {
         $location = $this->tokenizer->getLastLocation();
         $this->eat("FRAGMENT");
@@ -188,7 +186,7 @@ class Parser
      * SelectionSet
      *  : { SelectionList }
      */
-    public function SelectionSet()
+    public function SelectionSet(): array
     {
         $location = $this->tokenizer->getLastLocation();
         $this->eat("{");
@@ -206,7 +204,7 @@ class Parser
      *  : SelectionList
      *  : Selection
      */
-    public function SelectionList()
+    public function SelectionList(): array
     {
         $selectionList = [$this->Selection()];
 
@@ -222,7 +220,7 @@ class Parser
      *  : Field
      *  : FagmentSpread
      */
-    public function Selection()
+    public function Selection(): array
     {
         if ($this->lookahead["type"] !== "...") {
             return $this->Field();
@@ -247,10 +245,9 @@ class Parser
      * Field
      *  : Alias? : Name Arguments? SelectionSet?
      */
-    public function Field()
+    public function Field(): array
     {
         $alias = null;
-        $name = null;
         $arguments = [];
         $directives = [];
         $selectionSet = [];
@@ -297,7 +294,7 @@ class Parser
      * VariableDefinitions
      *  : ( VariableDefinitionList )
      */
-    public function VariableDefinitions()
+    public function VariableDefinitions(): array
     {
 
         $this->eat("(");
@@ -311,7 +308,7 @@ class Parser
      *  : VariableDefinition
      *  : VariableDefinitionList
      */
-    public function VariableDefinitionList()
+    public function VariableDefinitionList(): array
     {
         $variableDefinitionList = [$this->VariableDefinition()];
 
@@ -328,7 +325,7 @@ class Parser
      *  : Variable : Type
      *  : Variable : Type DefaultValue
      */
-    public function VariableDefinition()
+    public function VariableDefinition(): array
     {
         $location = $this->tokenizer->getLastLocation();
         $variable = $this->Variable();
@@ -352,7 +349,7 @@ class Parser
      * Variable
      *  : $ Name
      */
-    public function Variable()
+    public function Variable(): array
     {
         $location = $this->tokenizer->getLastLocation();
         $this->eat("$");
@@ -367,7 +364,7 @@ class Parser
      * DefaultValue
      *  : = Values
      */
-    public function DefaultValue()
+    public function DefaultValue(): array
     {
         $this->eat("=");
         return $this->Value();
@@ -385,7 +382,7 @@ class Parser
      *  : ListValue
      *  : ObjectValue
      */
-    public function Value()
+    public function Value(): array
     {
         $value = null;
         $location = $this->tokenizer->getLastLocation();
@@ -407,7 +404,7 @@ class Parser
     /***
      * Primitive Values
      */
-    public function IntValue()
+    public function IntValue(): array
     {
         $location = $this->tokenizer->getLastLocation();
         return [
@@ -417,7 +414,7 @@ class Parser
         ];
     }
 
-    public function FloatValue()
+    public function FloatValue(): array
     {
         $location = $this->tokenizer->getLastLocation();
         return [
@@ -427,7 +424,7 @@ class Parser
         ];
     }
 
-    public function StringValue()
+    public function StringValue(): array
     {
         $location = $this->tokenizer->getLastLocation();
         return [
@@ -437,7 +434,7 @@ class Parser
         ];
     }
 
-    public function BooleanValue()
+    public function BooleanValue(): array
     {
         $location = $this->tokenizer->getLastLocation();
         return [
@@ -447,7 +444,7 @@ class Parser
         ];
     }
 
-    public function NullValue()
+    public function NullValue(): array
     {
         $location = $this->tokenizer->getLastLocation();
         $this->eat("NULL")["value"];
@@ -458,7 +455,7 @@ class Parser
         ];
     }
 
-    public function EnumValue()
+    public function EnumValue(): array
     {
         $location = $this->tokenizer->getLastLocation();
         $value = $this->Name()["value"];
@@ -473,7 +470,7 @@ class Parser
      * ListValue
      *  : [ Values?... ]
      */
-    public function ListValue()
+    public function ListValue(): array
     {
         $location = $this->tokenizer->getLastLocation();
 
@@ -499,7 +496,7 @@ class Parser
      * ObjectValue
      *  : { ObjectFieldList }
      */
-    public function ObjectValue()
+    public function ObjectValue(): array
     {
         $location = $this->tokenizer->getLastLocation();
 
@@ -524,7 +521,7 @@ class Parser
      *  : ObjectField
      *  : ObjectField, ObjectFieldList
      */
-    public function ObjectFieldList()
+    public function ObjectFieldList(): array
     {
         $objectFieldList = [$this->ObjectField()];
 
@@ -540,7 +537,7 @@ class Parser
      * ObjectField:
      *  : Name : Values
      */
-    public function ObjectField()
+    public function ObjectField(): array
     {
         $location = $this->tokenizer->getLastLocation();
 
@@ -555,7 +552,7 @@ class Parser
         ];
     }
 
-    public function Name()
+    public function Name(): array
     {
         $location = $this->tokenizer->getLastLocation();
         return [
@@ -575,7 +572,6 @@ class Parser
     {
         $location = $this->tokenizer->getLastLocation();
 
-        $type = null;
         $nonNullable = false;
         $isListType = false;
 
@@ -634,7 +630,7 @@ class Parser
      * NamedType
      *  : Name
      */
-    public function NamedType()
+    public function NamedType(): array
     {
         return $this->Name();
     }
@@ -643,7 +639,7 @@ class Parser
      * Arguments
      *  : ( ArgumentList )
      */
-    public function Arguments()
+    public function Arguments(): array
     {
         $this->eat("(");
         $argumentList = $this->ArgumentList();
@@ -656,7 +652,7 @@ class Parser
      *  : Argument
      *  : ArgumentList
      */
-    public function ArgumentList()
+    public function ArgumentList(): array
     {
         $argumentList = [$this->Argument()];
 
@@ -672,7 +668,7 @@ class Parser
      * Argument
      *  : Name : Values
      */
-    public function Argument()
+    public function Argument(): array
     {
         $location = $this->tokenizer->getLastLocation();
 
@@ -691,7 +687,7 @@ class Parser
      * Directives
      *  : DirectiveList
      */
-    public function Directives()
+    public function Directives(): array
     {
         return $this->DirectiveList();
     }
@@ -701,7 +697,7 @@ class Parser
      *  : Directive
      *  : DirectiveList
      */
-    public function DirectiveList()
+    public function DirectiveList(): array
     {
         $directiveList = [$this->Directive()];
 
@@ -716,7 +712,7 @@ class Parser
      * Directive
      *  : @ Name Arguments?
      */
-    public function Directive()
+    public function Directive(): array
     {
         $location = $this->tokenizer->getLastLocation();
 
@@ -740,7 +736,7 @@ class Parser
      * FragmentSpread
      *  : ... TypeCondition? Directives? SelectionSet
      */
-    public function InlineFragment()
+    public function InlineFragment(): array
     {
         $location = $this->tokenizer->getLastLocation();
 
@@ -771,7 +767,7 @@ class Parser
      * FragmentSpread
      *  : ... FragmentName Directives?
      */
-    public function FragmentSpread()
+    public function FragmentSpread(): array
     {
         $location = $this->tokenizer->getLastLocation();
 
@@ -796,7 +792,7 @@ class Parser
      * FragmentName
      *  : Name !!but not on!!
      */
-    public function FragmentName()
+    public function FragmentName(): array
     {
         return $this->Name();
     }

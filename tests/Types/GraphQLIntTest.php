@@ -1,13 +1,13 @@
 <?php
 
-use \PHPUnit\Framework\TestCase;
-use \GraphQL\Types\GraphQLInt;
-use \GraphQL\Errors\GraphQLError;
+use PHPUnit\Framework\TestCase;
+use GraphQL\Types\GraphQLInt;
+use GraphQL\Errors\GraphQLError;
 
 class GraphQLIntTest extends TestCase
 {
 
-    public function getType()
+    public function getType(): GraphQLInt
     {
         return new GraphQLInt();
     }

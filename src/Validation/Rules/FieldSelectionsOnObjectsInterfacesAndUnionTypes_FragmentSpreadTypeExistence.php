@@ -2,7 +2,6 @@
 
 namespace GraphQL\Validation\Rules;
 
-use GraphQL\Errors\GraphQLError;
 use GraphQL\Errors\ValidationError;
 use GraphQL\Types\GraphQLType;
 use GraphQL\Utilities\Suggestions;
@@ -15,14 +14,12 @@ class FieldSelectionsOnObjectsInterfacesAndUnionTypes_FragmentSpreadTypeExistenc
      * Implements the rule specified under 5.3.1 (Field Selections on Objects, Interfaces, and Union Types) in the GraphQL-Specs (version: 2018),
      * also implements the rule specified under 5.5.1.2 (Fragment Spread Type Existence) in the GraphQL-Specs (version: 2018)
      * @param ValidationContext $validationContext
-     * @return array
+     * @return void
      */
     public function validate(ValidationContext $validationContext): void
     {
         $definitions = $validationContext->getDocument()["definitions"];
         $schema = $validationContext->getSchema();
-
-        $unnamedOperations = 0;
 
         foreach ($definitions as $definition) {
             $definitionKind = $definition["kind"] ?? null;
@@ -34,7 +31,6 @@ class FieldSelectionsOnObjectsInterfacesAndUnionTypes_FragmentSpreadTypeExistenc
                 } else if ($definitionOperation === "mutation") {
                     $this->validateFieldsInSelectionSet($definitionSelectionSet, $schema->getMutationType(), $validationContext);
                 }
-
             }
         }
     }
@@ -184,4 +180,3 @@ class FieldSelectionsOnObjectsInterfacesAndUnionTypes_FragmentSpreadTypeExistenc
     }
 }
 
-?>

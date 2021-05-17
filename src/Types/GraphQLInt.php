@@ -9,17 +9,17 @@ class GraphQLInt extends GraphQLScalarType
     protected $type = "Int";
     protected $description = "Default GraphQL Integer Type";
 
-    public function serialize($outputValue)
+    public function serialize($outputValue): ?int
     {
         if (!is_int($outputValue) and $outputValue !== null) {
             throw new GraphQLError(
-                "Value \"{$outputValue}\" is not of type \"{$this->getName()}\"."
+                "Value \"$outputValue\" is not of type \"{$this->getName()}\"."
             );
         }
         return $outputValue;
     }
 
-    public function parseLiteral($valueNode, $variables)
+    public function parseLiteral($valueNode, $variables): int
     {
         if ($valueNode["kind"] !== "IntValue") {
             throw new GraphQLError(
@@ -39,15 +39,14 @@ class GraphQLInt extends GraphQLScalarType
         return $num;
     }
 
-    public function parseValue($value)
+    public function parseValue($value): ?int
     {
         if (!is_int($value) and $value !== null) {
             throw new GraphQLError(
-                "Value \"{$value}\" is not of type \"{$this->getName()}\"."
+                "Value \"$value\" is not of type \"{$this->getName()}\"."
             );
         }
         return $value;
     }
 }
 
-?>

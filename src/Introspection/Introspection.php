@@ -2,7 +2,6 @@
 
 namespace GraphQL\Introspection;
 
-use GraphQL\Arguments\GraphQLArgument;
 use GraphQL\Fields\GraphQLTypeField;
 use GraphQL\Types\GraphQLObjectType;
 use GraphQL\Types\GraphQLBoolean;
@@ -554,4 +553,3 @@ class Introspection{
         return $carry || $type->getName()===$name;
     }, false);
 }*/
-?>

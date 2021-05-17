@@ -20,4 +20,3 @@ $schema = new Schema($queryType, $mutationType);
 $server = new Server($schema);
 $server->setInternalServerErrorPrint(true);
 $server->listen();
-?>

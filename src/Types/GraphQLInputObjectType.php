@@ -2,9 +2,8 @@
 
 namespace GraphQL\Types;
 
-use GraphQL\Errors\BadUserInputError;
+use Closure;
 use GraphQL\Fields\GraphQLQueryField;
-use GraphQL\Fields\GraphQLTypeField;
 
 class GraphQLInputObjectType extends GraphQLObjectType
 {
@@ -14,11 +13,10 @@ class GraphQLInputObjectType extends GraphQLObjectType
     public function __construct(
         string $type,
         string $description,
-        \Closure $fields
+        Closure $fields
     )
     {
         parent::__construct($type, $description, $fields, []);
     }
 }
 
-?>

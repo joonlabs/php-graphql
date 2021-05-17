@@ -5,7 +5,8 @@ header("Content-Type: application/json");
 // include the php-graphql-autoloader
 require '../../src/autoloader.php';
 
-use \GraphQL\Parser\Parser;
+use GraphQL\Errors\GraphQLError;
+use GraphQL\Parser\Parser;
 
 $parser = new Parser();
 $query = '
@@ -90,8 +91,7 @@ $query = '
 
 try {
     echo json_encode($parser->parse($query));
-} catch (\GraphQL\Errors\GraphQLError $e) {
+} catch (GraphQLError $e) {
     var_dump($e->getMessage(), $e->getLocations());
 }
 
-?>

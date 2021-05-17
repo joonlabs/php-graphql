@@ -49,14 +49,14 @@ class MyCustomStringType extends GraphQLScalarType
     {
         if (!is_string($outputValue) and $outputValue !== null) {
             throw new GraphQLError(
-                "Value \"{$outputValue}\" is not of type \"{$this->getName()}\"."
+                "Value \"$outputValue\" is not of type \"{$this->getName()}\"."
             );
         }
         return $outputValue;
     }
 
     /**
-     * Parses an externally provided value (query variable) to use as an input
+     * Parses an externally provided literal value (hardcoded in GraphQL query) to use as an input.
      * 
      * @param $valueNode
      * @param $variables
@@ -75,7 +75,7 @@ class MyCustomStringType extends GraphQLScalarType
     }
 
     /**
-     * Parses an externally provided literal value (hardcoded in GraphQL query) to use as an input.
+     * Parses an externally provided value (query variable) to use as an input
      * 
      * @param $value
      * @return string|null
@@ -85,7 +85,7 @@ class MyCustomStringType extends GraphQLScalarType
     {
         if (!is_string($value) and $value !== null) {
             throw new GraphQLError(
-                "Value \"{$value}\" is not of type \"{$this->getName()}\"."
+                "Value \"$value\" is not of type \"{$this->getName()}\"."
             );
         }
         return $value;

@@ -21,6 +21,7 @@ class Schema
      * Schema constructor.
      * @param GraphQLObjectType $queryType
      * @param GraphQLObjectType $mutationType
+     * @throws GraphQLError
      */
     public function __construct(?GraphQLObjectType $queryType, ?GraphQLObjectType $mutationType = null, ?array $directives = null)
     {
@@ -92,7 +93,12 @@ class Schema
         }
     }
 
-    private function collectReferencedTypes(GraphQLType $type, array &$typeSet)
+    /**
+     * @param GraphQLType $type
+     * @param array $typeSet
+     * @return array
+     */
+    private function collectReferencedTypes(GraphQLType $type, array &$typeSet): array
     {
         $namedType = $type->getNamedType();
         if (!in_array($namedType, $typeSet)) {
@@ -124,23 +130,40 @@ class Schema
         return $typeSet;
     }
 
+    /**
+     * @param GraphQLType $abstractType
+     * @return array|mixed
+     */
     public function getPossibleTypes(GraphQLType $abstractType)
     {
         return $abstractType->isUnionType() ? $abstractType->getTypes() : $this->getImplementations($abstractType)["objects"];
     }
 
+    /**
+     * @param GraphQLType $interfaceType
+     * @return array[]|mixed
+     */
     public function getImplementations(GraphQLType $interfaceType)
     {
         $implementations = $this->implementationsMap[$interfaceType->getName()];
         return $implementations ?? ["objects" => [], "interfaces" => []];
     }
 
+    /**
+     * @param string $name
+     * @return GraphQLType|null
+     */
     public function getType(string $name): ?GraphQLType
     {
         return $this->typeMap[$name] ?? null;
     }
 
-    public function isSubType(GraphQLAbstractType $abstractType, GraphQLType $maybeSubType)
+    /**
+     * @param GraphQLAbstractType $abstractType
+     * @param GraphQLType $maybeSubType
+     * @return bool
+     */
+    public function isSubType(GraphQLAbstractType $abstractType, GraphQLType $maybeSubType): bool
     {
         $map = $this->subTypeMap[$abstractType->getName()] ?? null;
         if ($map === null) {
@@ -215,8 +238,5 @@ class Schema
     {
         return $this->directives;
     }
-
-
 }
 
-?>

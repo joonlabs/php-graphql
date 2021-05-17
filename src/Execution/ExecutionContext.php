@@ -97,7 +97,7 @@ class ExecutionContext
      * @param mixed $rootValue
      * @return ExecutionContext
      */
-    public function setRootValue($rootValue)
+    public function setRootValue($rootValue): ExecutionContext
     {
         $this->rootValue = $rootValue;
         return $this;
@@ -115,7 +115,7 @@ class ExecutionContext
      * @param mixed $contextValue
      * @return ExecutionContext
      */
-    public function setContextValue($contextValue)
+    public function setContextValue($contextValue): ExecutionContext
     {
         $this->contextValue = $contextValue;
         return $this;
@@ -133,7 +133,7 @@ class ExecutionContext
      * @param mixed $operation
      * @return ExecutionContext
      */
-    public function setOperation($operation)
+    public function setOperation($operation): ExecutionContext
     {
         $this->operation = $operation;
         return $this;
@@ -151,7 +151,7 @@ class ExecutionContext
      * @param mixed $variableValues
      * @return ExecutionContext
      */
-    public function setVariableValues($variableValues)
+    public function setVariableValues($variableValues): ExecutionContext
     {
         $this->variableValues = $variableValues;
         return $this;
@@ -169,7 +169,7 @@ class ExecutionContext
      * @param mixed $fieldResolver
      * @return ExecutionContext
      */
-    public function setFieldResolver($fieldResolver)
+    public function setFieldResolver($fieldResolver): ExecutionContext
     {
         $this->fieldResolver = $fieldResolver;
         return $this;
@@ -187,7 +187,7 @@ class ExecutionContext
      * @param mixed $errors
      * @return ExecutionContext
      */
-    public function setErrors($errors)
+    public function setErrors($errors): ExecutionContext
     {
         $this->errors = $errors;
         return $this;
@@ -197,9 +197,10 @@ class ExecutionContext
      * @param GraphQLError $error
      * @return ExecutionContext
      */
-    public function pushError($error)
+    public function pushError(GraphQLError $error): ExecutionContext
     {
         $this->errors[] = $error;
+        return $this;
     }
 
     /**
@@ -214,11 +215,10 @@ class ExecutionContext
      * @param mixed $typeResolver
      * @return ExecutionContext
      */
-    public function setTypeResolver($typeResolver)
+    public function setTypeResolver($typeResolver): ExecutionContext
     {
         $this->typeResolver = $typeResolver;
         return $this;
     }
 }
 
-?>

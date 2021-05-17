@@ -2,8 +2,6 @@
 
 namespace GraphQL\Validation\Rules;
 
-use GraphQL\Errors\GraphQLError;
-use GraphQL\Errors\ValidationError;
 use GraphQL\Validation\ValidationContext;
 
 class InputObjectFieldUniqueness extends ValidationRule
@@ -11,7 +9,7 @@ class InputObjectFieldUniqueness extends ValidationRule
     /**
      * Implements the rule specified under 5.6.3 (Input Object Field Uniqueness) in the GraphQL-Specs (version: 2018)
      * @param ValidationContext $validationContext
-     * @return array
+     * @return void
      */
     public function validate(ValidationContext $validationContext): void
     {
@@ -20,4 +18,3 @@ class InputObjectFieldUniqueness extends ValidationRule
     }
 }
 
-?>

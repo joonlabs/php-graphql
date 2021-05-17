@@ -29,7 +29,6 @@ use GraphQL\Schemas\Schema;
 use GraphQL\Types\GraphQLString;
 use GraphQL\Types\GraphQLObjectType;
 use GraphQL\Fields\GraphQLTypeField;
-use GraphQL\Arguments\GraphQLFieldArgument;
 
 // build the query type
 $QueryType = new GraphQLObjectType("Query", "Root Query", function (){

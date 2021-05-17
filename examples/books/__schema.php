@@ -25,7 +25,7 @@ $bookType = new GraphQLObjectType("Book", "The Book Type", function () use (&$au
             "name",
             new GraphQLString(),
             "Name of the Book",
-            function ($parent, $args, &$context) {
+            function ($parent, $args, $context) {
                 return ($args["prefix"] ?? "") . $parent["name"] . ($context["addOn"] ?? "");
             },
             [
@@ -191,4 +191,3 @@ $mutationType = new GraphQLObjectType("Mutation", "Root Mutation", function () u
         )
     ];
 });
-?>

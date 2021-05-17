@@ -1,14 +1,14 @@
 <?php
 
-use \PHPUnit\Framework\TestCase;
-use \GraphQL\Types\GraphQLEnum;
-use \GraphQL\Types\GraphQLEnumValue;
-use \GraphQL\Errors\GraphQLError;
+use PHPUnit\Framework\TestCase;
+use GraphQL\Types\GraphQLEnum;
+use GraphQL\Types\GraphQLEnumValue;
+use GraphQL\Errors\GraphQLError;
 
 class GraphQLEnumTest extends TestCase
 {
 
-    public function getType()
+    public function getType(): GraphQLEnum
     {
         return new GraphQLEnum("enum", "", [
             new GraphQLEnumValue("VAL1", "Value #1."),

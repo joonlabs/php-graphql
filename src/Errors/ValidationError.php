@@ -7,4 +7,3 @@ class ValidationError extends GraphQLError
     protected $code = "GRAPHQL_VALIDATION_FAILED";
 }
 
-?>

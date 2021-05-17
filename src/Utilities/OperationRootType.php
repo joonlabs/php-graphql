@@ -7,7 +7,7 @@ use GraphQL\Schemas\Schema;
 
 abstract class OperationRootType
 {
-    public static function getOperationRootType(Schema $schema, $operation)
+    public static function getOperationRootType(Schema $schema, $operation): \GraphQL\Types\GraphQLObjectType
     {
         if ($operation["operation"] === "query") {
             $queryType = $schema->getQueryType();
@@ -36,4 +36,3 @@ abstract class OperationRootType
 
 }
 
-?>

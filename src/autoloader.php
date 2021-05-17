@@ -16,4 +16,3 @@ spl_autoload_register(function ($className) {
     // include required file
     include __DIR__ . "/$className.php";
 });
-?>

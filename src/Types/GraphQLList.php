@@ -2,7 +2,6 @@
 
 namespace GraphQL\Types;
 
-use GraphQL\Errors\ValidationError;
 use GraphQL\Fields\GraphQLQueryField;
 use GraphQL\Resolvers\QueryResolver;
 use GraphQL\Variables\GraphQLVariableHolder;
@@ -24,10 +23,9 @@ class GraphQLList extends GraphQLType
         $this->innerType = $innerType;
     }
 
-    public function getInnerType()
+    public function getInnerType(): GraphQLType
     {
         return $this->innerType;
     }
 }
 
-?>

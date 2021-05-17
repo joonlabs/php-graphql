@@ -2,9 +2,7 @@
 
 namespace GraphQL\Validation\Rules;
 
-use GraphQL\Errors\GraphQLError;
 use GraphQL\Errors\ValidationError;
-use GraphQL\Types\GraphQLType;
 use GraphQL\Validation\DocumentUtils;
 use GraphQL\Validation\ValidationContext;
 
@@ -13,12 +11,11 @@ class FragmentsMustBeUsed extends ValidationRule
     /**
      * Implements the rule specified under 5.5.1.4 (Fragments Must Be Used) in the GraphQL-Specs (version: 2018)
      * @param ValidationContext $validationContext
-     * @return array
+     * @return void
      */
     public function validate(ValidationContext $validationContext): void
     {
         $document = $validationContext->getDocument();
-        $schema = $validationContext->getSchema();
 
         $fragmentDefinitions = DocumentUtils::getAllNodesOfKind($document, "FragmentDefinition");
         $fragmentSpreads = DocumentUtils::getAllNodesOfKind($document, "FragmentSpread");
@@ -51,4 +48,3 @@ class FragmentsMustBeUsed extends ValidationRule
     }
 }
 
-?>

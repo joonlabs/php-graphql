@@ -46,4 +46,3 @@ abstract class ValidationRule
 
 }
 
-?>

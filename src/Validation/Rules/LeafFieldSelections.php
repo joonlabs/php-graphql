@@ -2,7 +2,6 @@
 
 namespace GraphQL\Validation\Rules;
 
-use GraphQL\Errors\GraphQLError;
 use GraphQL\Errors\ValidationError;
 use GraphQL\Types\GraphQLType;
 use GraphQL\Validation\DocumentUtils;
@@ -13,7 +12,7 @@ class LeafFieldSelections extends ValidationRule
     /**
      * Implements the rule specified under 5.3.3 (Leaf Field Selection) in the GraphQL-Specs (version: 2018)
      * @param ValidationContext $validationContext
-     * @return array
+     * @return void
      */
     public function validate(ValidationContext $validationContext): void
     {
@@ -142,4 +141,3 @@ class LeafFieldSelections extends ValidationRule
     }
 }
 
-?>

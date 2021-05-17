@@ -1,13 +1,13 @@
 <?php
 
-use \PHPUnit\Framework\TestCase;
-use \GraphQL\Types\GraphQLString;
-use \GraphQL\Errors\GraphQLError;
+use PHPUnit\Framework\TestCase;
+use GraphQL\Types\GraphQLString;
+use GraphQL\Errors\GraphQLError;
 
 class GraphQLStringTest extends TestCase
 {
 
-    public function getType()
+    public function getType(): GraphQLString
     {
         return new GraphQLString();
     }

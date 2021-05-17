@@ -15,4 +15,3 @@ $authors = [
     ["id" => 2, "name" => 'J. R. R. Tolkien'],
     ["id" => 3, "name" => 'Brent Weeks']
 ];
-?>

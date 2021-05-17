@@ -2,8 +2,6 @@
 
 namespace GraphQL\Validation\Rules;
 
-use GraphQL\Errors\GraphQLError;
-use GraphQL\Errors\ValidationError;
 use GraphQL\Validation\ValidationContext;
 
 class InputObjectRequiredFields extends ValidationRule
@@ -11,7 +9,7 @@ class InputObjectRequiredFields extends ValidationRule
     /**
      * Implements the rule specified under 5.6.4 (Input Object Required Fields) in the GraphQL-Specs (version: 2018)
      * @param ValidationContext $validationContext
-     * @return array
+     * @return void
      */
     public function validate(ValidationContext $validationContext): void
     {
@@ -21,4 +19,3 @@ class InputObjectRequiredFields extends ValidationRule
     }
 }
 
-?>

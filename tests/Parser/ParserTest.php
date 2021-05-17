@@ -1,7 +1,7 @@
 <?php
 
-use \PHPUnit\Framework\TestCase;
-use \GraphQL\Parser\Parser;
+use PHPUnit\Framework\TestCase;
+use GraphQL\Parser\Parser;
 
 class ParserTest extends TestCase
 {

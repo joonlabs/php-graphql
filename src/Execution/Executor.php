@@ -634,17 +634,11 @@ class Executor
     private function getFieldDef(Schema $schema, GraphQLObjectType $parentType, string $fieldName)
     {
         if ($fieldName === "__schema" && $schema->getQueryType() === $parentType) {
-            $SchemaMetaFieldDef = Introspection::getSchemaMetaFieldDef();
-            //require __DIR__ . "/../Introspection/Introspection.php";
-            return $SchemaMetaFieldDef;
+            return Introspection::getSchemaMetaFieldDef();
         } else if ($fieldName === "__type" && $schema->getQueryType() === $parentType) {
-            $TypeMetaFieldDef = Introspection::getTypeMetaFieldDef();
-            //require __DIR__ . "/../Introspection/Introspection.php";
-            return $TypeMetaFieldDef;
+            return Introspection::getTypeMetaFieldDef();
         } else if ($fieldName === "__typename") {
-            $TypeNameMetaFieldDef = Introspection::getTypeNameMetaFieldDef();
-            //require __DIR__ . "/../Introspection/Introspection.php";
-            return $TypeNameMetaFieldDef;
+            return Introspection::getTypeNameMetaFieldDef();
         }
         return $parentType->getFields()[$fieldName];
     }

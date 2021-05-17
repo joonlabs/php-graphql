@@ -10,7 +10,7 @@ class OperationNameUniqueness extends ValidationRule
     /**
      * Implements the rule specified under 5.2.1.1 in the GraphQL-Specs (version: 2018)
      * @param ValidationContext $validationContext
-     * @return array
+     * @return void
      */
     public function validate(ValidationContext $validationContext): void
     {
@@ -40,4 +40,3 @@ class OperationNameUniqueness extends ValidationRule
     }
 }
 
-?>

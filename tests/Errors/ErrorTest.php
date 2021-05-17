@@ -1,7 +1,7 @@
 <?php
 
-use \PHPUnit\Framework\TestCase;
-use \GraphQL\Errors\GraphQLError;
+use PHPUnit\Framework\TestCase;
+use GraphQL\Errors\GraphQLError;
 
 class ErrorTest extends TestCase
 {

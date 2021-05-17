@@ -10,7 +10,7 @@ The schema is a container for your type hierarchy that accepts object types as r
 It is passed to the validator and the executor and used to model your underlying data structures.
 
 ````php
-use GraphQL\Servers\Server;
+
 
 $schema = new Schema(
     $QueryType,

@@ -2,6 +2,7 @@
 
 namespace GraphQL\Fields;
 
+use Closure;
 use GraphQL\Types\GraphQLType;
 
 class GraphQLTypeField
@@ -19,12 +20,12 @@ class GraphQLTypeField
      * @param string $id Id of the field
      * @param GraphQLType $type
      * @param string $description Description of the field
-     * @param \Closure|null $resolve The resolve function of the field, by defaukt returns the parentDataObject[$id]
+     * @param Closure|null $resolve The resolve function of the field, by defaukt returns the parentDataObject[$id]
      * @param array $args Arguments of the field
      * @param null $defaultValue Default value of field
      * @param string|null $deprecationReason Reason why field is deprecated
      */
-    public function __construct(string $id, GraphQLType $type, string $description = "", \Closure $resolve = null, array $args = [], $defaultValue = null, ?string $deprecationReason = null)
+    public function __construct(string $id, GraphQLType $type, string $description = "", Closure $resolve = null, array $args = [], $defaultValue = null, ?string $deprecationReason = null)
     {
         $this->id = $id;
         $this->type = $type;
@@ -94,9 +95,9 @@ class GraphQLTypeField
     }
 
     /**
-     * @return \Closure|null
+     * @return Closure|null
      */
-    public function getResolve(): ?\Closure
+    public function getResolve(): ?Closure
     {
         return $this->resolve;
     }

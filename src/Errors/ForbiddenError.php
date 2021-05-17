@@ -7,4 +7,3 @@ class ForbiddenError extends GraphQLError
     protected $code = "FORBIDDEN";
 }
 
-?>

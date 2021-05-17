@@ -17,4 +17,3 @@ class GraphQLSkipDirective extends GraphQLDirective
     }
 }
 
-?>

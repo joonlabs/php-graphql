@@ -2,7 +2,6 @@
 
 namespace GraphQL\Validation\Rules;
 
-use GraphQL\Errors\GraphQLError;
 use GraphQL\Errors\ValidationError;
 use GraphQL\Validation\ValidationContext;
 
@@ -11,7 +10,7 @@ class LoneAnonymousOperation extends ValidationRule
     /**
      * Implements the rule specified under 5.2.2.1 in the GraphQL-Specs (version: 2018)
      * @param ValidationContext $validationContext
-     * @return array
+     * @return void
      */
     public function validate(ValidationContext $validationContext): void
     {
@@ -39,4 +38,3 @@ class LoneAnonymousOperation extends ValidationRule
     }
 }
 
-?>

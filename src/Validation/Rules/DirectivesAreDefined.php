@@ -2,9 +2,7 @@
 
 namespace GraphQL\Validation\Rules;
 
-use GraphQL\Errors\GraphQLError;
 use GraphQL\Errors\ValidationError;
-use GraphQL\Utilities\KeyMap;
 use GraphQL\Validation\DocumentUtils;
 use GraphQL\Validation\ValidationContext;
 
@@ -13,7 +11,7 @@ class DirectivesAreDefined extends ValidationRule
     /**
      * Implements the rule specified under 5.2.1.1 in the GraphQL-Specs (version: 2018)
      * @param ValidationContext $validationContext
-     * @return array
+     * @return void
      */
     public function validate(ValidationContext $validationContext): void
     {
@@ -49,4 +47,3 @@ class DirectivesAreDefined extends ValidationRule
     }
 }
 
-?>

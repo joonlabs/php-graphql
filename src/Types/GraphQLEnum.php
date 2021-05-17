@@ -33,7 +33,7 @@ class GraphQLEnum extends GraphQLType
     {
         if (!array_key_exists($outputValue, $this->values)) {
             throw new GraphQLError(
-                "Value \"{$outputValue}\" does not exist in \"{$this->getName()}\" enum."
+                "Value \"$outputValue\" does not exist in \"{$this->getName()}\" enum."
             );
         }
 
@@ -51,23 +51,23 @@ class GraphQLEnum extends GraphQLType
         $value = $valueNode["value"];
         if (!array_key_exists($value, $this->values)) {
             throw new GraphQLError(
-                "Value \"{$value}\" does not exist in \"{$this->getName()}\" enum."
+                "Value \"$value\" does not exist in \"{$this->getName()}\" enum."
             );
         }
         return $value;
     }
 
-    public function parseValue($value)
+    public function parseValue($value): string
     {
         if (!is_string($value)) {
             throw new GraphQLError(
-                "Enum \"{$this->getName()}\" cannot represent non-string value: {$value}"
+                "Enum \"{$this->getName()}\" cannot represent non-string value: $value"
             );
         }
 
         if (!array_key_exists($value, $this->values)) {
             throw new GraphQLError(
-                "Value \"{$value}\" does not exist in \"{$this->getName()}\" enum."
+                "Value \"$value\" does not exist in \"{$this->getName()}\" enum."
             );
         }
 
@@ -128,4 +128,3 @@ class GraphQLEnumValue
     }
 }
 
-?>

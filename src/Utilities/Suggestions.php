@@ -2,8 +2,6 @@
 
 namespace GraphQL\Utilities;
 
-use GraphQL\Schemas\Schema;
-
 abstract class Suggestions
 {
 
@@ -44,4 +42,3 @@ abstract class Suggestions
     }
 }
 
-?>

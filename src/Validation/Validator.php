@@ -85,7 +85,7 @@ class Validator
      * Returns all ValidationRules necessary to check the ValidationContext against.
      * @return ValidationRule[]
      */
-    private function getAllValidationRules()
+    private function getAllValidationRules(): array
     {
         // the rules must be returned in the correct (and following) order
         // since some rules may depend on their predecessors
@@ -117,10 +117,7 @@ class Validator
         ];
 
         // add aditional validation rules
-        $validationRules = array_merge($validationRules, $this->additionalValidationRules);
-
-        return $validationRules;
+        return array_merge($validationRules, $this->additionalValidationRules);
     }
 }
 
-?>

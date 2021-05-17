@@ -9,11 +9,11 @@ class GraphQLBoolean extends GraphQLScalarType
     protected $type = "Boolean";
     protected $description = "Default GraphQL Boolean Type";
 
-    public function serialize($outputValue)
+    public function serialize($outputValue): ?bool
     {
         if (!is_bool($outputValue) and $outputValue !== null) {
             throw new GraphQLError(
-                "Value \"{$outputValue}\" is not of type \"{$this->getName()}\"."
+                "Value \"$outputValue\" is not of type \"{$this->getName()}\"."
             );
         }
         return $outputValue;
@@ -30,15 +30,14 @@ class GraphQLBoolean extends GraphQLScalarType
         return $valueNode["value"];
     }
 
-    public function parseValue($value)
+    public function parseValue($value): ?bool
     {
         if (!is_bool($value) and $value !== null) {
             throw new GraphQLError(
-                "Value \"{$value}\" is not of type \"{$this->getName()}\"."
+                "Value \"$value\" is not of type \"{$this->getName()}\"."
             );
         }
         return $value;
     }
 }
 
-?>

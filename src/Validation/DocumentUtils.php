@@ -23,7 +23,7 @@ class DocumentUtils
      * @param string $kind
      * @return array
      */
-    public static function getAllNodesOfKind(array $document, string $kind)
+    public static function getAllNodesOfKind(array $document, string $kind): array
     {
         $keys = array_keys($document);
 
@@ -47,7 +47,7 @@ class DocumentUtils
      * @param string $kind
      * @return array
      */
-    public static function getAllNodesOfKey(array $document, string $key)
+    public static function getAllNodesOfKey(array $document, string $key): array
     {
         $keys = array_keys($document);
 
@@ -66,4 +66,3 @@ class DocumentUtils
     }
 }
 
-?>

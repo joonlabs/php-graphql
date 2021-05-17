@@ -1,13 +1,13 @@
 <?php
 
-use \PHPUnit\Framework\TestCase;
-use \GraphQL\Types\GraphQLID;
-use \GraphQL\Errors\GraphQLError;
+use PHPUnit\Framework\TestCase;
+use GraphQL\Types\GraphQLID;
+use GraphQL\Errors\GraphQLError;
 
 class GraphQLIDTest extends TestCase
 {
 
-    public function getType()
+    public function getType(): GraphQLID
     {
         return new GraphQLID();
     }

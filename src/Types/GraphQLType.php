@@ -2,10 +2,7 @@
 
 namespace GraphQL\Types;
 
-use GraphQL\Errors\BadUserInputError;
-use GraphQL\Errors\GraphQLError;
 use GraphQL\Fields\GraphQLQueryField;
-use GraphQL\Fields\GraphQLTypeField;
 use GraphQL\Resolvers\QueryResolver;
 use GraphQL\Variables\GraphQLVariableHolder;
 

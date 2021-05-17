@@ -2,9 +2,11 @@
 
 namespace GraphQL\Utilities;
 
+use Closure;
+
 abstract class KeyMap
 {
-    public static function map(?array $items, \Closure $function)
+    public static function map(?array $items, Closure $function): array
     {
         $items = $items ?? []; // repair null values
         $result = [];
@@ -15,4 +17,3 @@ abstract class KeyMap
     }
 }
 
-?>

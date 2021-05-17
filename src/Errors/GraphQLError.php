@@ -2,9 +2,9 @@
 
 namespace GraphQL\Errors;
 
-use Throwable;
+use Exception;
 
-class GraphQLError extends \Exception
+class GraphQLError extends Exception
 {
     protected $code;
     protected $node;
@@ -59,4 +59,3 @@ class GraphQLError extends \Exception
     }
 }
 
-?>

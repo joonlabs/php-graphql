@@ -17,4 +17,3 @@ class GraphQLIncludeDirective extends GraphQLDirective
     }
 }
 
-?>

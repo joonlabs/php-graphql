@@ -7,4 +7,3 @@ class BadImplementationError extends GraphQLError
     protected $code = "BAD_IMPLEMENTATION";
 }
 
-?>

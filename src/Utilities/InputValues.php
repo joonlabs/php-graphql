@@ -73,7 +73,7 @@ abstract class InputValues
                 if (!array_key_exists($fieldName, $fieldDefs)) {
                     $suggestions = Suggestions::suggest($fieldName, array_keys($type->getFields()));
                     throw new GraphQLError(
-                        "Field \"{$fieldName}\" is not defined by type \"{$type->getName()}\"." . Suggestions::didYouMean($suggestions)
+                        "Field \"$fieldName\" is not defined by type \"{$type->getName()}\"." . Suggestions::didYouMean($suggestions)
                     );
                 }
             }
@@ -82,18 +82,16 @@ abstract class InputValues
 
         // check for leaf types
         if ($type->isLeafType()) {
-            $parseResult = null;
-
             // Scalars and Enums determine if an input value is valid via parseValue(),
             // which can throw to indicate failure. If it throws, maintain a reference
             // to the original error.
 
             // check for other scalar types?? (see: https://github.com/graphql/graphql-js/blob/5ed55b89d526c637eeb9c440715367eec8a2adec/src/utilities/coerceInputValue.js#L149)
-            $parseResult = $type->parseValue($inputValue);
-
-            return $parseResult;
+            return $type->parseValue($inputValue);
         }
+
+        // default to null
+        return null;
     }
 }
 
-?>

@@ -2,7 +2,6 @@
 
 namespace GraphQL\Validation\Rules;
 
-use GraphQL\Errors\GraphQLError;
 use GraphQL\Errors\ValidationError;
 use GraphQL\Types\GraphQLObjectType;
 use GraphQL\Types\GraphQLType;
@@ -16,7 +15,7 @@ class FieldSelectionMerging extends ValidationRule
     /**
      * Implements the rule specified under 5.3.2 (Field Selection Merging) in the GraphQL-Specs (version: 2018),
      * @param ValidationContext $validationContext
-     * @return array
+     * @return void
      */
     public function validate(ValidationContext $validationContext): void
     {
@@ -95,7 +94,6 @@ class FieldSelectionMerging extends ValidationRule
                     );
                 } else {
                     // call the function to check the InlineFragment's SelectionSet
-                    $subSelectionSet = $selection["selectionSet"];
                     $subType = $typeMap[$typeConditionName];
                     // if this type is a GrappQLList or GraphQLNonNull get the inner type (notice: abstract types support getFields())
                     if ($subType->isWrappingType()) {
@@ -183,7 +181,7 @@ class FieldSelectionMerging extends ValidationRule
                                 $permutation[1]
                             )
                         );
-                        continue;
+                        // continue // 'continue' is unnecessary as the last statement in a loop
                     }
                 }
             }
@@ -197,7 +195,7 @@ class FieldSelectionMerging extends ValidationRule
      * @param GraphQLObjectType $parentType
      * @return bool
      */
-    private function sameResponseShape(array $fieldA, array $fieldB, GraphQLType $parentType)
+    private function sameResponseShape(array $fieldA, array $fieldB, GraphQLType $parentType): bool
     {
         // step 1
         $typeA = $parentType->getFields()[$fieldA["name"]["value"]]->getType();
@@ -241,7 +239,7 @@ class FieldSelectionMerging extends ValidationRule
      * @param array $arr
      * @return array
      */
-    private function getPermutations(array $arr)
+    private function getPermutations(array $arr): array
     {
         $perms = [];
         for ($i = 0; $i < count($arr); $i++) {
@@ -256,9 +254,9 @@ class FieldSelectionMerging extends ValidationRule
      * Returns all fields in an inline fragment
      * @param array $inlineFragment
      * @param ValidationContext $validationContext
-     * @return array
+     * @return void
      */
-    private function collectFieldsInInlineFragment(array $inlineFragment, ValidationContext $validationContext)
+    private function collectFieldsInInlineFragment(array $inlineFragment, ValidationContext $validationContext): array
     {
         $fields = [];
 
@@ -298,9 +296,9 @@ class FieldSelectionMerging extends ValidationRule
      * Returns all fields in an fragment
      * @param string $fragmentName
      * @param ValidationContext $validationContext
-     * @return array
+     * @return void
      */
-    private function collectFieldsInFragment(string $fragmentName, ValidationContext $validationContext)
+    private function collectFieldsInFragment(string $fragmentName, ValidationContext $validationContext): array
     {
         $fields = [];
 
@@ -343,4 +341,3 @@ class FieldSelectionMerging extends ValidationRule
     }
 }
 
-?>

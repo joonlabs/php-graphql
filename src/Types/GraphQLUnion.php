@@ -2,6 +2,8 @@
 
 namespace GraphQL\Types;
 
+use Closure;
+
 class GraphQLUnion extends GraphQLAbstractType
 {
     protected $type = "Union";
@@ -10,7 +12,7 @@ class GraphQLUnion extends GraphQLAbstractType
     private $types;
     private $resolveTypeFn;
 
-    public function __construct(string $type, string $description, array $types, ?\Closure $resolveTypeFn = null)
+    public function __construct(string $type, string $description, array $types, ?Closure $resolveTypeFn = null)
     {
         $this->type = $type;
         $this->description = $description;
@@ -39,12 +41,11 @@ class GraphQLUnion extends GraphQLAbstractType
     }
 
     /**
-     * @return \Closure|null
+     * @return Closure|null
      */
-    public function getResolveType(): ?\Closure
+    public function getResolveType(): ?Closure
     {
         return $this->resolveTypeFn;
     }
 }
 
-?>

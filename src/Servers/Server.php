@@ -2,6 +2,8 @@
 
 namespace GraphQL\Servers;
 
+use Error;
+use Exception;
 use GraphQL\Execution\Executor;
 use GraphQL\Parser\Parser;
 use GraphQL\Schemas\Schema;
@@ -96,14 +98,14 @@ class Server
                 $result = $this->executor->execute($this->schema, $this->parser->getParsedDocument(), null, null, $variables);
                 $this->returnData($result);
 
-            } catch (\Error $error) {
+            } catch (Error $error) {
                 // 500 error -> error
                 $this->returnData([
                     "errors" => Errors::prettyPrintErrors(
                         [new InternalServerError("An unexpected error occurred during execution" . ($this->displayInternalServerErrorReason ? ": " . $error->getMessage() . ". Trace: " . $error->getTraceAsString() : "."))]
                     )
                 ]);
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 // Unexpected exception -> error
                 $this->returnData([
                     "errors" => Errors::prettyPrintErrors(
@@ -124,7 +126,7 @@ class Server
      *
      * @return string|null
      */
-    private function getQuery()
+    private function getQuery(): ?string
     {
         // check if query is sent as raw http body in request as "application/json" or via post fields as "multipart/form-data"
         $headers = apache_request_headers();
@@ -159,4 +161,3 @@ class Server
     }
 }
 
-?>

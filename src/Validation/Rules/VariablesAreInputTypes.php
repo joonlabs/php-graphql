@@ -2,9 +2,7 @@
 
 namespace GraphQL\Validation\Rules;
 
-use GraphQL\Errors\GraphQLError;
 use GraphQL\Errors\ValidationError;
-use GraphQL\Utilities\KeyMap;
 use GraphQL\Utilities\Suggestions;
 use GraphQL\Validation\ValidationContext;
 
@@ -13,7 +11,7 @@ class VariablesAreInputTypes extends ValidationRule
     /**
      * Implements the rule specified under 5.8.2 (Variables Are Input Types) in the GraphQL-Specs (version: 2018)
      * @param ValidationContext $validationContext
-     * @return array
+     * @return void
      */
     public function validate(ValidationContext $validationContext): void
     {
@@ -24,7 +22,6 @@ class VariablesAreInputTypes extends ValidationRule
             if ($definition["kind"] !== "OperationDefinition") continue;
 
             $variableDefinitions = $definition["variableDefinitions"];
-            $seenKeys = [];
 
             foreach ($variableDefinitions as $variableDefinition) {
                 $type = $variableDefinition["type"];
@@ -59,4 +56,3 @@ class VariablesAreInputTypes extends ValidationRule
 
 }
 
-?>

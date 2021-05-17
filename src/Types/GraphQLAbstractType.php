@@ -7,4 +7,3 @@ abstract class GraphQLAbstractType extends GraphQLType
 
 }
 
-?>

@@ -12,19 +12,18 @@ use GraphQL\Utilities\KeyMap;
 
 abstract class Values
 {
-    public static function getVariableValues(Schema $schema, array $variableDefinitions, array $inputs)
+    public static function getVariableValues(Schema $schema, array $variableDefinitions, array $inputs): array
     {
         $errors = [];
         try {
-            $coerced = self::coerceVariableValues($schema, $variableDefinitions, $inputs);
-            return $coerced;
+            return self::coerceVariableValues($schema, $variableDefinitions, $inputs);
         } catch (GraphQLError $error) {
             $errors[] = $error;
         }
         return $errors;
     }
 
-    public static function coerceVariableValues(Schema $schema, array $variableDefinitions, array $inputs)
+    public static function coerceVariableValues(Schema $schema, array $variableDefinitions, array $inputs): array
     {
         $coercedValues = [];
         foreach ($variableDefinitions as $varDefNode) {
@@ -37,7 +36,6 @@ abstract class Values
                 throw new GraphQLError(
                     "Variable \"$varName\" expected value of type \"$varTypeStr\" which cannot be used as an input type."
                 );
-                continue;
             }
 
             // check if variable exists in inputs or has a default value
@@ -71,7 +69,7 @@ abstract class Values
         return $coercedValues;
     }
 
-    public static function getDirectiveValues(GraphQLDirective $directiveDef, $node, $variableValues)
+    public static function getDirectiveValues(GraphQLDirective $directiveDef, $node, $variableValues): ?array
     {
         $directiveNode = array_filter($node["directives"], function ($directive) use ($directiveDef) {
                 return $directive["name"]["value"] == $directiveDef->getName();
@@ -80,9 +78,12 @@ abstract class Values
         if ($directiveNode) {
             return self::getArgumentValues($directiveDef, $directiveNode, $variableValues);
         }
+
+        // default to null
+        return null;
     }
 
-    public static function getArgumentValues($def, $node, $variableValues)
+    public static function getArgumentValues($def, $node, $variableValues): array
     {
         $coercedValues = [];
 
@@ -103,7 +104,7 @@ abstract class Values
                     $coercedValues[$name] = $argDef->getDefaultValue();
                 } else if ($argType->isNonNullType()) {
                     throw new GraphQLError(
-                        "Argument \"{$name}\" of required type \"{$argType->getName()}\" was not provided.'"
+                        "Argument \"$name\" of required type \"{$argType->getName()}\" was not provided.'"
                     );
                 }
                 continue;
@@ -120,7 +121,7 @@ abstract class Values
                         $coercedValues[$name] = $argDef->getDefaultValue();
                     } else if ($argType->isNonNullType()) {
                         throw new GraphQLError(
-                            "Argument \"{$name}\" of required type \"{$argType->getName()}\" was provided the variable \"{$variableName}\" which was not provided a runtime value."
+                            "Argument \"$name\" of required type \"{$argType->getName()}\" was provided the variable \"$variableName\" which was not provided a runtime value."
                         );
                     }
                     continue;
@@ -131,14 +132,14 @@ abstract class Values
             // check if argument is null but most not be so
             if ($isNull and $argType->isNonNullType()) {
                 throw new GraphQLError(
-                    "Argument \"{$name}\" of non-null type \"{$argType->getName()}\" must not be null."
+                    "Argument \"$name\" of non-null type \"{$argType->getName()}\" must not be null."
                 );
             }
 
             $coercedValue = Ast::valueFromAst($valueNode, $argType, $variableValues);
             if ($coercedValue instanceof UndefinedValue) {
                 throw new GraphQLError(
-                    "Argument \"{$name}\" of type \"{$argType->getName()}\" has invalid value. Maybe provided wrong type or forgot non-nullable field in input object?"
+                    "Argument \"$name\" of type \"{$argType->getName()}\" has invalid value. Maybe provided wrong type or forgot non-nullable field in input object?"
                 );
             }
             $coercedValues[$name] = $coercedValue;
@@ -147,4 +148,3 @@ abstract class Values
     }
 }
 
-?>

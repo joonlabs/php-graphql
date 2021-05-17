@@ -2,9 +2,8 @@
 
 namespace GraphQL\Types;
 
-use GraphQL\Errors\BadUserInputError;
+use Closure;
 use GraphQL\Fields\GraphQLQueryField;
-use GraphQL\Fields\GraphQLTypeField;
 
 class GraphQLObjectType extends GraphQLType
 {
@@ -15,7 +14,7 @@ class GraphQLObjectType extends GraphQLType
     private $interfaces;
     private $isTypeOfFn;
 
-    public function __construct(string $type, string $description, \Closure $fields, ?array $interfaces = null, ?\Closure $isTypeOfFn = null)
+    public function __construct(string $type, string $description, Closure $fields, ?array $interfaces = null, ?Closure $isTypeOfFn = null)
     {
         $this->type = $type;
         $this->description = $description;
@@ -107,10 +106,10 @@ class GraphQLObjectType extends GraphQLType
     }
 
     /**
-     * @param \Closure $fields
+     * @param Closure $fields
      * @return GraphQLObjectType
      */
-    public function setFields(\Closure $fields): GraphQLObjectType
+    public function setFields(Closure $fields): GraphQLObjectType
     {
         $this->fields = $fields;
         return $this;
@@ -127,14 +126,13 @@ class GraphQLObjectType extends GraphQLType
     }
 
     /**
-     * @param \Closure $isTypeOfFn
+     * @param Closure $isTypeOfFn
      * @return GraphQLObjectType
      */
-    public function setIsTypeOfFn(\Closure $isTypeOfFn): GraphQLObjectType
+    public function setIsTypeOfFn(Closure $isTypeOfFn): GraphQLObjectType
     {
         $this->isTypeOfFn = $isTypeOfFn;
         return $this;
     }
 }
 
-?>

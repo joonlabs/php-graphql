@@ -21,10 +21,9 @@ class GraphQLNonNull extends GraphQLType
         $this->innerType = $innerType;
     }
 
-    public function getInnerType()
+    public function getInnerType(): GraphQLType
     {
         return $this->innerType;
     }
 }
 
-?>

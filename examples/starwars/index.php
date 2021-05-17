@@ -19,4 +19,3 @@ $schema = new Schema($Query);
 $server = new Server($schema);
 $server->setInternalServerErrorPrint(true);
 $server->listen();
-?>

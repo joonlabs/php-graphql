@@ -94,7 +94,7 @@ class Tokenizer
      * @return array|null
      * @throws UnexpectedTokenError
      */
-    public function getNextToken()
+    public function getNextToken(): ?array
     {
 
         $this->addToLocationHistory();
@@ -127,7 +127,7 @@ class Tokenizer
         throw new UnexpectedTokenError("Unexpetced token : \"" . $string[0] . "\"", $this->getLastLocation());
     }
 
-    public function glimpsAtNextToken()
+    public function glimpsAtNextToken(): ?array
     {
         $cursor = $this->cursor;
         $glimpsToken = $this->getNextToken();
@@ -145,7 +145,7 @@ class Tokenizer
     public function match(string $regexp, string $string)
     {
         $matches = [];
-        $matched = preg_match($regexp, $string, $matches);
+        preg_match($regexp, $string, $matches);
 
         if (count($matches) == 0) {
             return null;
@@ -160,7 +160,7 @@ class Tokenizer
      *
      * @return int[]
      */
-    public function getLocation()
+    public function getLocation(): array
     {
         $location = [
             "line" => 1,

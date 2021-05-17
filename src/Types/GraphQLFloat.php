@@ -9,17 +9,17 @@ class GraphQLFloat extends GraphQLScalarType
     protected $type = "Float";
     protected $description = "Default GraphQL Float Type";
 
-    public function serialize($outputValue)
+    public function serialize($outputValue): ?float
     {
         if (!is_float($outputValue) and $outputValue !== null) {
             throw new GraphQLError(
-                "Value \"{$outputValue}\" is not of type \"{$this->getName()}\"."
+                "Value \"$outputValue\" is not of type \"{$this->getName()}\"."
             );
         }
         return $outputValue;
     }
 
-    public function parseLiteral($valueNode, $variables)
+    public function parseLiteral($valueNode, $variables): float
     {
         if ($valueNode["kind"] !== "IntValue" and $valueNode["kind"] !== "FloatValue") {
             throw new GraphQLError(
@@ -38,15 +38,14 @@ class GraphQLFloat extends GraphQLScalarType
         return floatval($valueNode["value"]);
     }
 
-    public function parseValue($value)
+    public function parseValue($value): ?float
     {
         if (!is_float($value) and $value !== null) {
             throw new GraphQLError(
-                "Value \"{$value}\" is not of type \"{$this->getName()}\"."
+                "Value \"$value\" is not of type \"{$this->getName()}\"."
             );
         }
         return $value;
     }
 }
 
-?>

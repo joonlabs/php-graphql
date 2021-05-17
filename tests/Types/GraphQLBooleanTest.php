@@ -1,13 +1,13 @@
 <?php
 
-use \PHPUnit\Framework\TestCase;
-use \GraphQL\Types\GraphQLBoolean;
-use \GraphQL\Errors\GraphQLError;
+use PHPUnit\Framework\TestCase;
+use GraphQL\Types\GraphQLBoolean;
+use GraphQL\Errors\GraphQLError;
 
 class GraphQLBooleanTest extends TestCase
 {
 
-    public function getType()
+    public function getType(): GraphQLBoolean
     {
         return new GraphQLBoolean();
     }

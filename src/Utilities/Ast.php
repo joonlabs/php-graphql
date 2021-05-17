@@ -14,7 +14,6 @@ abstract class Ast
 {
     static function typeFromAst(Schema $schema, $typeNode)
     {
-        $innerType = null;
         if ($typeNode["kind"] === "ListType") {
             $innerType = self::typeFromAst($schema, $typeNode["type"]);
             return new GraphQLList($innerType);
@@ -164,7 +163,6 @@ abstract class Ast
 
         // check if type is leaf type
         if ($type->isLeafType()) {
-            $result = null;
             try {
                 $result = $type->parseLiteral($valueNode, $variables);
             } catch (GraphQLError $error) {
@@ -179,6 +177,9 @@ abstract class Ast
 
             return $result;
         }
+
+        // default to undefined value
+        return new UndefinedValue();
     }
 
     private static function isMissingVariable($valueNode, $variables): bool
@@ -188,5 +189,3 @@ abstract class Ast
         );
     }
 }
-
-?>

@@ -3,11 +3,10 @@
 namespace GraphQL\Utilities;
 
 use GraphQL\Errors\GraphQLError;
-use GraphQL\Schemas\Schema;
 
 abstract class LocatedError
 {
-    public static function from(GraphQLError $originalError, $fieldNodes, $path)
+    public static function from(GraphQLError $originalError, $fieldNodes, $path): GraphQLError
     {
         return new GraphQLError(
             $originalError->getMessage(),
@@ -18,4 +17,3 @@ abstract class LocatedError
 
 }
 
-?>

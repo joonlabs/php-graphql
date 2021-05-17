@@ -2,6 +2,8 @@
 
 namespace GraphQL\Types;
 
+use Closure;
+
 class GraphQLInterface extends GraphQLAbstractType
 {
     protected $type = "Interface";
@@ -10,7 +12,7 @@ class GraphQLInterface extends GraphQLAbstractType
     private $fields;
     private $resolveTypeFn;
 
-    public function __construct(string $type, string $description, \Closure $fields, ?\Closure $resolveTypeFn = null)
+    public function __construct(string $type, string $description, Closure $fields, ?Closure $resolveTypeFn = null)
     {
         $this->type = $type;
         $this->description = $description;
@@ -32,18 +34,18 @@ class GraphQLInterface extends GraphQLAbstractType
     }
 
     /**
-     * @return \Closure|null
+     * @return Closure|null
      */
-    public function getResolveType(): ?\Closure
+    public function getResolveType(): ?Closure
     {
         return $this->resolveTypeFn;
     }
 
     /**
-     * @param \Closure|null $resolveTypeFn
+     * @param Closure|null $resolveTypeFn
      * @return GraphQLInterface
      */
-    public function setResolveTypeFn(?\Closure $resolveTypeFn): GraphQLInterface
+    public function setResolveTypeFn(?Closure $resolveTypeFn): GraphQLInterface
     {
         $this->resolveTypeFn = $resolveTypeFn;
         return $this;
@@ -52,10 +54,9 @@ class GraphQLInterface extends GraphQLAbstractType
     /**
      * @return array
      */
-    public function getInterfaces()
+    public function getInterfaces(): array
     {
         return [];
     }
 }
 
-?>

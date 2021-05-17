@@ -2,8 +2,6 @@
 
 namespace GraphQL\Validation\Rules;
 
-use GraphQL\Errors\GraphQLError;
-use GraphQL\Errors\ValidationError;
 use GraphQL\Validation\ValidationContext;
 
 class AllVariableUsagesAreAllowed extends ValidationRule
@@ -11,7 +9,7 @@ class AllVariableUsagesAreAllowed extends ValidationRule
     /**
      * Implements the rule specified under 5.8.5 (All Variable Usages Are Allowed) in the GraphQL-Specs (version: 2018)
      * @param ValidationContext $validationContext
-     * @return array
+     * @return void
      */
     public function validate(ValidationContext $validationContext): void
     {
@@ -20,5 +18,3 @@ class AllVariableUsagesAreAllowed extends ValidationRule
         // Values::getArgumentValues(...)
     }
 }
-
-?>

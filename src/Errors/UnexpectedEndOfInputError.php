@@ -6,4 +6,3 @@ class UnexpectedEndOfInputError extends ParseFailedError
 {
 }
 
-?>

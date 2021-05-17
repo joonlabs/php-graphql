@@ -1,13 +1,13 @@
 <?php
 
-use \PHPUnit\Framework\TestCase;
-use \GraphQL\Types\GraphQLFloat;
-use \GraphQL\Errors\GraphQLError;
+use PHPUnit\Framework\TestCase;
+use GraphQL\Types\GraphQLFloat;
+use GraphQL\Errors\GraphQLError;
 
 class GraphQLFloatTest extends TestCase
 {
 
-    public function getType()
+    public function getType(): GraphQLFloat
     {
         return new GraphQLFloat();
     }

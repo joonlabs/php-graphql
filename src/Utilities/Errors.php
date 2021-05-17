@@ -11,7 +11,7 @@ abstract class Errors
      * @param array $errors
      * @return array|array[]
      */
-    public static function prettyPrintErrors(array $errors)
+    public static function prettyPrintErrors(array $errors): array
     {
         return array_map(function (GraphQLError $error) {
             return [
@@ -26,4 +26,4 @@ abstract class Errors
     }
 }
 
-?>
+

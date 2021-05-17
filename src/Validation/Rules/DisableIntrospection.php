@@ -2,10 +2,7 @@
 
 namespace GraphQL\Validation\Rules;
 
-use GraphQL\Errors\GraphQLError;
 use GraphQL\Errors\ValidationError;
-use GraphQL\Utilities\KeyMap;
-use GraphQL\Validation\DocumentUtils;
 use GraphQL\Validation\ValidationContext;
 
 class DisableIntrospection extends ValidationRule
@@ -13,7 +10,7 @@ class DisableIntrospection extends ValidationRule
     /**
      * This rule disables the introspection of the graphql api
      * @param ValidationContext $validationContext
-     * @return array
+     * @return void
      */
     public function validate(ValidationContext $validationContext): void
     {
@@ -37,4 +34,3 @@ class DisableIntrospection extends ValidationRule
     }
 }
 
-?>

@@ -2,9 +2,7 @@
 
 namespace GraphQL\Validation\Rules;
 
-use GraphQL\Errors\GraphQLError;
 use GraphQL\Errors\ValidationError;
-use GraphQL\Utilities\KeyMap;
 use GraphQL\Validation\ValidationContext;
 
 class VariableUniqueness extends ValidationRule
@@ -12,7 +10,7 @@ class VariableUniqueness extends ValidationRule
     /**
      * Implements the rule specified under 5.8.1 (Variable Uniqueness) in the GraphQL-Specs (version: 2018)
      * @param ValidationContext $validationContext
-     * @return array
+     * @return void
      */
     public function validate(ValidationContext $validationContext): void
     {
@@ -24,13 +22,13 @@ class VariableUniqueness extends ValidationRule
             $variableDefinitions = $definition["variableDefinitions"];
             $seenKeys = [];
 
-            foreach ($variableDefinitions as $definition) {
-                $definitionName = $definition["variable"]["name"]["value"];
+            foreach ($variableDefinitions as $variableDefinition) {
+                $definitionName = $variableDefinition["variable"]["name"]["value"];
                 if (in_array($definitionName, $seenKeys)) {
                     $this->addError(
                         new ValidationError(
                             "There can be only one variable named \"$definitionName\".",
-                            $definition
+                            $variableDefinition
                         )
                     );
                 } else {
@@ -41,4 +39,3 @@ class VariableUniqueness extends ValidationRule
     }
 }
 
-?>
