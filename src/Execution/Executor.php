@@ -234,6 +234,7 @@ class Executor
      */
     public function executeFields(ExecutionContext $executionContext, GraphQLObjectType $parentType, $sourceValue, $path, $fields)
     {
+        $initial = [];
         return array_reduce(array_keys($fields), function (&$results, $responseName) use ($executionContext, $parentType, $sourceValue, $path, $fields) {
             $fieldNodes = $fields[$responseName];
             $fieldPath = [$path, $responseName, $parentType->getName()];
@@ -252,7 +253,7 @@ class Executor
 
             $results[$responseName] = $result;
             return $results;
-        }, []);
+        }, $initial);
     }
 
     /**
