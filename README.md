@@ -35,8 +35,7 @@ see [joonlabs.com](https://joonlabs.com)
 <br>
 <img src="https://joonlabs.com/php-graphql/backers/leafx.png" alt="index.js logo" height="30"/><br>
 see [leafx.de](https://leafx.de)
-<br>
 
 
-#License
+## License
 Fore more infromation regarding the license, see the [LICENSE](https://github.com/joonlabs/php-graphql/blob/master/LICENSE) file.
