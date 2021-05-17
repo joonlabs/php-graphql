@@ -12,7 +12,7 @@ class GraphQLUnion extends GraphQLAbstractType
     private $types;
     private $resolveTypeFn;
 
-    public function __construct(\string $type, \string $description, array $types, ?Closure $resolveTypeFn = null)
+    public function __construct(string $type, string $description, array $types, ?Closure $resolveTypeFn = null)
     {
         $this->type = $type;
         $this->description = $description;

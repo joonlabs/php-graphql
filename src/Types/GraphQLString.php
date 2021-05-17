@@ -9,7 +9,7 @@ class GraphQLString extends GraphQLScalarType
     protected $type = "String";
     protected $description = "Default GraphQL String Type";
 
-    public function serialize($outputValue): ?\string
+    public function serialize($outputValue): ?string
     {
         if (!is_string($outputValue) and $outputValue !== null) {
             throw new GraphQLError(
@@ -30,7 +30,7 @@ class GraphQLString extends GraphQLScalarType
         return $valueNode["value"];
     }
 
-    public function parseValue($value): ?\string
+    public function parseValue($value): ?string
     {
         if (!is_string($value) and $value !== null) {
             throw new GraphQLError(

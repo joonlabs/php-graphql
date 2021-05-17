@@ -9,7 +9,7 @@ class GraphQLBoolean extends GraphQLScalarType
     protected $type = "Boolean";
     protected $description = "Default GraphQL Boolean Type";
 
-    public function serialize($outputValue): ?\bool
+    public function serialize($outputValue): ?bool
     {
         if (!is_bool($outputValue) and $outputValue !== null) {
             throw new GraphQLError(
@@ -30,7 +30,7 @@ class GraphQLBoolean extends GraphQLScalarType
         return $valueNode["value"];
     }
 
-    public function parseValue($value): ?\bool
+    public function parseValue($value): ?bool
     {
         if (!is_bool($value) and $value !== null) {
             throw new GraphQLError(

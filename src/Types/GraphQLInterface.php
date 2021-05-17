@@ -12,7 +12,7 @@ class GraphQLInterface extends GraphQLAbstractType
     private $fields;
     private $resolveTypeFn;
 
-    public function __construct(\string $type, \string $description, Closure $fields, ?Closure $resolveTypeFn = null)
+    public function __construct(string $type, string $description, Closure $fields, ?Closure $resolveTypeFn = null)
     {
         $this->type = $type;
         $this->description = $description;
