@@ -14,7 +14,7 @@ class GraphQLObjectType extends GraphQLType
     private $interfaces;
     private $isTypeOfFn;
 
-    public function __construct(string $type, string $description, Closure $fields, ?array $interfaces = null, ?Closure $isTypeOfFn = null)
+    public function __construct(\string $type, \string $description, Closure $fields, ?array $interfaces = null, ?Closure $isTypeOfFn = null)
     {
         $this->type = $type;
         $this->description = $description;
@@ -89,7 +89,7 @@ class GraphQLObjectType extends GraphQLType
      * @param string $type
      * @return GraphQLObjectType
      */
-    public function setType(string $type): GraphQLObjectType
+    public function setType(\string $type): GraphQLObjectType
     {
         $this->type = $type;
         return $this;
@@ -99,7 +99,7 @@ class GraphQLObjectType extends GraphQLType
      * @param string $description
      * @return GraphQLObjectType
      */
-    public function setDescription(string $description): GraphQLObjectType
+    public function setDescription(\string $description): GraphQLObjectType
     {
         $this->description = $description;
         return $this;

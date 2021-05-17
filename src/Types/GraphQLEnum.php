@@ -12,7 +12,7 @@ class GraphQLEnum extends GraphQLType
 
     private $values = [];
 
-    public function __construct(string $type, string $description, ?array $values)
+    public function __construct(\string $type, \string $description, ?array $values)
     {
         $this->type = $type;
         $this->description = $description;
@@ -57,7 +57,7 @@ class GraphQLEnum extends GraphQLType
         return $value;
     }
 
-    public function parseValue($value): string
+    public function parseValue($value): \string
     {
         if (!is_string($value)) {
             throw new GraphQLError(

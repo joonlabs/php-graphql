@@ -11,7 +11,7 @@ abstract class GraphQLType
     protected $type;
     protected $description;
 
-    public function getName(): string
+    public function getName(): \string
     {
         return $this->type;
     }
@@ -32,92 +32,92 @@ abstract class GraphQLType
         return $this;
     }
 
-    public function isAbstractType(): bool
+    public function isAbstractType(): \bool
     {
         return $this instanceof GraphQLAbstractType;
     }
 
-    public function isBooleanType(): bool
+    public function isBooleanType(): \bool
     {
         return $this instanceof GraphQLBoolean;
     }
 
-    public function isEnumType(): bool
+    public function isEnumType(): \bool
     {
         return $this instanceof GraphQLEnum;
     }
 
-    public function isFloatType(): bool
+    public function isFloatType(): \bool
     {
         return $this instanceof GraphQLFloat;
     }
 
-    public function isIDType(): bool
+    public function isIDType(): \bool
     {
         return $this instanceof GraphQLID;
     }
 
-    public function isInputObjectType(): bool
+    public function isInputObjectType(): \bool
     {
         return $this instanceof GraphQLInputObjectType;
     }
 
-    public function isIntType(): bool
+    public function isIntType(): \bool
     {
         return $this instanceof GraphQLInt;
     }
 
-    public function isInterfaceType(): bool
+    public function isInterfaceType(): \bool
     {
         return $this instanceof GraphQLInterface;
     }
 
-    public function isListType(): bool
+    public function isListType(): \bool
     {
         return $this instanceof GraphQLList;
     }
 
-    public function isNonNullType(): bool
+    public function isNonNullType(): \bool
     {
         return $this instanceof GraphQLNonNull;
     }
 
-    public function isObjectType(): bool
+    public function isObjectType(): \bool
     {
         return $this instanceof GraphQLObjectType and !($this instanceof GraphQLInputObjectType);
     }
 
-    public function isStringType(): bool
+    public function isStringType(): \bool
     {
         return $this instanceof GraphQLString;
     }
 
-    public function isUnionType(): bool
+    public function isUnionType(): \bool
     {
         return $this instanceof GraphQLUnion;
     }
 
-    public function isScalarType(): bool
+    public function isScalarType(): \bool
     {
         return $this instanceof GraphQLScalarType;
     }
 
-    public function isWrappingType(): bool
+    public function isWrappingType(): \bool
     {
         return ($this->isListType() || $this->isNonNullType());
     }
 
-    public function isLeafType(): bool
+    public function isLeafType(): \bool
     {
         return ($this->isScalarType() || $this->isEnumType());
     }
 
-    public function isCompositeType(): bool
+    public function isCompositeType(): \bool
     {
         return ($this->isObjectType() || $this->isInterfaceType() || $this->isUnionType());
     }
 
-    public function isInputType(): bool
+    public function isInputType(): \bool
     {
         return ($this->isScalarType() ||
             $this->isEnumType() ||

@@ -11,8 +11,8 @@ class GraphQLInputObjectType extends GraphQLObjectType
     protected $description;
 
     public function __construct(
-        string $type,
-        string $description,
+        \string $type,
+        \string $description,
         Closure $fields
     )
     {

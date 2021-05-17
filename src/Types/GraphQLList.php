@@ -13,7 +13,7 @@ class GraphQLList extends GraphQLType
 
     private $innerType;
 
-    public function getName(): string
+    public function getName(): \string
     {
         return parent::getName() . "({$this->getInnerType()->getName()})";
     }
