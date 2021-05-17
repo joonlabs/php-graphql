@@ -29,6 +29,10 @@ use GraphQL\Validation\Rules\ValuesOfCorrectType;
 use GraphQL\Validation\Rules\VariablesAreInputTypes;
 use GraphQL\Validation\Rules\VariableUniqueness;
 
+/**
+ * Class Validator
+ * @package GraphQL\Validation
+ */
 class Validator
 {
     private $errors = [];

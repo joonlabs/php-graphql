@@ -6,6 +6,10 @@ use GraphQL\Errors\GraphQLError;
 use GraphQL\Errors\UnexpectedEndOfInputError;
 use GraphQL\Errors\UnexpectedTokenError;
 
+/**
+ * Class Parser
+ * @package GraphQL\Parser
+ */
 class Parser
 {
     private $tokenizer;
@@ -14,6 +18,9 @@ class Parser
     private $lookahead;
     private $errors;
 
+    /**
+     * Parser constructor.
+     */
     public function __construct()
     {
         $this->string = "";

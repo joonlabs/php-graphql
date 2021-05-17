@@ -5,8 +5,19 @@ namespace GraphQL\Utilities;
 use GraphQL\Errors\GraphQLError;
 use GraphQL\Types\GraphQLType;
 
+/**
+ * Class InputValues
+ * @package GraphQL\Utilities
+ */
 abstract class InputValues
 {
+    /**
+     * @param $inputValue
+     * @param GraphQLType $type
+     * @param array $path
+     * @return array|array[]|null[]|null
+     * @throws GraphQLError
+     */
     static function coerceInputValue($inputValue, GraphQLType $type, $path = [])
     {
         // check for null type

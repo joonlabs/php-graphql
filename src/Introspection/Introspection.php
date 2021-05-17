@@ -2,6 +2,7 @@
 
 namespace GraphQL\Introspection;
 
+use GraphQL\Errors\BadImplementationError;
 use GraphQL\Fields\GraphQLTypeField;
 use GraphQL\Types\GraphQLObjectType;
 use GraphQL\Types\GraphQLBoolean;
@@ -15,7 +16,15 @@ use GraphQL\Schemas\Schema;
 use GraphQL\Directives\GraphQLDirective;
 use GraphQL\Arguments\GraphQLFieldArgument;
 
+/**
+ * Class Introspection
+ * @package GraphQL\Introspection
+ */
 class Introspection{
+    /**
+     * @return array
+     * @throws BadImplementationError
+     */
     static public function buildIntrospectionSchemaParts() : array
     {
         $__Type = null;
@@ -523,6 +532,7 @@ class Introspection{
 
     /**
      * @return GraphQLTypeField
+     * @throws BadImplementationError
      */
     static public function getSchemaMetaFieldDef(): GraphQLTypeField
     {
@@ -531,6 +541,7 @@ class Introspection{
 
     /**
      * @return GraphQLTypeField
+     * @throws BadImplementationError
      */
     static public function getTypeMetaFieldDef(): GraphQLTypeField
     {
@@ -539,6 +550,7 @@ class Introspection{
 
     /**
      * @return GraphQLTypeField
+     * @throws BadImplementationError
      */
     static public function getTypeNameMetaFieldDef(): GraphQLTypeField
     {

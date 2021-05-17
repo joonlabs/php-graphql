@@ -9,6 +9,12 @@ use GraphQL\Tests\StarWarsSchema;
 class StarWarsQueryTest extends TestCase
 {
 
+    /**
+     * Formats an array like a graphql result from a server
+     *
+     * @param array $result
+     * @return array[]
+     */
     private function buildResult(array $result): array
     {
         return [

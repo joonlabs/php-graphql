@@ -5,6 +5,10 @@ namespace GraphQL\Types;
 use Closure;
 use GraphQL\Fields\GraphQLQueryField;
 
+/**
+ * Class GraphQLObjectType
+ * @package GraphQL\Types
+ */
 class GraphQLObjectType extends GraphQLType
 {
     protected $type;
@@ -14,6 +18,14 @@ class GraphQLObjectType extends GraphQLType
     private $interfaces;
     private $isTypeOfFn;
 
+    /**
+     * GraphQLObjectType constructor.
+     * @param string $type
+     * @param string $description
+     * @param Closure $fields
+     * @param array|null $interfaces
+     * @param Closure|null $isTypeOfFn
+     */
     public function __construct(string $type, string $description, Closure $fields, ?array $interfaces = null, ?Closure $isTypeOfFn = null)
     {
         $this->type = $type;

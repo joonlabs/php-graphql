@@ -28,6 +28,12 @@ class StarWarsSchema
         "2001" => ["type" => "droid", "id" => "2001", "name" => "R2-D2", "friends" => ["1000", "1002", "1003"], "appearsIn" => ["NEW_HOPE", "EMPIRE", "JEDI"], "homePlanet" => "Astromech"],
     ];
 
+    /**
+     * Builds the Star Wars schema
+     * @return Schema
+     * @throws \GraphQL\Errors\BadImplementationError
+     * @throws \GraphQL\Errors\GraphQLError
+     */
     public static function buildSchema(): Schema
     {
         $humans = self::$humans;

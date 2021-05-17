@@ -4,6 +4,10 @@ namespace GraphQL\Validation;
 
 use GraphQL\Schemas\Schema;
 
+/**
+ * Class ValidationContext
+ * @package GraphQL\Validation
+ */
 class ValidationContext
 {
     private $schema;

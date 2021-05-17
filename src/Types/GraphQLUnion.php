@@ -4,6 +4,10 @@ namespace GraphQL\Types;
 
 use Closure;
 
+/**
+ * Class GraphQLUnion
+ * @package GraphQL\Types
+ */
 class GraphQLUnion extends GraphQLAbstractType
 {
     protected $type = "Union";
@@ -12,6 +16,13 @@ class GraphQLUnion extends GraphQLAbstractType
     private $types;
     private $resolveTypeFn;
 
+    /**
+     * GraphQLUnion constructor.
+     * @param string $type
+     * @param string $description
+     * @param array $types
+     * @param Closure|null $resolveTypeFn
+     */
     public function __construct(string $type, string $description, array $types, ?Closure $resolveTypeFn = null)
     {
         $this->type = $type;

@@ -4,11 +4,20 @@ namespace GraphQL\Types;
 
 use GraphQL\Errors\GraphQLError;
 
+/**
+ * Class GraphQLID
+ * @package GraphQL\Types
+ */
 class GraphQLID extends GraphQLScalarType
 {
     protected $type = "ID";
     protected $description = "Default GraphQL ID Type";
 
+    /**
+     * @param $outputValue
+     * @return string|null
+     * @throws GraphQLError
+     */
     public function serialize($outputValue): ?string
     {
         if (!is_string($outputValue) and $outputValue !== null) {
@@ -19,6 +28,12 @@ class GraphQLID extends GraphQLScalarType
         return $outputValue;
     }
 
+    /**
+     * @param $valueNode
+     * @param $variables
+     * @return mixed
+     * @throws GraphQLError
+     */
     public function parseLiteral($valueNode, $variables)
     {
         if ($valueNode["kind"] !== "StringValue") {
@@ -30,6 +45,11 @@ class GraphQLID extends GraphQLScalarType
         return $valueNode["value"];
     }
 
+    /**
+     * @param $value
+     * @return string|null
+     * @throws GraphQLError
+     */
     public function parseValue($value): ?string
     {
         if (!is_string($value) and $value !== null) {

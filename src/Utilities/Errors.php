@@ -3,6 +3,10 @@ namespace GraphQL\Utilities;
 
 use GraphQL\Errors\GraphQLError;
 
+/**
+ * Class Errors
+ * @package GraphQL\Utilities
+ */
 abstract class Errors
 {
 

@@ -8,6 +8,10 @@ use GraphQL\Types\GraphQLObjectType;
 use GraphQL\Types\GraphQLType;
 use GraphQL\Introspection\Introspection;
 
+/**
+ * Class Schema
+ * @package GraphQL\Schemas
+ */
 class Schema
 {
     private $queryType;

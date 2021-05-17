@@ -2,6 +2,10 @@
 
 namespace GraphQL\Directives;
 
+/**
+ * Class GraphQLDirective
+ * @package GraphQL\Directives
+ */
 class GraphQLDirective
 {
     protected $name;

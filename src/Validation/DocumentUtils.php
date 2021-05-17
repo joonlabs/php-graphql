@@ -3,6 +3,10 @@
 namespace GraphQL\Validation;
 
 
+/**
+ * Class DocumentUtils
+ * @package GraphQL\Validation
+ */
 class DocumentUtils
 {
     /**

@@ -4,11 +4,20 @@ namespace GraphQL\Types;
 
 use GraphQL\Errors\GraphQLError;
 
+/**
+ * Class GraphQLFloat
+ * @package GraphQL\Types
+ */
 class GraphQLFloat extends GraphQLScalarType
 {
     protected $type = "Float";
     protected $description = "Default GraphQL Float Type";
 
+    /**
+     * @param $outputValue
+     * @return float|null
+     * @throws GraphQLError
+     */
     public function serialize($outputValue): ?float
     {
         if (!is_float($outputValue) and $outputValue !== null) {
@@ -19,6 +28,12 @@ class GraphQLFloat extends GraphQLScalarType
         return $outputValue;
     }
 
+    /**
+     * @param $valueNode
+     * @param $variables
+     * @return float
+     * @throws GraphQLError
+     */
     public function parseLiteral($valueNode, $variables): float
     {
         if ($valueNode["kind"] !== "IntValue" and $valueNode["kind"] !== "FloatValue") {
@@ -38,6 +53,11 @@ class GraphQLFloat extends GraphQLScalarType
         return floatval($valueNode["value"]);
     }
 
+    /**
+     * @param $value
+     * @return float|null
+     * @throws GraphQLError
+     */
     public function parseValue($value): ?float
     {
         if (!is_float($value) and $value !== null) {

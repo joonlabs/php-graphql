@@ -5,6 +5,10 @@ namespace GraphQL\Fields;
 use Closure;
 use GraphQL\Types\GraphQLType;
 
+/**
+ * Class GraphQLTypeField
+ * @package GraphQL\Fields
+ */
 class GraphQLTypeField
 {
     protected $id;

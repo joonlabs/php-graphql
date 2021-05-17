@@ -19,6 +19,10 @@ use GraphQL\Utilities\LocatedError;
 use GraphQL\Utilities\OperationRootType;
 use GraphQL\Introspection\Introspection;
 
+/**
+ * Class Executor
+ * @package GraphQL\Execution
+ */
 class Executor
 {
     /**

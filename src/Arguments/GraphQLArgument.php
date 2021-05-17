@@ -4,11 +4,23 @@ namespace GraphQL\Arguments;
 
 use GraphQL\Types\GraphQLType;
 
+/**
+ * Class GraphQLArgument
+ * @package GraphQL\Arguments
+ */
 abstract class GraphQLArgument
 {
     protected $id;
     protected $type;
 
+    /**
+     * GraphQLArgument constructor.
+     * @param string $id
+     * @param GraphQLType $type
+     * @param string $description
+     * @param null $defaultValue
+     * @param string|null $deprecationReason
+     */
     public function __construct(string $id, GraphQLType $type, string $description = "", $defaultValue = null, ?string $deprecationReason = null)
     {
         $this->id = $id;

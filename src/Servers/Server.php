@@ -12,6 +12,10 @@ use GraphQL\Utilities\Errors;
 use GraphQL\Validation\Rules\ValidationRule;
 use GraphQL\Validation\Validator;
 
+/**
+ * Class Server
+ * @package GraphQL\Servers
+ */
 class Server
 {
     private $schema;
@@ -44,6 +48,11 @@ class Server
         $this->displayInternalServerErrorReason = $enabled;
     }
 
+    /**
+     * Adds a custom validation rule (e.g.) for disabling schema introspection
+     *
+     * @param ValidationRule $validationRule
+     */
     public function addValidationRule(ValidationRule $validationRule)
     {
         $this->validator->addAdditionalValidationRule($validationRule);
@@ -51,7 +60,6 @@ class Server
 
     /**
      * Looks for a query and variables, and tries to parse and resolve it against the schema.
-     *
      */
     public function listen()
     {
@@ -116,6 +124,9 @@ class Server
         }
     }
 
+    /**
+     * @param $data
+     */
     public function returnData($data)
     {
         echo json_encode($data);

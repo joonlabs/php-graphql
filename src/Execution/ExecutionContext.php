@@ -17,6 +17,18 @@ class ExecutionContext
     private $typeResolver;
     private $errors;
 
+    /**
+     * ExecutionContext constructor.
+     * @param Schema $schema
+     * @param array $fragments
+     * @param $rootValue
+     * @param array $contextValue
+     * @param $operation
+     * @param $variableValues
+     * @param $fieldResolver
+     * @param $typeResolver
+     * @param $errors
+     */
     public function __construct(
         Schema $schema,
         array $fragments,

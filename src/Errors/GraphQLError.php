@@ -4,6 +4,10 @@ namespace GraphQL\Errors;
 
 use Exception;
 
+/**
+ * Class GraphQLError
+ * @package GraphQL\Errors
+ */
 class GraphQLError extends Exception
 {
     protected $code;

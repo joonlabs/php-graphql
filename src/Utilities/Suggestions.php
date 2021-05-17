@@ -2,6 +2,10 @@
 
 namespace GraphQL\Utilities;
 
+/**
+ * Class Suggestions
+ * @package GraphQL\Utilities
+ */
 abstract class Suggestions
 {
 
@@ -31,6 +35,13 @@ abstract class Suggestions
         return $suggestions;
     }
 
+    /**
+     * Formats a "Did you mean \"...\",..." string
+     *
+     * @param array $suggestions
+     * @param string $prefix
+     * @return string
+     */
     public static function didYouMean(array $suggestions, string $prefix = " "): string
     {
         $text = "";

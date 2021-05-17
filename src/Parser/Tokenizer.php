@@ -4,6 +4,10 @@ namespace GraphQL\Parser;
 
 use GraphQL\Errors\UnexpectedTokenError;
 
+/**
+ * Class Tokenizer
+ * @package GraphQL\Parser
+ */
 class Tokenizer
 {
     private $string = "";
@@ -73,6 +77,9 @@ class Tokenizer
         //['/^[\x{0009}\x{000A}\x{000D}\x{0020}-\x{FFFF}]+/u', "SOURCETEXT"],
     ];
 
+    /**
+     * @param $string
+     */
     public function init($string)
     {
         $this->string = $string;
@@ -127,6 +134,12 @@ class Tokenizer
         throw new UnexpectedTokenError("Unexpetced token : \"" . $string[0] . "\"", $this->getLastLocation());
     }
 
+    /**
+     * Implenents LL(2)-Parsing shortcut, as this is necesarry for Selection to dertermine the fragment type
+     *
+     * @return array|null
+     * @throws UnexpectedTokenError
+     */
     public function glimpsAtNextToken(): ?array
     {
         $cursor = $this->cursor;
@@ -178,6 +191,11 @@ class Tokenizer
         return $location;
     }
 
+    /**
+     * Returns the last location visited in the query
+     *
+     * @return int[]|mixed
+     */
     public function getLastLocation()
     {
         $historyLength = count($this->locationHistory);
@@ -185,6 +203,9 @@ class Tokenizer
         return $this->locationHistory[$historyLength - 1];
     }
 
+    /**
+     * Adds the current location to the history
+     */
     private function addToLocationHistory()
     {
         $this->locationHistory[] = $this->getLocation();

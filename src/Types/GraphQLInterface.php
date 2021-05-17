@@ -4,6 +4,10 @@ namespace GraphQL\Types;
 
 use Closure;
 
+/**
+ * Class GraphQLInterface
+ * @package GraphQL\Types
+ */
 class GraphQLInterface extends GraphQLAbstractType
 {
     protected $type = "Interface";
@@ -12,6 +16,13 @@ class GraphQLInterface extends GraphQLAbstractType
     private $fields;
     private $resolveTypeFn;
 
+    /**
+     * GraphQLInterface constructor.
+     * @param string $type
+     * @param string $description
+     * @param Closure $fields
+     * @param Closure|null $resolveTypeFn
+     */
     public function __construct(string $type, string $description, Closure $fields, ?Closure $resolveTypeFn = null)
     {
         $this->type = $type;

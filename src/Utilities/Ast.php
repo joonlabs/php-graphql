@@ -10,6 +10,10 @@ use GraphQL\Types\GraphQLList;
 use GraphQL\Types\GraphQLNonNull;
 use GraphQL\Types\GraphQLType;
 
+/**
+ * Class Ast
+ * @package GraphQL\Utilities
+ */
 abstract class Ast
 {
     /**

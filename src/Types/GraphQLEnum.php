@@ -5,6 +5,10 @@ namespace GraphQL\Types;
 use GraphQL\Errors\BadImplementationError;
 use GraphQL\Errors\GraphQLError;
 
+/**
+ * Class GraphQLEnum
+ * @package GraphQL\Types
+ */
 class GraphQLEnum extends GraphQLType
 {
     protected $type = "Enum";
@@ -12,6 +16,13 @@ class GraphQLEnum extends GraphQLType
 
     private $values = [];
 
+    /**
+     * GraphQLEnum constructor.
+     * @param string $type
+     * @param string $description
+     * @param array|null $values
+     * @throws BadImplementationError
+     */
     public function __construct(string $type, string $description, ?array $values)
     {
         $this->type = $type;
@@ -29,6 +40,11 @@ class GraphQLEnum extends GraphQLType
         }
     }
 
+    /**
+     * @param $outputValue
+     * @return mixed
+     * @throws GraphQLError
+     */
     public function serialize($outputValue)
     {
         if (!array_key_exists($outputValue, $this->values)) {
@@ -40,6 +56,12 @@ class GraphQLEnum extends GraphQLType
         return $outputValue;
     }
 
+    /**
+     * @param $valueNode
+     * @param $variables
+     * @return mixed
+     * @throws GraphQLError
+     */
     public function parseLiteral($valueNode, $variables)
     {
         if ($valueNode["kind"] !== "EnumValue") {
@@ -57,6 +79,11 @@ class GraphQLEnum extends GraphQLType
         return $value;
     }
 
+    /**
+     * @param $value
+     * @return string
+     * @throws GraphQLError
+     */
     public function parseValue($value): string
     {
         if (!is_string($value)) {
@@ -80,51 +107,6 @@ class GraphQLEnum extends GraphQLType
     public function getValues(): array
     {
         return $this->values;
-    }
-}
-
-class GraphQLEnumValue
-{
-
-    private $id;
-    private $description;
-    private $deprecationReason;
-
-    /**
-     * GraphQLEnumValue constructor.
-     * @param string $id
-     * @param string $description
-     * @param string|null $deprecationReason
-     */
-    public function __construct(string $id, string $description = "", ?string $deprecationReason = null)
-    {
-        $this->id = $id;
-        $this->description = $description;
-        $this->deprecationReason = $deprecationReason ?? null;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName(): string
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
-    /**
-     * @return ?string
-     */
-    public function getDeprecationReason(): ?string
-    {
-        return $this->deprecationReason;
     }
 }
 

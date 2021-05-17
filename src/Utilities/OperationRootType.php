@@ -5,8 +5,18 @@ namespace GraphQL\Utilities;
 use GraphQL\Errors\GraphQLError;
 use GraphQL\Schemas\Schema;
 
+/**
+ * Class OperationRootType
+ * @package GraphQL\Utilities
+ */
 abstract class OperationRootType
 {
+    /**
+     * @param Schema $schema
+     * @param $operation
+     * @return \GraphQL\Types\GraphQLObjectType
+     * @throws GraphQLError
+     */
     public static function getOperationRootType(Schema $schema, $operation): \GraphQL\Types\GraphQLObjectType
     {
         if ($operation["operation"] === "query") {

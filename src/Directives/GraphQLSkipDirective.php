@@ -5,10 +5,17 @@ namespace GraphQL\Directives;
 use GraphQL\Arguments\GraphQLDirectiveArgument;
 use GraphQL\Types\GraphQLBoolean;
 
+/**
+ * Class GraphQLSkipDirective
+ * @package GraphQL\Directives
+ */
 class GraphQLSkipDirective extends GraphQLDirective
 {
     protected $name = "skip";
 
+    /**
+     * GraphQLSkipDirective constructor.
+     */
     public function __construct()
     {
         $this->arguments = [
