@@ -14,7 +14,6 @@
     "graphql",
     "API"
   ],
-  "minimum-stability": "stable",
   "require-dev": {
     "phpunit/phpunit": "9.5.4",
     "phpbench/phpbench": "1.0.1"
