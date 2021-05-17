@@ -12,6 +12,12 @@ use GraphQL\Utilities\KeyMap;
 
 abstract class Values
 {
+    /**
+     * @param Schema $schema
+     * @param array $variableDefinitions
+     * @param array $inputs
+     * @return array
+     */
     public static function getVariableValues(Schema $schema, array $variableDefinitions, array $inputs): array
     {
         $errors = [];
@@ -23,6 +29,14 @@ abstract class Values
         return $errors;
     }
 
+    /**
+     * @param Schema $schema
+     * @param array $variableDefinitions
+     * @param array $inputs
+     * @return array
+     * @throws GraphQLError
+     * @throws \GraphQL\Errors\ValidationError
+     */
     public static function coerceVariableValues(Schema $schema, array $variableDefinitions, array $inputs): array
     {
         $coercedValues = [];
@@ -69,6 +83,13 @@ abstract class Values
         return $coercedValues;
     }
 
+    /**
+     * @param GraphQLDirective $directiveDef
+     * @param $node
+     * @param $variableValues
+     * @return array|null
+     * @throws GraphQLError
+     */
     public static function getDirectiveValues(GraphQLDirective $directiveDef, $node, $variableValues): ?array
     {
         $directiveNode = array_filter($node["directives"], function ($directive) use ($directiveDef) {
@@ -83,6 +104,14 @@ abstract class Values
         return null;
     }
 
+    /**
+     * @param $def
+     * @param $node
+     * @param $variableValues
+     * @return array
+     * @throws GraphQLError
+     * @throws \GraphQL\Errors\ValidationError
+     */
     public static function getArgumentValues($def, $node, $variableValues): array
     {
         $coercedValues = [];
@@ -99,7 +128,7 @@ abstract class Values
             $argumentNode = $argNodeMap[$name] ?? null;
 
             // if no argument specified in AST, check if default argument exists and is valid
-            if (!$argumentNode) {
+            if ($argumentNode === null) {
                 if ($argDef->getDefaultValue() !== null) {
                     $coercedValues[$name] = $argDef->getDefaultValue();
                 } else if ($argType->isNonNullType()) {

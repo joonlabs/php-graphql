@@ -12,6 +12,12 @@ use GraphQL\Types\GraphQLType;
 
 abstract class Ast
 {
+    /**
+     * @param Schema $schema
+     * @param $typeNode
+     * @return GraphQLList|GraphQLNonNull|GraphQLType|null
+     * @throws GraphQLError
+     */
     static function typeFromAst(Schema $schema, $typeNode)
     {
         if ($typeNode["kind"] === "ListType") {
@@ -31,9 +37,16 @@ abstract class Ast
         );
     }
 
-    static function valueFromAst(array $valueNode, GraphQLType $type, ?array $variables = null)
+    /**
+     * @param array|null $valueNode
+     * @param GraphQLType $type
+     * @param array|null $variables
+     * @return array|UndefinedValue|mixed|null
+     * @throws ValidationError
+     */
+    static function valueFromAst(?array $valueNode, GraphQLType $type, ?array $variables = null)
     {
-        if (!$valueNode) {
+        if ($valueNode === null) {
             // When there is no node, then there is also no value.
             // Importantly, this is different from returning the value null.
             return new UndefinedValue();
@@ -182,6 +195,11 @@ abstract class Ast
         return new UndefinedValue();
     }
 
+    /**
+     * @param $valueNode
+     * @param $variables
+     * @return bool
+     */
     private static function isMissingVariable($valueNode, $variables): bool
     {
         return (

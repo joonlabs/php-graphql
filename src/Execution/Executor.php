@@ -127,8 +127,8 @@ class Executor
                         break;
                     }
                     $visitedFragmentNames[$fragName] = true;
-                    $fragment = $executionContext->getFragments()[$fragName];
-                    if (!$fragment || !$this->doesFragmentConditionMatch($executionContext, $fragment, $runtimeType)) {
+                    $fragment = $executionContext->getFragments()[$fragName] ?? null;
+                    if ($fragment === null || !$this->doesFragmentConditionMatch($executionContext, $fragment, $runtimeType)) {
                         break;
                     }
                     $this->collectFields(
@@ -166,8 +166,8 @@ class Executor
      */
     private function doesFragmentConditionMatch(ExecutionContext $executionContext, $fragment, GraphQLObjectType $type): bool
     {
-        $typeConditionNode = $fragment["typeCondition"];
-        if (!$typeConditionNode) {
+        $typeConditionNode = $fragment["typeCondition"] ?? null;
+        if ($typeConditionNode === null) {
             return true;
         }
 
