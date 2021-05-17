@@ -9,49 +9,24 @@ based on the [reference implementation in JavaScript](https://github.com/graphql
 
 ## Installation
 
-**git clone:**
-
-````bash
-git clone https://github.com/joonlabs/php-graphql.git
-````
-
-after downloading include the autloader.php, e.g.:
-
-````php
-require 'php-graphql/src/autoloader.php';
-````
-
-## Hello world!
-
-```php
-use GraphQL\Servers\Server;
-use GraphQL\Schemas\Schema;
-use GraphQL\Types\GraphQLString;
-use GraphQL\Types\GraphQLObjectType;
-use GraphQL\Fields\GraphQLTypeField;
-
-// build the query type
-$QueryType = new GraphQLObjectType("Query", "Root Query", function (){
-    return [
-        new GraphQLTypeField(
-            "hello",
-            new GraphQLString(),
-            "Your first hello world GraphQL-Application",
-            function (){ return 'Hello world!'; }
-        )
-    ];
-});
-
-// build the schema
-$schema = new Schema($QueryType);
-
-// start a server
-$server = new Server($schema);
-$server->listen();
+Via **composer:**
+```bash
+composer require joonlabs/php-graphql
 ```
 
-That's it! Now the GraphQL server is ready to accept requests at the URL of the PHP script.
+Via **git submodule:**
 
+```bash
+git clone https://github.com/joonlabs/php-graphql.git
+```
+
+For more information, see the [doc pages](https://joonlabs.github.io/php-graphql/docs/getting-started/)
+
+## Documentation
+The library's documentation is available at [https://joonlabs.github.io/php-graphql/](https://joonlabs.github.io/php-graphql/) or in the [docs](https://github.com/joonlabs/php-graphql/tree/master/docs) folder.
+
+## Examples
+Examples can be found in the [examples](https://github.com/joonlabs/php-graphql/tree/master/docs) directory and are additionally discussed in the [documentation](https://joonlabs.github.io/php-graphql/).
 ## Backers and sponsors
 
 <img src="https://joonlabs.com/php-graphql/backers/joon.png" alt="index.js logo" height="30"/><br>
@@ -60,5 +35,6 @@ see [joonlabs.com](https://joonlabs.com)
 <br>
 <img src="https://joonlabs.com/php-graphql/backers/leafx.png" alt="index.js logo" height="30"/><br>
 see [leafx.de](https://leafx.de)
-<br>
-<br>
+
+#License
+Fore more infromation regarding the license, see the [LICENSE](https://github.com/joonlabs/php-graphql/blob/master/LICENSE) file.
