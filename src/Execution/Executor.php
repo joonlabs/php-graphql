@@ -7,7 +7,6 @@ use Closure;
 use GraphQL\Directives\GraphQLIncludeDirective;
 use GraphQL\Directives\GraphQLSkipDirective;
 use GraphQL\Errors\GraphQLError;
-use GraphQL\Errors\InvalidReturnTypeError;
 use GraphQL\Fields\GraphQLTypeField;
 use GraphQL\Schemas\Schema;
 use GraphQL\Types\GraphQLAbstractType;
@@ -18,6 +17,7 @@ use GraphQL\Utilities\Ast;
 use GraphQL\Utilities\Errors;
 use GraphQL\Utilities\LocatedError;
 use GraphQL\Utilities\OperationRootType;
+use GraphQL\Introspection\Introspection;
 
 class Executor
 {
@@ -634,16 +634,16 @@ class Executor
     private function getFieldDef(Schema $schema, GraphQLObjectType $parentType, string $fieldName)
     {
         if ($fieldName === "__schema" && $schema->getQueryType() === $parentType) {
-            $SchemaMetaFieldDef = null;
-            require __DIR__ . "/../Introspection/Introspection.php";
+            $SchemaMetaFieldDef = Introspection::getSchemaMetaFieldDef();
+            //require __DIR__ . "/../Introspection/Introspection.php";
             return $SchemaMetaFieldDef;
         } else if ($fieldName === "__type" && $schema->getQueryType() === $parentType) {
-            $TypeMetaFieldDef = null;
-            require __DIR__ . "/../Introspection/Introspection.php";
+            $TypeMetaFieldDef = Introspection::getTypeMetaFieldDef();
+            //require __DIR__ . "/../Introspection/Introspection.php";
             return $TypeMetaFieldDef;
         } else if ($fieldName === "__typename") {
-            $TypeNameMetaFieldDef = null;
-            require __DIR__ . "/../Introspection/Introspection.php";
+            $TypeNameMetaFieldDef = Introspection::getTypeNameMetaFieldDef();
+            //require __DIR__ . "/../Introspection/Introspection.php";
             return $TypeNameMetaFieldDef;
         }
         return $parentType->getFields()[$fieldName];

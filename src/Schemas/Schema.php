@@ -6,6 +6,7 @@ use GraphQL\Errors\GraphQLError;
 use GraphQL\Types\GraphQLAbstractType;
 use GraphQL\Types\GraphQLObjectType;
 use GraphQL\Types\GraphQLType;
+use GraphQL\Introspection\Introspection;
 
 class Schema
 {
@@ -41,8 +42,7 @@ class Schema
 
         //TODO: check for custom directives (see: https://github.com/graphql/graphql-js/blob/5ed55b89d526c637eeb9c440715367eec8a2adec/src/type/schema.js#L190)
 
-        $__Schema = null;
-        require __DIR__ . '/../Introspection/Introspection.php';
+        $__Schema = Introspection::buildIntrospectionSchemaParts()["__Schema"];
         $this->collectReferencedTypes($__Schema, $allReferencedTypes);
 
         // build type map
