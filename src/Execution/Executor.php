@@ -3,11 +3,11 @@
 namespace GraphQL\Execution;
 
 
-use Cassandra\FutureRows;
-use GraphQL\Arguments\GraphQLFieldArgument;
+use Closure;
 use GraphQL\Directives\GraphQLIncludeDirective;
 use GraphQL\Directives\GraphQLSkipDirective;
 use GraphQL\Errors\GraphQLError;
+use GraphQL\Errors\InvalidReturnTypeError;
 use GraphQL\Fields\GraphQLTypeField;
 use GraphQL\Schemas\Schema;
 use GraphQL\Types\GraphQLAbstractType;
@@ -21,10 +21,22 @@ use GraphQL\Utilities\OperationRootType;
 
 class Executor
 {
-    public function execute(Schema $schema, array $document, $rootValue = null, $contextValue = null, $variableValues = null, $operationName = null, $fieldResolver = null, $typeResolver = null)
+    /**
+     * Executes a query against a document.
+     *
+     * @param Schema $schema
+     * @param array $document
+     * @param null $rootValue
+     * @param null $contextValue
+     * @param null $variableValues
+     * @param null $operationName
+     * @param null $fieldResolver
+     * @param null $typeResolver
+     * @return array
+     * @throws GraphQLError
+     */
+    public function execute(Schema $schema, array $document, $rootValue = null, $contextValue = null, $variableValues = null, $operationName = null, $fieldResolver = null, $typeResolver = null): array
     {
-
-
         // build execution context
         $executionContext = $this->buildExecutionContext(
             $schema,
@@ -41,6 +53,15 @@ class Executor
         return $this->buildResponse($executionContext, $data);
     }
 
+    /**
+     * Executes an operation
+     *
+     * @param ExecutionContext $executionContext
+     * @param $operation
+     * @param $rootValue
+     * @return mixed|null
+     * @throws GraphQLError
+     */
     public function executeOperation(ExecutionContext $executionContext, $operation, $rootValue)
     {
         $type = OperationRootType::getOperationRootType($executionContext->getSchema(), $operation);
@@ -61,7 +82,18 @@ class Executor
         }
     }
 
-    public function collectFields(ExecutionContext $executionContext, GraphQLObjectType $runtimeType, $selectionSet, &$fields, array $visitedFragmentNames)
+    /**
+     * Collects all fields in a selection set
+     *
+     * @param ExecutionContext $executionContext
+     * @param GraphQLObjectType $runtimeType
+     * @param $selectionSet
+     * @param $fields
+     * @param array $visitedFragmentNames
+     * @return array
+     * @throws GraphQLError
+     */
+    public function collectFields(ExecutionContext $executionContext, GraphQLObjectType $runtimeType, $selectionSet, &$fields, array $visitedFragmentNames): array
     {
         foreach ($selectionSet["selections"] as $selection) {
             switch ($selection["kind"]) {
@@ -112,12 +144,27 @@ class Executor
         return $fields;
     }
 
+    /**
+     * Returns the key that should be used for the field's answer
+     *
+     * @param $node
+     * @return string
+     */
     private function getFieldEntryKey($node): string
     {
         return $node["alias"] ? $node["alias"]["value"] : $node["name"]["value"];
     }
 
-    private function doesFragmentConditionMatch(ExecutionContext $executionContext, $fragment, GraphQLObjectType $type)
+    /**
+     * Returns wether a fragment condition matches or not
+     *
+     * @param ExecutionContext $executionContext
+     * @param $fragment
+     * @param GraphQLObjectType $type
+     * @return bool
+     * @throws GraphQLError
+     */
+    private function doesFragmentConditionMatch(ExecutionContext $executionContext, $fragment, GraphQLObjectType $type): bool
     {
         $typeConditionNode = $fragment["typeCondition"];
         if (!$typeConditionNode) {
@@ -135,7 +182,14 @@ class Executor
         return false;
     }
 
-    private function shouldIncludeNode(ExecutionContext $executionContext, $node)
+    /**
+     * Returns wether a node should be included, based on the built-in directives
+     *
+     * @param ExecutionContext $executionContext
+     * @param $node
+     * @return bool
+     */
+    private function shouldIncludeNode(ExecutionContext $executionContext, $node): bool
     {
         // check if skip directive is active
         $skip = Values::getDirectiveValues(
@@ -144,7 +198,7 @@ class Executor
             $executionContext->getVariableValues()
         );
 
-        if ($skip["if"] === true) {
+        if (($skip["if"] ?? null) === true) {
             return false;
         }
 
@@ -155,7 +209,7 @@ class Executor
             $executionContext->getVariableValues()
         );
 
-        if ($include["if"] === false) {
+        if (($include["if"] ?? null) === false) {
             return false;
         }
 
@@ -163,6 +217,17 @@ class Executor
         return true;
     }
 
+    /**
+     * Executes fields in a parent type's context
+     *
+     * @param ExecutionContext $executionContext
+     * @param GraphQLObjectType $parentType
+     * @param $sourceValue
+     * @param $path
+     * @param $fields
+     * @return mixed
+     * @throws GraphQLError
+     */
     public function executeFields(ExecutionContext $executionContext, GraphQLObjectType $parentType, $sourceValue, $path, $fields)
     {
         return array_reduce(array_keys($fields), function (&$results, $responseName) use ($executionContext, $parentType, $sourceValue, $path, $fields) {
@@ -177,15 +242,26 @@ class Executor
                 $fieldPath
             );
 
-            if ($result === null) {
-                //return $results;
-            }
+            /*if ($result === null) {
+                return $results;
+            }*/
 
             $results[$responseName] = $result;
             return $results;
         }, []);
     }
 
+    /**
+     * Resolves a field's value
+     *
+     * @param ExecutionContext $executionContext
+     * @param GraphQLObjectType $parentType
+     * @param $source
+     * @param $fieldNodes
+     * @param $path
+     * @return array|array[]|mixed|null[]|\null[][]|null
+     * @throws GraphQLError
+     */
     public function resolveField(ExecutionContext $executionContext, GraphQLObjectType $parentType, $source, $fieldNodes, $path)
     {
         $fieldNode = $fieldNodes[0];
@@ -193,8 +269,8 @@ class Executor
 
 
         $fieldDef = $this->getFieldDef($executionContext->getSchema(), $parentType, $fieldName);
-        if (!$fieldDef) {
-            return;
+        if ($fieldDef === null) {
+            return null;
         }
 
         $returnType = $fieldDef->getType();
@@ -229,6 +305,15 @@ class Executor
         }
     }
 
+    /**
+     * Field error is added to internal error-stack if field was not non-nullable field
+     *
+     * @param GraphQLError $error
+     * @param GraphQLType $returnType
+     * @param ExecutionContext $executionContext
+     * @return null
+     * @throws GraphQLError
+     */
     private function handleFieldError(GraphQLError $error, GraphQLType $returnType, ExecutionContext $executionContext)
     {
         if ($returnType->isNonNullType()) {
@@ -239,6 +324,16 @@ class Executor
         return null;
     }
 
+    /**
+     * @param ExecutionContext $executionContext
+     * @param GraphQLType $returnType
+     * @param $fieldNodes
+     * @param $info
+     * @param $path
+     * @param $result
+     * @return array|array[]|mixed|null[]|\null[][]|null
+     * @throws GraphQLError
+     */
     function completeValue(ExecutionContext $executionContext, GraphQLType $returnType, $fieldNodes, $info, $path, $result)
     {
         // if result is error, throw a located error
@@ -317,7 +412,17 @@ class Executor
         );
     }
 
-    private function completeListValue(ExecutionContext $executionContext, GraphQLList $returnType, $fieldNodes, $info, $path, $result)
+    /**
+     * @param ExecutionContext $executionContext
+     * @param GraphQLList $returnType
+     * @param $fieldNodes
+     * @param $info
+     * @param $path
+     * @param $result
+     * @return array|array[]|\array[][]|null[]|\null[][]|\null[][][]
+     * @throws GraphQLError
+     */
+    private function completeListValue(ExecutionContext $executionContext, GraphQLList $returnType, $fieldNodes, $info, $path, $result): array
     {
         if (!is_iterable($result)) {
             throw new GraphQLError(
@@ -326,7 +431,7 @@ class Executor
         }
 
         $itemType = $returnType->getInnerType();
-        $completedResults = array_map(function ($item, $index) use ($executionContext, $returnType, $fieldNodes, $info, $path, $result, $itemType) {
+        return array_map(function ($item, $index) use ($executionContext, $returnType, $fieldNodes, $info, $path, $result, $itemType) {
             $itemPath = [$path, $index, null];
             try {
                 return $this->completeValue(
@@ -342,15 +447,23 @@ class Executor
                 return $this->handleFieldError($error, $returnType, $executionContext);
             }
         }, $result, array_keys($result));
-        return $completedResults;
     }
 
     private function completeLeafValue(GraphQLType $returnType, $result)
     {
-        $serializedResult = $returnType->serialize($result);
-        return $serializedResult;
+        return $returnType->serialize($result);
     }
 
+    /**
+     * @param ExecutionContext $executionContext
+     * @param GraphQLAbstractType $returnType
+     * @param $fieldNodes
+     * @param $info
+     * @param $path
+     * @param $result
+     * @return mixed
+     * @throws GraphQLError
+     */
     private function completeAbstractValue(ExecutionContext $executionContext, GraphQLAbstractType $returnType, $fieldNodes, $info, $path, $result)
     {
         $resolveTypeFn = $returnType->getResolveType() ?? $executionContext->getTypeResolver();
@@ -374,60 +487,103 @@ class Executor
         );
     }
 
-    private function ensureValidRuntimeType($runtimeTypeName, ExecutionContext $executionContext, $returnType, $fieldNodes, $info, $result)
+    /**
+     * @param $runtimeTypeName
+     * @param ExecutionContext $executionContext
+     * @param $returnType
+     * @param $fieldNodes
+     * @param $info
+     * @param $result
+     * @return GraphQLType
+     * @throws GraphQLError
+     */
+    private function ensureValidRuntimeType($runtimeTypeName, ExecutionContext $executionContext, $returnType, $fieldNodes, $info, $result): GraphQLType
     {
         if ($runtimeTypeName === null) {
             throw new GraphQLError(
-                "Abstract type \"{$returnType->getName()}\" must resolve to an Object type at runtime for field \"{$info["parentType"]->getName()}.{$info["fieldName"]}\". Either the \"{$returnType->getName()}\" type should provide a \"resolveType\" function or each possible type should provide an \"isTypeOf\" function."
+                "Abstract type \"{$returnType->getName()}\" must resolve to an Object type at runtime for field \"{$info["parentType"]->getName()}.{$info["fieldName"]}\". Either the \"{$returnType->getName()}\" type should provide a \"resolveType\" function or each possible type should provide an \"isTypeOf\" function.",
+                $fieldNodes[0]
             );
         }
 
         if (!is_string($runtimeTypeName)) {
             throw new GraphQLError(
-                "Abstract type \"{$returnType->getName()}\" must resolve to an Object type at runtime for field \"{$info["parentType"]->getName()}.{$info["fieldName"]}\" with value {$result}, received \"{$runtimeTypeName}\"."
+                "Abstract type \"{$returnType->getName()}\" must resolve to an Object type at runtime for field \"{$info["parentType"]->getName()}.{$info["fieldName"]}\" with value $result, received \"$runtimeTypeName\".",
+                $fieldNodes[0]
             );
         }
 
         $runtimeType = $executionContext->getSchema()->getType($runtimeTypeName);
         if ($runtimeType === null) {
             throw new GraphQLError(
-                "Abstract type \"{$returnType->getName()}\" was resolve to a type \"{$runtimeTypeName}\" that does not exist inside schema."
+                "Abstract type \"{$returnType->getName()}\" was resolve to a type \"$runtimeTypeName\" that does not exist inside schema.",
+                $fieldNodes[0]
             );
         }
 
         if (!$runtimeType->isObjectType()) {
             throw new GraphQLError(
-                "Abstract type \"{$returnType->getName()}\" was resolve to a non-object type \"{$runtimeTypeName}\"."
+                "Abstract type \"{$returnType->getName()}\" was resolve to a non-object type \"$runtimeTypeName\".",
+                $fieldNodes[0]
             );
         }
 
         if (!$executionContext->getSchema()->isSubType($returnType, $runtimeType)) {
             throw new GraphQLError(
-                "Runtime Object type \"{$runtimeType->getName()}\" is not a possible type for \"{$returnType->getName()}\"."
+                "Runtime Object type \"{$runtimeType->getName()}\" is not a possible type for \"{$returnType->getName()}\".",
+                $fieldNodes[0]
             );
         }
 
         return $runtimeType;
     }
 
+    /**
+     * @param ExecutionContext $executionContext
+     * @param GraphQLObjectType $returnType
+     * @param $fieldNodes
+     * @param $info
+     * @param $path
+     * @param $result
+     * @return mixed
+     * @throws GraphQLError
+     */
     private function completeObjectValue(ExecutionContext $executionContext, GraphQLObjectType $returnType, $fieldNodes, $info, $path, $result)
     {
         return $this->collectAndExecuteSubfields(
             $executionContext,
             $returnType,
             $fieldNodes,
+            $info,
             $path,
             $result
         );
     }
 
-    private function collectAndExecuteSubfields(ExecutionContext $executionContext, GraphQLObjectType $returnType, $fieldNodes, $path, $result)
+    /**
+     * @param ExecutionContext $executionContext
+     * @param GraphQLObjectType $returnType
+     * @param $fieldNodes
+     * @param $info
+     * @param $path
+     * @param $result
+     * @return mixed
+     * @throws GraphQLError
+     */
+    private function collectAndExecuteSubfields(ExecutionContext $executionContext, GraphQLObjectType $returnType, $fieldNodes, $info, $path, $result)
     {
         $subFieldNodes = $this->collectSubFields($executionContext, $returnType, $fieldNodes);
         return $this->executeFields($executionContext, $returnType, $result, $path, $subFieldNodes);
     }
 
-    private function collectSubFields(ExecutionContext $executionContext, GraphQLObjectType $returnType, $fieldNodes)
+    /**
+     * @param ExecutionContext $executionContext
+     * @param GraphQLObjectType $returnType
+     * @param $fieldNodes
+     * @return array
+     * @throws GraphQLError
+     */
+    private function collectSubFields(ExecutionContext $executionContext, GraphQLObjectType $returnType, $fieldNodes): array
     {
         $subFieldNodes = [];
         $visitedFragmentNames = [];
@@ -445,7 +601,15 @@ class Executor
         return $subFieldNodes;
     }
 
-    private function buildResolveInfo(ExecutionContext $executionContext, GraphQLTypeField $fieldDef, $fieldNodes, $parentType, $path)
+    /**
+     * @param ExecutionContext $executionContext
+     * @param GraphQLTypeField $fieldDef
+     * @param $fieldNodes
+     * @param $parentType
+     * @param $path
+     * @return array
+     */
+    private function buildResolveInfo(ExecutionContext $executionContext, GraphQLTypeField $fieldDef, $fieldNodes, $parentType, $path): array
     {
         return [
             "fieldName" => $fieldDef->getName(),
@@ -461,6 +625,12 @@ class Executor
         ];
     }
 
+    /**
+     * @param Schema $schema
+     * @param GraphQLObjectType $parentType
+     * @param string $fieldName
+     * @return mixed|null
+     */
     private function getFieldDef(Schema $schema, GraphQLObjectType $parentType, string $fieldName)
     {
         if ($fieldName === "__schema" && $schema->getQueryType() === $parentType) {
@@ -479,6 +649,17 @@ class Executor
         return $parentType->getFields()[$fieldName];
     }
 
+    /**
+     * @param Schema $schema
+     * @param array $document
+     * @param null $rootValue
+     * @param null $contextValue
+     * @param null $rawVariableValues
+     * @param null $operationName
+     * @param null $fieldResolver
+     * @param null $typeResolver
+     * @return GraphQLError[]|ExecutionContext
+     */
     public function buildExecutionContext(Schema $schema, array $document, $rootValue = null, $contextValue = null, $rawVariableValues = null, $operationName = null, $fieldResolver = null, $typeResolver = null)
     {
         $operation = null;
@@ -509,11 +690,11 @@ class Executor
         if ($operation === null) {
             if ($operationName !== null) {
                 return [
-                    new GraphQLError("Unknown operation named \"$operationName\"", $definition["loc"])
+                    new GraphQLError("Unknown operation named \"$operationName\"", $definition["loc"] ?? null)
                 ];
             }
             return [
-                new GraphQLError("Must provide an operation.", $definition["loc"])
+                new GraphQLError("Must provide an operation.", $definition["loc"] ?? null)
             ];
         }
 
@@ -536,7 +717,12 @@ class Executor
         );
     }
 
-    private function buildResponse(ExecutionContext $executionContext, $data)
+    /**
+     * @param ExecutionContext $executionContext
+     * @param $data
+     * @return array
+     */
+    private function buildResponse(ExecutionContext $executionContext, $data): array
     {
         if (count($executionContext->getErrors()) === 0) {
             return [
@@ -550,7 +736,10 @@ class Executor
         }
     }
 
-    private function getDefaultFieldResolver(): \Closure
+    /**
+     * @return Closure
+     */
+    private function getDefaultFieldResolver(): Closure
     {
         return function ($source, $args, $contextValue, $info) {
             // if $source is an iterable (e.g. array), get value by key (field name)
@@ -583,7 +772,7 @@ class Executor
      * Otherwise, test each possible type for the abstract type by calling
      * isTypeOf for the object being coerced, returning the first type that matches.
      */
-    private function getDefaultTypeResolver(): \Closure
+    private function getDefaultTypeResolver(): Closure
     {
         return function ($value, $contextValue, $info, $abstractType) {
             if (is_iterable($value) and is_string($value["__typename"] ?? null)) {
@@ -616,9 +805,9 @@ class Executor
                     }
                 }
             }
+
+            return null;
         };
     }
 
 }
-
-?>

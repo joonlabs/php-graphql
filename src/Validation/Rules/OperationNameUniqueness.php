@@ -22,7 +22,7 @@ class OperationNameUniqueness extends ValidationRule
             $definitionName = $definition["name"] ?? null;
             $definitionKind = $definition["kind"] ?? null;
 
-            if ($definitionKind === "OperationDefinition" and $definitionName["value"] !== null) {
+            if ($definitionKind === "OperationDefinition" and ($definitionName["value"] ?? null) !== null) {
                 if (!in_array($definitionName["value"], $namedDefinitionsNames)) {
                     // operation is not known until now -> add it to the array
                     $namedDefinitionsNames[] = $definitionName["value"];
