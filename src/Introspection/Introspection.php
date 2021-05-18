@@ -20,12 +20,13 @@ use GraphQL\Arguments\GraphQLFieldArgument;
  * Class Introspection
  * @package GraphQL\Introspection
  */
-class Introspection{
+class Introspection
+{
     /**
      * @return array
      * @throws BadImplementationError
      */
-    static public function buildIntrospectionSchemaParts() : array
+    static public function buildIntrospectionSchemaParts(): array
     {
         $__Type = null;
         $__Field = null;
@@ -555,6 +556,89 @@ class Introspection{
     static public function getTypeNameMetaFieldDef(): GraphQLTypeField
     {
         return self::buildIntrospectionSchemaParts()["TypeNameMetaFieldDef"];
+    }
+
+    static public function getIntrospectionQuery(): string
+    {
+        return '
+          query IntrospectionQuery {
+            __schema {
+              queryType { name }
+              mutationType { name }
+              subscriptionType { name }
+              types {
+                ...FullType
+              }
+              directives {
+                name
+                description
+                args {
+                  ...InputValue
+                }
+                onOperation
+                onFragment
+                onField
+              }
+            }
+          }
+        
+          fragment FullType on __Type {
+            kind
+            name
+            description
+            fields(includeDeprecated: true) {
+              name
+              description
+              args {
+                ...InputValue
+              }
+              type {
+                ...TypeRef
+              }
+              isDeprecated
+              deprecationReason
+            }
+            inputFields {
+              ...InputValue
+            }
+            interfaces {
+              ...TypeRef
+            }
+            enumValues(includeDeprecated: true) {
+              name
+              description
+              isDeprecated
+              deprecationReason
+            }
+            possibleTypes {
+              ...TypeRef
+            }
+          }
+        
+          fragment InputValue on __InputValue {
+            name
+            description
+            type { ...TypeRef }
+            defaultValue
+          }
+        
+          fragment TypeRef on __Type {
+            kind
+            name
+            ofType {
+              kind
+              name
+              ofType {
+                kind
+                name
+                ofType {
+                  kind
+                  name
+                }
+              }
+            }
+          }
+        ';
     }
 }
 

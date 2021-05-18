@@ -1,5 +1,6 @@
 <?php
 
+use GraphQL\Introspection\Introspection;
 use PHPUnit\Framework\TestCase;
 use GraphQL\Parser\Parser;
 use GraphQL\Validation\Validator;
@@ -185,6 +186,26 @@ class StarWarsValidationTest extends TestCase
             }
           }
         }';
+
+        $schema = StarWarsSchema::buildSchema();
+
+        $parser = new Parser();
+        $validator = new Validator();
+
+        $parser->parse($query);
+        $document = $parser->getParsedDocument();
+
+        $validator->validate($schema, $document);
+
+        self::assertEmpty($validator->getErrors());
+    }
+
+    /**
+     * Allows intropection query on schema
+     */
+    public function testAllowsIntrospectionOnSchema()
+    {
+        $query = Introspection::getIntrospectionQuery();
 
         $schema = StarWarsSchema::buildSchema();
 
