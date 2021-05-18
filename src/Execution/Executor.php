@@ -53,6 +53,14 @@ class Executor
             $typeResolver
         );
 
+        // return early errors if execution context failed.
+        if(is_array($executionContext)){
+            return [
+                "errors" => Errors::prettyPrintErrors($executionContext),
+                "data" => []
+            ];
+        }
+
         $data = $this->executeOperation($executionContext, $executionContext->getOperation(), $rootValue);
         return $this->buildResponse($executionContext, $data);
     }

@@ -65,6 +65,7 @@ class Server
     {
         // obtain query and variables
         $variables = $this->getVariables();
+        $operationName = $this->getOperationName();
         $query = $this->getQuery();
 
         if ($query === null) {
@@ -103,7 +104,7 @@ class Server
 
 
                 // execute query
-                $result = $this->executor->execute($this->schema, $this->parser->getParsedDocument(), null, null, $variables);
+                $result = $this->executor->execute($this->schema, $this->parser->getParsedDocument(), null, null, $variables, $operationName);
                 $this->returnData($result);
 
             } catch (Error $error) {
@@ -148,6 +149,25 @@ class Server
         } else {
             // query sent via post field
             return $_POST["query"] ?? null;
+        }
+    }
+
+    /**
+     * Returns the operation name string from the raw post data.
+     *
+     * @return string|null
+     */
+    private function getOperationName(): ?string
+    {
+        // check if query is sent as raw http body in request as "application/json" or via post fields as "multipart/form-data"
+        $headers = apache_request_headers();
+        if (array_key_exists("Content-Type", $headers) and $headers["Content-Type"] === "application/json") {
+            // raw json string in http body
+            $phpInput = json_decode(file_get_contents("php://input"), true);
+            return $phpInput["operationName"] ?? null;
+        } else {
+            // query sent via post field
+            return $_POST["operationName"] ?? null;
         }
     }
 
