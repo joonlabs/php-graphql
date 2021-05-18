@@ -23,8 +23,13 @@
   },
   "autoload": {
     "psr-4": {
-      "GraphQL\\": "src/",
-      "GraphQL\\Tests\\": "tests/"
+      "GraphQL\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "GraphQL\\Tests\\": "tests/",
+      "GraphQL\\Benchmarks\\": "tests/"
     }
   },
   "scripts": {
