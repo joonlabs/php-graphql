@@ -1,5 +1,6 @@
 <?php
 
+use GraphQL\Errors\ForbiddenError;
 use GraphQL\Types\GraphQLObjectType;
 use GraphQL\Types\GraphQLEnum;
 use GraphQL\Types\GraphQLEnumValue;
@@ -30,6 +31,7 @@ $Character = new GraphQLInterface("Character", "A character in the Star Wars Tri
         new GraphQLTypeField("name", new GraphQLString(), "The name of the character."),
         new GraphQLTypeField("friends", new GraphQLList($Character), "The friends of the character, or an empty list if they have none."),
         new GraphQLTypeField("appearsIn", new GraphQLList($Episode), "Which movies they appear in."),
+        new GraphQLTypeField("secretBackstory", new GraphQLString(), "All secrets about their past."),
     ];
 }, function ($character) {
     if ($character["type"] === "human") {
@@ -51,7 +53,10 @@ $Human = new GraphQLObjectType("Human", "A humanoid creature in the Star Wars un
             }, $character["friends"]);
         }),
         new GraphQLTypeField("appearsIn", new GraphQLList($Episode), "Which movies they appear in."),
-        new GraphQLTypeField("homePlanet", new GraphQLString(), "The home planet of the human, or null if unknown.")
+        new GraphQLTypeField("homePlanet", new GraphQLString(), "The home planet of the human, or null if unknown."),
+        new GraphQLTypeField("secretBackstory", new GraphQLString(), "Where are they from and how they came to be who they are.", function (){
+            throw new ForbiddenError("secretBackstory is secret.");
+        })
     ];
 }, [
     $Character
@@ -70,7 +75,10 @@ $Droid = new GraphQLObjectType("Droid", "A mechanical creature in the Star Wars 
             }, $character["friends"]);
         }),
         new GraphQLTypeField("appearsIn", new GraphQLList($Episode), "Which movies they appear in."),
-        new GraphQLTypeField("primaryFunction", new GraphQLString(), "The primary function of the droid.")
+        new GraphQLTypeField("primaryFunction", new GraphQLString(), "The primary function of the droid."),
+        new GraphQLTypeField("secretBackstory", new GraphQLString(), "Construction date and the name of the designer.", function (){
+            throw new ForbiddenError("secretBackstory is secret.");
+        })
     ];
 }, [
     $Character

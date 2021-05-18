@@ -18,7 +18,8 @@ abstract class LocatedError
      */
     public static function from(GraphQLError $originalError, $fieldNodes, $path): GraphQLError
     {
-        return new GraphQLError(
+        $errorClassName = get_class($originalError);
+        return new $errorClassName(
             $originalError->getMessage(),
             $fieldNodes[0],
             $path
