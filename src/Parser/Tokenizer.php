@@ -2,6 +2,7 @@
 
 namespace GraphQL\Parser;
 
+use GraphQL\Errors\GraphQLError;
 use GraphQL\Errors\UnexpectedTokenError;
 
 /**
@@ -13,9 +14,17 @@ class Tokenizer
     private $string = "";
     private $cursor = 0;
 
+    private $location = [
+        "line" => 1,
+        "column" => 1
+    ];
     private $locationHistory = [];
 
     private $spec = [
+        // --------------------------------------------
+        // New-Line(s):
+        ['/^\n+/', "NL"],
+
         // --------------------------------------------
         // Whitespace(s):
         ['/^\s+/', null],
@@ -120,8 +129,16 @@ class Tokenizer
                 continue;
             }
 
-            // this token can be skipped, e.g. whitespace
+            // this token can be skipped (newline)
+            if ($tokenType === "NL") {
+                $this->location["line"] += strlen($tokenValue);
+                $this->location["column"] = 1;
+                return $this->getNextToken();
+            }
+
+            // this token can be skipped, e.g. whitespace or comment
             if ($tokenType === null) {
+                $this->location["column"] += strlen($tokenValue);
                 return $this->getNextToken();
             }
 
@@ -165,6 +182,7 @@ class Tokenizer
         }
 
         $this->cursor += strlen($matches[0]); // add matched length to cursor
+
         return $matches[0];
     }
 
@@ -175,20 +193,7 @@ class Tokenizer
      */
     public function getLocation(): array
     {
-        $location = [
-            "line" => 1,
-            "column" => 1,
-        ];
-        for ($i = 0; $i < $this->cursor; $i++) {
-            if ($this->string[$i] === "\n") {
-                $location["line"]++;
-                $location["column"] = 1;
-            } else {
-                $location["column"]++;
-            }
-        }
-
-        return $location;
+        return $this->location;
     }
 
     /**
@@ -199,7 +204,8 @@ class Tokenizer
     public function getLastLocation()
     {
         $historyLength = count($this->locationHistory);
-        if ($historyLength <= 1) return $this->getLocation();
+        if ($historyLength <= 1)
+            return $this->getLocation();
         return $this->locationHistory[$historyLength - 1];
     }
 

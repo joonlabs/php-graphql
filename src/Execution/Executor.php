@@ -200,6 +200,7 @@ class Executor
      * @param ExecutionContext $executionContext
      * @param $node
      * @return bool
+     * @throws GraphQLError
      */
     private function shouldIncludeNode(ExecutionContext $executionContext, $node): bool
     {
@@ -254,10 +255,6 @@ class Executor
                 $fieldNodes,
                 $fieldPath
             );
-
-            /*if ($result === null) {
-                return $results;
-            }*/
 
             $results[$responseName] = $result;
             return $results;
@@ -643,6 +640,7 @@ class Executor
      * @param GraphQLObjectType $parentType
      * @param string $fieldName
      * @return mixed|null
+     * @throws \GraphQL\Errors\BadImplementationError
      */
     private function getFieldDef(Schema $schema, GraphQLObjectType $parentType, string $fieldName)
     {

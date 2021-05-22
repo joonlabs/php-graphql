@@ -96,6 +96,10 @@ abstract class Values
      */
     public static function getDirectiveValues(GraphQLDirective $directiveDef, $node, $variableValues): ?array
     {
+        // skip check for directives if no directives wanted
+        if(empty($node["directives"]))
+            return null;
+
         $directiveNode = array_filter($node["directives"], function ($directive) use ($directiveDef) {
                 return $directive["name"]["value"] == $directiveDef->getName();
             })[0] ?? null;
