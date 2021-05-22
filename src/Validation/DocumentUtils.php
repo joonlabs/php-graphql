@@ -9,6 +9,9 @@ namespace GraphQL\Validation;
  */
 class DocumentUtils
 {
+    private static $cacheNodesOfKey = [];
+    private static $cacheNodesOfKind = [];
+
     /**
      * Returns all FragmentDefinitions
      * @param array $document
@@ -29,6 +32,10 @@ class DocumentUtils
      */
     public static function getAllNodesOfKind(array $document, string $kind): array
     {
+        $hashKey = self::getHashKey($document, $kind);
+        if ((self::$cacheNodesOfKind[$hashKey] ?? null) !== null)
+            return self::$cacheNodesOfKind[$hashKey];
+
         $keys = array_keys($document);
 
         $nodes = [];
@@ -42,6 +49,8 @@ class DocumentUtils
             }
         }
 
+        self::$cacheNodesOfKind[$hashKey] = $nodes;
+
         return $nodes;
     }
 
@@ -53,6 +62,10 @@ class DocumentUtils
      */
     public static function getAllNodesOfKey(array $document, string $key): array
     {
+        $hashKey = self::getHashKey($document, $key);
+        if ((self::$cacheNodesOfKey[$hashKey] ?? null) !== null)
+            return self::$cacheNodesOfKey[$hashKey];
+
         $keys = array_keys($document);
 
         $nodes = [];
@@ -66,7 +79,25 @@ class DocumentUtils
             }
         }
 
+        self::$cacheNodesOfKey[$hashKey] = $nodes;
+
         return $nodes;
+    }
+
+    /**
+     * Builds an unique hash-key based on a document and an identifier.
+     *
+     * @param array $document
+     * @param string $identifier
+     * @return string
+     */
+    private static function getHashKey(array $document, string $identifier): string
+    {
+        return crc32(
+                serialize(
+                    $document
+                )
+            ) . $identifier;
     }
 }
 
