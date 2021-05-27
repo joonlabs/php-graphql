@@ -22,12 +22,17 @@ use GraphQL\Arguments\GraphQLFieldArgument;
  */
 class Introspection
 {
+    static $introspectionSchemaPartsCache;
+
     /**
      * @return array
      * @throws BadImplementationError
      */
     static public function buildIntrospectionSchemaParts(): array
     {
+        if (self::$introspectionSchemaPartsCache !== null)
+            return self::$introspectionSchemaPartsCache;
+
         $__Type = null;
         $__Field = null;
         $__TypeKind = null;
@@ -523,12 +528,14 @@ class Introspection
             &$__TypeKind
         ];
 
-        return [
+        self::$introspectionSchemaPartsCache = [
             "__Schema" => $__Schema,
             "SchemaMetaFieldDef" => $SchemaMetaFieldDef,
             "TypeMetaFieldDef" => $TypeMetaFieldDef,
             "TypeNameMetaFieldDef" => $TypeNameMetaFieldDef,
         ];
+
+        return self::$introspectionSchemaPartsCache;
     }
 
     /**
@@ -641,11 +648,3 @@ class Introspection
         ';
     }
 }
-
-
-/*function isIntrospectionType(string $name){
-    global $introspectionTypes;
-    return array_reduce($introspectionTypes, function($carry, GraphQLObjectType $type) use($name){
-        return $carry || $type->getName()===$name;
-    }, false);
-}*/

@@ -15,6 +15,7 @@ class GraphQLObjectType extends GraphQLType
     protected $description;
 
     private $fields;
+    private $fieldsCache;
     private $interfaces;
     private $isTypeOfFn;
 
@@ -78,11 +79,17 @@ class GraphQLObjectType extends GraphQLType
      */
     public function getFields(): array
     {
+        if ($this->fieldsCache !== null)
+            return $this->fieldsCache;
+
         $allFields = call_user_func($this->fields);
         $fields = [];
         foreach ($allFields as $field) {
             $fields[$field->getName()] = $field;
         }
+
+        $this->fieldsCache = $fields;
+
         return $fields;
     }
 
