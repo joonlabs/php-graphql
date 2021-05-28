@@ -31,6 +31,11 @@ The library's documentation is available at [https://joonlabs.github.io/php-grap
 
 ## Examples
 Examples can be found in the [examples](https://github.com/joonlabs/php-graphql/tree/master/docs) directory and are additionally discussed in the [documentation](https://joonlabs.github.io/php-graphql/).
+
+## Motivation
+This project was developed out of internal needs in the company. We decided to go with an own implementation to stay in control of performance critical parts, implement cache systems and support file upload from scratch.
+Also this library does not use arrays but explicit parameters for initialization and configuration of types, fields and other objects. Thanks to features like named arguments which were added by PHP 8, this library achieves a high readability.
+As nice sideeffect this library seems to outperform the currently most used library [webonyx/graphql-php](https://github.com/webonyx/graphql-php) in terms of speed in many use cases (please see [https://github.com/joonlabs/graphql-benchmarks](https://github.com/joonlabs/graphql-benchmarks) for reference). 
 ## Backers and sponsors
 
 <img src="https://joonlabs.com/php-graphql/backers/joon.png" alt="index.js logo" height="30"/><br>
