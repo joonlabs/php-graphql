@@ -204,6 +204,10 @@ class Executor
      */
     private function shouldIncludeNode(ExecutionContext $executionContext, $node): bool
     {
+        // skip check for directives if no directives wanted
+        if(empty($node["directives"]))
+            return true;
+
         // check if skip directive is active
         $skip = Values::getDirectiveValues(
             new GraphQLSkipDirective(),
