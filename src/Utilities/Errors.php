@@ -21,8 +21,8 @@ abstract class Errors
             return [
                 "message" => $error->getMessage(),
                 "locations" => $error->getLocations(),
-                "path" => $error->getPath(),
-                "extensions" => $error->getExtensions()
+                "extensions" => $error->getExtensions(),
+                "path" => $error->getSimplifiedPath()
             ];
         }, $errors);
     }

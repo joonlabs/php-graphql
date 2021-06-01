@@ -27,21 +27,16 @@ class GraphQLError extends Exception
     {
         parent::__construct($message);
         $this->node = $node;
-        $this->path = array_filter(
-            array_reverse($path ?? []),
-            function ($pathItem) {
-                return $pathItem !== null;
-            }
-        );
+        $this->path = $path;
         $this->customExtensions = $customExtensions;
     }
 
     /**
      * Returns all given locations of errors in the query.
      *
-     * @return null
+     * @return array|null
      */
-    public function getLocations()
+    public function getLocations(): ?array
     {
         return $this->node["loc"] ?? null;
     }
@@ -49,11 +44,27 @@ class GraphQLError extends Exception
     /**
      * Returns all given locations of errors in the query.
      *
-     * @return null
+     * @return array|null
      */
-    public function getPath()
+    public function getPath(): ?array
     {
         return $this->path;
+    }
+
+    /**
+     * Returns all given locations of errors in the query.
+     *
+     * @return array|null
+     */
+    public function getSimplifiedPath(): ?array
+    {
+        $simplifiedPath = [];
+        $currentPathField = $this->path;
+        while($currentPathField !== null){
+            $simplifiedPath[] = $currentPathField[0];
+            $currentPathField = $currentPathField[2];
+        }
+        return array_reverse($simplifiedPath);
     }
 
     /**

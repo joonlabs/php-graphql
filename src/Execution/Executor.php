@@ -242,7 +242,7 @@ class Executor
      * @param $sourceValue
      * @param $path
      * @param $fields
-     * @return mixed
+     * @return array
      * @throws GraphQLError
      */
     public function executeFields(ExecutionContext $executionContext, GraphQLObjectType $parentType, $sourceValue, $path, $fields)
@@ -250,7 +250,7 @@ class Executor
         $initial = [];
         return array_reduce(array_keys($fields), function ($results, $responseName) use ($executionContext, $parentType, $sourceValue, $path, $fields) {
             $fieldNodes = $fields[$responseName];
-            $fieldPath = [$path, $responseName, $parentType->getName()];
+            $fieldPath = [$responseName, $parentType->getName(), $path];
 
             $result = $this->resolveField(
                 $executionContext,
@@ -446,7 +446,7 @@ class Executor
 
         $itemType = $returnType->getInnerType();
         return array_map(function ($item, $index) use ($executionContext, $returnType, $fieldNodes, $info, $path, $result, $itemType) {
-            $itemPath = [$path, $index, null];
+            $itemPath = [$index, null, $path];
             try {
                 return $this->completeValue(
                     $executionContext,
