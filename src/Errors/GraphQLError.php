@@ -14,13 +14,16 @@ class GraphQLError extends Exception
     protected $node;
     protected $path;
 
+    protected $customExtensions;
+
     /**
      * GraphQLError constructor.
      * @param string $message
-     * @param null $node
-     * @param null $path
+     * @param array|null $node
+     * @param array|null $path
+     * @param array|null $customExtensions
      */
-    public function __construct($message = "", $node = null, $path = null)
+    public function __construct(string $message = "", array $node = null, array $path = null, array $customExtensions=null)
     {
         parent::__construct($message);
         $this->node = $node;
@@ -30,6 +33,7 @@ class GraphQLError extends Exception
                 return $pathItem !== null;
             }
         );
+        $this->customExtensions = $customExtensions;
     }
 
     /**
@@ -60,6 +64,38 @@ class GraphQLError extends Exception
     public function getErrorCode()
     {
         return $this->code;
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $value
+     * @return $this
+     */
+    public function addCustomExtension(string $key, $value): GraphQLError
+    {
+        $this->customExtensions[$key] = $value;
+        return $this;
+    }
+
+    /**
+     * Returns all added custom extensions
+     * @return array
+     */
+    public function getCustomExtensions(): array
+    {
+        return $this->customExtensions ?? [];
+    }
+
+    /**
+     * Returns all extensions of the error.
+     *
+     * @return array
+     */
+    public function getExtensions(): array
+    {
+        return array_merge([
+            "code" => $this->getErrorCode()
+        ], $this->getCustomExtensions());
     }
 }
 

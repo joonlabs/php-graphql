@@ -22,9 +22,7 @@ abstract class Errors
                 "message" => $error->getMessage(),
                 "locations" => $error->getLocations(),
                 "path" => $error->getPath(),
-                "extensions" => [
-                    "code" => $error->getErrorCode()
-                ]
+                "extensions" => $error->getExtensions()
             ];
         }, $errors);
     }

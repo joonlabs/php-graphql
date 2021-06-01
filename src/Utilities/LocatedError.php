@@ -22,7 +22,8 @@ abstract class LocatedError
         return new $errorClassName(
             $originalError->getMessage(),
             $fieldNodes[0],
-            $path
+            $path,
+            $originalError->getCustomExtensions()
         );
     }
 
