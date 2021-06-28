@@ -4,6 +4,7 @@ namespace GraphQL\Directives;
 
 use GraphQL\Arguments\GraphQLDirectiveArgument;
 use GraphQL\Types\GraphQLBoolean;
+use GraphQL\Types\GraphQLNonNull;
 
 /**
  * Class GraphQLSkipDirective
@@ -19,7 +20,15 @@ class GraphQLSkipDirective extends GraphQLDirective
     public function __construct()
     {
         $this->arguments = [
-            new GraphQLDirectiveArgument("if", new GraphQLBoolean(), "Determines whether to skip the target field or not", false)
+            new GraphQLDirectiveArgument("if", new GraphQLNonNull(new GraphQLBoolean()), "Skipped when true.")
+        ];
+
+        $this->description = "Directs the executor to skip this field or fragment when the `if` argument is true.";
+
+        $this->locations = [
+            "FIELD",
+            "FRAGMENT_SPREAD",
+            "INLINE_FRAGMENT"
         ];
     }
 }

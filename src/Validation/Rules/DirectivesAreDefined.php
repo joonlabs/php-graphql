@@ -21,12 +21,8 @@ class DirectivesAreDefined extends ValidationRule
         $directives = $schema->getDirectives();
 
         $directives = array_map(function ($directive) {
-            return $directive["name"]["value"];
+            return $directive->getName();
         }, $directives);
-
-        // include "skip" and "include" by default
-        $directives[] = "skip";
-        $directives[] = "include";
 
         $wantedDirectives = DocumentUtils::getAllNodesOfKey($document, "directives");
 

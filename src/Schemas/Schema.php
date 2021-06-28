@@ -2,6 +2,9 @@
 
 namespace GraphQL\Schemas;
 
+use GraphQL\Directives\GraphQLDirective;
+use GraphQL\Directives\GraphQLIncludeDirective;
+use GraphQL\Directives\GraphQLSkipDirective;
 use GraphQL\Errors\GraphQLError;
 use GraphQL\Types\GraphQLAbstractType;
 use GraphQL\Types\GraphQLObjectType;
@@ -31,7 +34,10 @@ class Schema
     {
         $this->queryType = $queryType;
         $this->mutationType = $mutationType ?? null;
-        $this->directives = $directives ?? [];
+        $this->directives = array_merge([
+            new GraphQLSkipDirective(),
+            new GraphQLIncludeDirective()
+        ], $directives ?? []);
 
         $allReferencedTypes = [];
         $this->typeMap = [];
@@ -45,7 +51,14 @@ class Schema
             $this->collectReferencedTypes($this->mutationType, $allReferencedTypes);
         }
 
-        //TODO: check for custom directives (see: https://github.com/graphql/graphql-js/blob/5ed55b89d526c637eeb9c440715367eec8a2adec/src/type/schema.js#L190)
+        // collect types from directives
+        foreach ($this->directives as $directive) {
+            if ($directive instanceof GraphQLDirective) {
+                foreach ($directive->getArguments() as $argument) {
+                    $this->collectReferencedTypes($argument->getType(), $allReferencedTypes);
+                }
+            }
+        }
 
         $__Schema = Introspection::buildIntrospectionSchemaParts()["__Schema"];
         $this->collectReferencedTypes($__Schema, $allReferencedTypes);

@@ -4,6 +4,7 @@ namespace GraphQL\Directives;
 
 use GraphQL\Arguments\GraphQLDirectiveArgument;
 use GraphQL\Types\GraphQLBoolean;
+use GraphQL\Types\GraphQLNonNull;
 
 /**
  * Class GraphQLIncludeDirective
@@ -19,7 +20,15 @@ class GraphQLIncludeDirective extends GraphQLDirective
     public function __construct()
     {
         $this->arguments = [
-            new GraphQLDirectiveArgument("if", new GraphQLBoolean(), "Determines whether to include the target field or not", true)
+            new GraphQLDirectiveArgument("if", new GraphQLNonNull(new GraphQLBoolean()), "Included when true.")
+        ];
+
+        $this->description = "Directs the executor to include this field or fragment only when the `if` argument is true.";
+
+        $this->locations = [
+            "FIELD",
+            "FRAGMENT_SPREAD",
+            "INLINE_FRAGMENT"
         ];
     }
 }
