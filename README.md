@@ -30,7 +30,7 @@ For more information, see the [doc pages](https://joonlabs.github.io/php-graphql
 The library's documentation is available at [https://joonlabs.github.io/php-graphql/](https://joonlabs.github.io/php-graphql/) or in the [docs](https://github.com/joonlabs/php-graphql/tree/master/docs) folder.
 
 ## Examples
-Examples can be found in the [examples](https://github.com/joonlabs/php-graphql/tree/master/docs) directory and are additionally discussed in the [documentation](https://joonlabs.github.io/php-graphql/).
+Examples can be found in the [examples](https://github.com/joonlabs/php-graphql/tree/master/examples) directory and are additionally discussed in the [documentation](https://joonlabs.github.io/php-graphql/).
 
 ## Motivation
 This project was developed out of internal needs in the company. We decided to go with an own implementation to stay in control of performance critical parts, implement cache systems and support file upload from scratch.
