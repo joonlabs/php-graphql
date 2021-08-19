@@ -59,22 +59,28 @@ class Server
     }
 
     /**
-     * Looks for a query and variables, and tries to parse and resolve it against the schema.
+     * Handles a request and returns the result. Internally (if not provided via arguments)
+     * it looks for a query and variables, and tries to parse and resolve it against the schema.
+     *
+     * @param string|null $query
+     * @param array|null $variables
+     * @param string|null $operationName
+     * @return array
      */
-    public function listen()
+    public function handle(string $query = null, array $variables = null, string $operationName = null): array
     {
         // obtain query and variables
-        $variables = $this->getVariables();
-        $operationName = $this->getOperationName();
-        $query = $this->getQuery();
+        $variables = $variables ?? $this->getVariables();
+        $operationName = $operationName ?? $this->getOperationName();
+        $query = $query ?? $this->getQuery();
 
         if ($query === null) {
             // no query found -> error
-            $this->returnData([
+            return [
                 "errors" => Errors::prettyPrintErrors(
                     [new InternalServerError("No query could be found. Please ensure, that your query is sent via raw POST data, json encoded and accessible via the \"query\" key.")]
                 )
-            ]);
+            ];
         } else {
             // try to parse the query
             try {
@@ -84,10 +90,9 @@ class Server
                 // check if is valid
                 if (!$this->parser->queryIsValid()) {
                     // if invalid -> show errors
-                    $this->returnData([
+                    return [
                         "errors" => Errors::prettyPrintErrors($this->parser->getErrors())
-                    ]);
-                    return;
+                    ];
                 }
 
                 // validate query
@@ -96,39 +101,44 @@ class Server
                 // check if is valid
                 if (!$this->validator->documentIsValid()) {
                     // if invalid -> show errors
-                    $this->returnData([
+                    return [
                         "errors" => Errors::prettyPrintErrors($this->validator->getErrors())
-                    ]);
-                    return;
+                    ];
                 }
 
-
                 // execute query
-                $result = $this->executor->execute($this->schema, $this->parser->getParsedDocument(), null, null, $variables, $operationName);
-                $this->returnData($result);
+                return $this->executor->execute($this->schema, $this->parser->getParsedDocument(), null, null, $variables, $operationName);
 
             } catch (Error $error) {
                 // 500 error -> error
-                $this->returnData([
+                return [
                     "errors" => Errors::prettyPrintErrors(
                         [new InternalServerError("An unexpected error occurred during execution" . ($this->displayInternalServerErrorReason ? ": " . $error->getMessage() . ". Trace: " . $error->getTraceAsString() : "."))]
                     )
-                ]);
+                ];
             } catch (Exception $exception) {
                 // Unexpected exception -> error
-                $this->returnData([
+                return [
                     "errors" => Errors::prettyPrintErrors(
                         [new InternalServerError("An unexpected exception occurred during execution." . ($this->displayInternalServerErrorReason ? "\n" . $exception->getMessage() . "\n" . $exception->getTraceAsString() : ""))]
                     )
-                ]);
+                ];
             }
         }
     }
 
     /**
+     * Handles a request and prints the result.
+     */
+    public function listen()
+    {
+        $this->returnData($this->handle());
+    }
+
+    /**
      * @param $data
      */
-    public function returnData($data)
+    private function returnData($data)
     {
         echo json_encode($data);
     }
@@ -160,7 +170,7 @@ class Server
     private function getOperationName(): ?string
     {
         // check if query is sent as raw http body in request as "application/json" or via post fields as "multipart/form-data"
-        $headers = apache_request_headers();
+        $headers = function_exists("getallheaders") ? getallheaders() : [];
         if (array_key_exists("Content-Type", $headers) and $headers["Content-Type"] === "application/json") {
             // raw json string in http body
             $phpInput = json_decode(file_get_contents("php://input"), true);
@@ -179,7 +189,7 @@ class Server
     private function getVariables(): array
     {
         // check if variables is sent as raw http body in request as "application/json" or via post fields as "multipart/form-data"
-        $headers = apache_request_headers();
+        $headers = function_exists("getallheaders") ? getallheaders() : [];
         if (array_key_exists("Content-Type", $headers) and $headers["Content-Type"] === "application/json") {
             // raw json string in http body
             $phpInput = json_decode(file_get_contents("php://input"), true);
