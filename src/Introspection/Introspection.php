@@ -406,7 +406,8 @@ class Introspection
                         "",
                         //$inputValue can either be GraphQLArgument or GraphQLTypeField
                         function ($inputValue) {
-                            return strval($inputValue->getDefaultValue());
+                            $defaultValue = $inputValue->getDefaultValue();
+                            return $defaultValue !== null ? strval($defaultValue) : null;
                         }
                     ),
                     new GraphQLTypeField(
