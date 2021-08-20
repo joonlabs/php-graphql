@@ -759,13 +759,12 @@ class Executor
             if (is_object($source)) {
                 $propertyName = $info["fieldName"];
                 $methodName = "get" . ucwords($info["fieldName"]);
+                // try to use the getter
                 if (method_exists($source, $methodName)) {
                     return $source->{$methodName}();
                 }
-                if (property_exists($source, $propertyName)) {
-                    return $source->{$propertyName};
-                }
-                return null;
+                // get the property
+                return $source->{$propertyName};
             }
             return null;
         };
