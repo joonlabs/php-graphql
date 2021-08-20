@@ -824,7 +824,7 @@ class Parser
         }
         if ($token["type"] !== $tokenType) {
             throw new UnexpectedTokenError(
-                "Unexpected token: \"" . $token["value"] . "\", expected token of type \"$tokenType\", got tyoe \"" . $token["type"] . "\".",
+                "Unexpected token: \"" . $token["value"] . "\", expected token of type \"$tokenType\", got type \"" . $token["type"] . "\".",
                 $this->tokenizer->getLastLocation()
             );
         }

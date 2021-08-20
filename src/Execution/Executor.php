@@ -367,7 +367,7 @@ class Executor
             );
             if ($completed === null) {
                 throw new GraphQLError(
-                    "Cannot return null for non-nullable field {$info["parentType"]->getName()}.{$info["fieldName"]}."
+                    "Cannot use [null] for non-nullable field {$info["parentType"]->getName()}.{$info["fieldName"]}."
                 );
             }
             return $completed;
