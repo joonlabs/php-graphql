@@ -152,7 +152,8 @@ class Server
     {
         // check if query is sent as raw http body in request as "application/json" or via post fields as "multipart/form-data"
         $headers = apache_request_headers();
-        if (array_key_exists("Content-Type", $headers) and $headers["Content-Type"] === "application/json") {
+        if (array_key_exists("Content-Type", $headers)
+            and in_array($headers["Content-Type"], ["application/json", "application/json;charset=utf-8"])) {
             // raw json string in http body
             $phpInput = json_decode(file_get_contents("php://input"), true);
             return $phpInput["query"] ?? null;
