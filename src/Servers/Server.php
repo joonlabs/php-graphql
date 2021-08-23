@@ -152,8 +152,7 @@ class Server
     {
         // check if query is sent as raw http body in request as "application/json" or via post fields as "multipart/form-data"
         $headers = apache_request_headers();
-        if (array_key_exists("Content-Type", $headers)
-            and in_array($headers["Content-Type"], ["application/json", "application/json;charset=utf-8"])) {
+        if (array_key_exists("Content-Type", $headers) and str_contains($headers["Content-Type"], "application/json")) {
             // raw json string in http body
             $phpInput = json_decode(file_get_contents("php://input"), true);
             return $phpInput["query"] ?? null;
@@ -172,7 +171,7 @@ class Server
     {
         // check if query is sent as raw http body in request as "application/json" or via post fields as "multipart/form-data"
         $headers = function_exists("getallheaders") ? getallheaders() : [];
-        if (array_key_exists("Content-Type", $headers) and $headers["Content-Type"] === "application/json") {
+        if (array_key_exists("Content-Type", $headers) and str_contains($headers["Content-Type"], "application/json")) {
             // raw json string in http body
             $phpInput = json_decode(file_get_contents("php://input"), true);
             return $phpInput["operationName"] ?? null;
@@ -191,7 +190,7 @@ class Server
     {
         // check if variables is sent as raw http body in request as "application/json" or via post fields as "multipart/form-data"
         $headers = function_exists("getallheaders") ? getallheaders() : [];
-        if (array_key_exists("Content-Type", $headers) and $headers["Content-Type"] === "application/json") {
+        if (array_key_exists("Content-Type", $headers) and str_contains($headers["Content-Type"], "application/json")) {
             // raw json string in http body
             $phpInput = json_decode(file_get_contents("php://input"), true);
             return $phpInput["variables"] ?? [];
