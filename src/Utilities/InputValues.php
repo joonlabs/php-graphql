@@ -76,7 +76,12 @@ abstract class InputValues
                     continue;
                 }
 
-                $coercedValue[$field->getName()] = self::coerceInputValue($fieldValue, $field->getType(), [$path, $field->getName(), $type->getName()]);
+                try {
+                    $coercedValue[$field->getName()] = self::coerceInputValue($fieldValue, $field->getType(), [$path, $field->getName(), $type->getName()]);
+                } catch (GraphQLError $error) {
+                    // add information about explicit field name of input object type when coersion failed.
+                    throw new GraphQLError("Coercing value of \"{$field->getName()}\" failed explicity. " . $error->getMessage());
+                }
             }
 
             // ensure every provided field is defined
