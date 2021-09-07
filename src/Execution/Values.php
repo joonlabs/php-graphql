@@ -4,6 +4,7 @@ namespace GraphQL\Execution;
 
 use GraphQL\Directives\GraphQLDirective;
 use GraphQL\Errors\GraphQLError;
+use GraphQL\Errors\ValidationError;
 use GraphQL\Internals\UndefinedValue;
 use GraphQL\Schemas\Schema;
 use GraphQL\Utilities\Ast;
@@ -79,10 +80,19 @@ abstract class Values
             }
 
             // coerce value
-            $coercedValues[$varName] = InputValues::coerceInputValue(
-                $value,
-                $varType
-            );
+            try{
+                $coercedValues[$varName] = InputValues::coerceInputValue(
+                    $value,
+                    $varType
+                );
+            }catch (GraphQLError $error){
+                // add node to error when coercing input variable failed
+                throw new ValidationError(
+                    "Cannot coerce input value of type \"{$varType->getName()}\"." .
+                    $error->getMessage(),
+                    $varDefNode);
+            }
+
         }
         return $coercedValues;
     }

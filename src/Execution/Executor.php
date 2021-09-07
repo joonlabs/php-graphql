@@ -54,7 +54,7 @@ class Executor
         );
 
         // return early errors if execution context failed.
-        if(is_array($executionContext)){
+        if (is_array($executionContext)) {
             return [
                 "errors" => Errors::prettyPrintErrors($executionContext),
                 "data" => []
@@ -205,7 +205,7 @@ class Executor
     private function shouldIncludeNode(ExecutionContext $executionContext, $node): bool
     {
         // skip check for directives if no directives wanted
-        if(empty($node["directives"]))
+        if (empty($node["directives"]))
             return true;
 
         // check if skip directive is active
@@ -709,6 +709,11 @@ class Executor
 
         $variableDefinitions = $operation["variableDefinitions"] ?? [];
         $coercedVariableValues = Values::getVariableValues($schema, $variableDefinitions, $rawVariableValues ?? []);
+
+        // check if $coercedVariableValues contains only one numeric index because that means
+        // that the variables' coercing values were not formatted correctly.
+        if (count($coercedVariableValues) === 1 and array_key_first($coercedVariableValues) === 0)
+            return $coercedVariableValues;
 
         // default $contextValue to an empty array
         $contextValue = $contextValue ?? [];
