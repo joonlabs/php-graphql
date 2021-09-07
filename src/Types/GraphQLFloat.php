@@ -20,7 +20,7 @@ class GraphQLFloat extends GraphQLScalarType
      */
     public function serialize($outputValue): ?float
     {
-        if (!is_float($outputValue) and $outputValue !== null) {
+        if (!is_float($outputValue) and !is_int($outputValue) and $outputValue !== null) {
             throw new GraphQLError(
                 "Value \"$outputValue\" is not of type \"{$this->getName()}\"."
             );
@@ -60,7 +60,7 @@ class GraphQLFloat extends GraphQLScalarType
      */
     public function parseValue($value): ?float
     {
-        if (!is_float($value) and $value !== null) {
+        if (!is_float($value) and !is_int($value) and $value !== null) {
             throw new GraphQLError(
                 "Value \"$value\" is not of type \"{$this->getName()}\"."
             );
