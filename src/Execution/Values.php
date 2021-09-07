@@ -88,7 +88,7 @@ abstract class Values
             }catch (GraphQLError $error){
                 // add node to error when coercing input variable failed
                 throw new ValidationError(
-                    "Cannot coerce input value of type \"{$varType->getName()}\"." .
+                    "Cannot coerce input value of type \"{$varType->getName()}\". " .
                     $error->getMessage(),
                     $varDefNode);
             }
