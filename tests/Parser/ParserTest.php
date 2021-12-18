@@ -27,6 +27,21 @@ class ParserTest extends TestCase
 
         self::assertEmpty($parser->getErrors());
     }
+    
+    /**
+     * Allows us to check if the parser can parse null tokens before closing brackets
+     */
+    public function testCheckParseOfNullTokensBeforeClosingBracket()
+    {
+        $query = 'query{
+          someField(value:null)
+        }';
+
+        $parser = new Parser();
+        $parser->parse($query);
+
+        self::assertEmpty($parser->getErrors());
+    }
 
     /**
      * Allows us to check if a complex but valid query can be parsed
