@@ -20,7 +20,7 @@ class GraphQLString extends GraphQLScalarType
      */
     public function serialize($outputValue): ?string
     {
-        if (!is_string($outputValue) and $outputValue !== null) {
+        if (!$this->isStringableValue($outputValue)) {
             throw new GraphQLError(
                 "Value \"$outputValue\" is not of type \"{$this->getName()}\"."
             );
@@ -45,6 +45,7 @@ class GraphQLString extends GraphQLScalarType
         return $valueNode["value"];
     }
 
+
     /**
      * @param $value
      * @return string|null
@@ -52,12 +53,30 @@ class GraphQLString extends GraphQLScalarType
      */
     public function parseValue($value): ?string
     {
-        if (!is_string($value) and $value !== null) {
+        if (!$this->isStringableValue($value)) {
+            // cast value to a printable version
+            $value = is_array($value)
+                ? "[Array]"
+                : (string)$value;
+
             throw new GraphQLError(
                 "Value \"$value\" is not of type \"{$this->getName()}\"."
             );
         }
         return $value;
+    }
+
+    /**
+     * Returns whether the object can be casted to a string or not.
+     *
+     * @param mixed $value
+     * @return bool
+     */
+    private function isStringableValue(mixed $value): bool
+    {
+        return $value === null
+            || is_string($value)
+            || is_object($value) && method_exists($value, '__toString');
     }
 }
 
