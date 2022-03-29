@@ -445,10 +445,13 @@ class Executor
         }
 
         $itemType = $returnType->getInnerType();
-        return array_map(function ($item, $index) use ($executionContext, $returnType, $fieldNodes, $info, $path, $result, $itemType) {
+
+        // iterate over all entries in the list and complete the values
+        $completedListValue = [];
+        foreach ($result as $index => $item) {
             $itemPath = [$index, null, $path];
             try {
-                return $this->completeValue(
+                $completedListValue[] = $this->completeValue(
                     $executionContext,
                     $itemType,
                     $fieldNodes,
@@ -458,9 +461,12 @@ class Executor
                 );
             } catch (GraphQLError $error) {
                 $error = LocatedError::from($error, $fieldNodes, $path);
-                return $this->handleFieldError($error, $returnType, $executionContext);
+                $completedListValue[] = $this->handleFieldError($error, $returnType, $executionContext);
             }
-        }, $result, array_keys($result));
+        }
+
+        // return the completed list
+        return $completedListValue;
     }
 
     private function completeLeafValue(GraphQLType $returnType, $result)
