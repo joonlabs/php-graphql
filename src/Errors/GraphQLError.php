@@ -38,7 +38,7 @@ class GraphQLError extends Exception
      */
     public function getLocations(): ?array
     {
-        return $this->node["loc"] ?? null;
+        return [$this->node["loc"]] ?? null;
     }
 
     /**

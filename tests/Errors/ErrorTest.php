@@ -19,7 +19,7 @@ class ErrorTest extends TestCase
             ]
         ];
         $Error = new GraphQLError("message", $node);
-        self::assertSame($Error->getLocations(), $node["loc"]);
+        self::assertSame($Error->getLocations(), [$node["loc"]]);
     }
 
 
