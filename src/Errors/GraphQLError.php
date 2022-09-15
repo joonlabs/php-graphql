@@ -23,7 +23,7 @@ class GraphQLError extends Exception
      * @param array|null $path
      * @param array|null $customExtensions
      */
-    public function __construct(string $message = "", array $node = null, array $path = null, array $customExtensions=null)
+    public function __construct(string $message = "", array $node = null, array $path = null, array $customExtensions = null)
     {
         parent::__construct($message);
         $this->node = $node;
@@ -38,7 +38,15 @@ class GraphQLError extends Exception
      */
     public function getLocations(): ?array
     {
-        return [$this->node["loc"]] ?? null;
+        // get location of error
+        $location = $this->node["loc"] ?? null;
+
+        // return null if location is null
+        if ($location === null)
+            return null;
+
+        // return location
+        return [$location];
     }
 
     /**
@@ -60,7 +68,7 @@ class GraphQLError extends Exception
     {
         $simplifiedPath = [];
         $currentPathField = $this->path;
-        while($currentPathField !== null){
+        while ($currentPathField !== null) {
             $simplifiedPath[] = $currentPathField[0];
             $currentPathField = $currentPathField[2];
         }
