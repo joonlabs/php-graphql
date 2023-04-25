@@ -10,8 +10,11 @@ use GraphQL\Types\GraphQLType;
  */
 abstract class GraphQLArgument
 {
-    protected $id;
-    protected $type;
+    protected string $id;
+    protected GraphQLType $type;
+    private string $description;
+    private $defaultValue;
+    private ?string $deprecationReason;
 
     /**
      * GraphQLArgument constructor.
